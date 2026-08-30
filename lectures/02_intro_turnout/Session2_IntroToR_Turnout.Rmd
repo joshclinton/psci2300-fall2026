@@ -83,14 +83,18 @@ See also the _New Yorker_ article on "The Reinhart and Rogoff Controversy: A Sum
 ![**Source of many, many errors: World Economy**](figs/WashPoRR.png){width=70%}
 </div>
 
-The spreadsheet behind the result makes the problem concrete.  
-The formula averages cells `L30:L44`, so the five countries in rows 45--49 are omitted from the calculation.
+What happened? The screenshot below shows the working spreadsheet analyzed by Herndon, Ash, and Pollin.  
+The displayed formula averages cells `L30:L44` rather than `L30:L49`, placing five country rows outside the selected range.  
+Belgium is the omitted country with an available value in this particular column.  
+The spreadsheet error accounted for only a small portion of the difference between the published and revised estimates.[^wp-excel]
 
 <div style="text-align:center">
-![**What data analysis in Excel can look like: the selected range omits five countries. Source: [Brad Plumer, *The Washington Post* (2013)](https://www.washingtonpost.com/news/wonk/wp/2013/04/16/is-the-best-evidence-for-austerity-based-on-an-excel-spreadsheet-error/).**](figs/WP_Excel_Excerpt.png){width=85%}
+![**The Excel range error in the working spreadsheet**](figs/WP_Excel_Excerpt.png){width=85%}
 </div>
 
-And using Excel for data entry has resulted in well-documented errors in [Medical Research](https://www.nature.com/articles/d41586-021-02211-4) due to "auto-correct" changing value names.  
+[^wp-excel]: Brad Plumer, “Is the Evidence for Austerity Based on an Excel Spreadsheet Error?” *The Washington Post*, April 16, 2013. Plumer credits Mike Konczal for explaining and illustrating the formula problem and notes that the spreadsheet error itself changed the result by about 0.3 percentage points. [Read the article](https://www.washingtonpost.com/news/wonk/wp/2013/04/16/is-the-best-evidence-for-austerity-based-on-an-excel-spreadsheet-error/).
+
+And using Excel for data entry has contributed to many well-documented errors in [Medical Research](https://www.nature.com/articles/d41586-021-02211-4) due to "auto-correct" changing value names.  
 
 <div style="text-align:center">
 ![**Source of many, many errors: Medical Research**](figs/GeneExcel.png){width=70%}
