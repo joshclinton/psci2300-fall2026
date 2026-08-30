@@ -2299,9 +2299,7 @@ Always imagine that you are handing the code off to someone else – can they un
 What variables did you rename, what transformations did you do, how did you recode values?</p>
 <p>Similar concerns arise when we use AI – how can we check what was done to replicate that in the future?<br>
 We will discuss the implications for how we structure workflows using AI when we get there.</p>
-<p>People using Excel for analysis have been identified as being (partially) responsible for what is widely believed to be a <a href="https://www.washingtonpost.com/news/wonk/wp/2013/04/16/is-the-best-evidence-for-austerity-based-on-an-excel-spreadsheet-error/">failed global economic policy</a>.<br>
-The costs of that error were tremendous – see, for example, a story about the impact in <a href="https://www.nytimes.com/2010/06/29/business/global/29austerity.html">Ireland</a>, including a quote by one of the Harvard economists responsible for the study with the error noting that ``the Ireland experience points to the profound challenges that the current strategy [which was based on this erroneous research] implies.”<br>
-See also the <em>New Yorker</em> article on “The Reinhart and Rogoff Controversy: A Summing Up” by John Cassidy in the Lecture Folder – or linked <a href="https://www.newyorker.com/news/john-cassidy/the-reinhart-and-rogoff-controversy-a-summing-up">here</a> –for more overview and links to this controversy.</p>
+<p>Mistakes from analysis done using Excel for analysis have been identified as being (partially) responsible for what is widely believed to be a <a href="https://www.washingtonpost.com/news/wonk/wp/2013/04/16/is-the-best-evidence-for-austerity-based-on-an-excel-spreadsheet-error/">failed global economic policy</a>. See, for example, a story about the impact in <a href="https://www.nytimes.com/2010/06/29/business/global/29austerity.html">Ireland</a>, including a quote by one of the Harvard economists responsible for the study with the error noting that ``the Ireland experience points to the profound challenges that the current strategy [which was based on this erroneous research] implies.” (See also the <em>New Yorker</em> article on “The Reinhart and Rogoff Controversy: A Summing Up” by John Cassidy in the Lecture Folder – or linked <a href="https://www.newyorker.com/news/john-cassidy/the-reinhart-and-rogoff-controversy-a-summing-up">here</a> –for more overview and links to this controversy.)</p>
 <div style="text-align:center">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -2310,7 +2308,7 @@ See also the <em>New Yorker</em> article on “The Reinhart and Rogoff Controver
 </figure>
 </div>
 </div>
-<p>What happened? As the screenshot of the working spreadsheet analyzed by Herndon, Ash, and Pollin shows, the analysis done in Excel used a formula that averaged cells <code>L30:L44</code>, incorrectly omitting the five countries in rows 45–49.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> There were other errors that contributed to the difference as well.</p>
+<p>So what happened? As the screenshot of the working spreadsheet analyzed by Herndon, Ash, and Pollin shows, the analysis was done in Excel and it used a formula that averaged cells <code>L30:L44</code> – incorrectly omitting the five countries in rows 45–49.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <div style="text-align:center">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -2341,8 +2339,8 @@ See also the <em>New Yorker</em> article on “The Reinhart and Rogoff Controver
 This includes inspecting your data and getting a sense of the type of data you have.</p>
 <p>OK, enough cautionary tales. Let’s get R ready and then put it to work.</p>
 </section>
-<section id="recap-starting-out" class="level2">
-<h2 class="anchored" data-anchor-id="recap-starting-out">RECAP: Starting out</h2>
+<section id="starting-out" class="level2">
+<h2 class="anchored" data-anchor-id="starting-out">Starting out</h2>
 <p>We are going to work with R via RStudio – an Integrated Development Environment (IDE) that combines coding and evaluation in a single application.</p>
 <p>When you start out (in this class) it is always a good idea to have a clean – i.e., empty – workspace so that your analysis is based on the code that you are doing rather than some manipulations that were done previously. Do not be one of those students at the end of the class who has every dataset they worked with in class saved and loaded in their Environment.</p>
 <p>If you are starting out with an empty workspace your R Studio should say the “Environment is empty” in the Environment tab. It is always a good idea to always start with an empty environment because the data manipulations we are doing will not be cumulative.</p>
@@ -2835,7 +2833,7 @@ But we use summarize because we can do multiple at once:</p>
 <div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
 
 <ol>
-<li id="fn1"><p>Brad Plumer, “Is the Evidence for Austerity Based on an Excel Spreadsheet Error?” <em>The Washington Post</em>, April 16, 2013. Plumer credits Mike Konczal for explaining and illustrating the formula problem and notes that the spreadsheet error itself changed the result by about 0.3 percentage points. <a href="https://www.washingtonpost.com/news/wonk/wp/2013/04/16/is-the-best-evidence-for-austerity-based-on-an-excel-spreadsheet-error/">Read the article</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>Brad Plumer, “Is the Evidence for Austerity Based on an Excel Spreadsheet Error?” <em>The Washington Post</em>, April 16, 2013. Plumer credits Mike Konczal for explaining and illustrating the formula problem and notes that the spreadsheet error excluding Belgium changed the result by about 0.3 percentage points. There were other errors that contributed to the difference as well. <a href="https://www.washingtonpost.com/news/wonk/wp/2013/04/16/is-the-best-evidence-for-austerity-based-on-an-excel-spreadsheet-error/">Read the article</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main>
 <!-- /main column -->

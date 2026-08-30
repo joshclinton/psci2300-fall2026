@@ -75,21 +75,19 @@ What variables did you rename, what transformations did you do, how did you reco
 Similar concerns arise when we use AI -- how can we check what was done to replicate that in the future?  
 We will discuss the implications for how we structure workflows using AI when we get there.
 
-People using Excel for analysis have been identified as being (partially) responsible for what is widely believed to be a [failed global economic policy](https://www.washingtonpost.com/news/wonk/wp/2013/04/16/is-the-best-evidence-for-austerity-based-on-an-excel-spreadsheet-error/).  
-The costs of that error were tremendous -- see, for example, a story about the impact in [Ireland](https://www.nytimes.com/2010/06/29/business/global/29austerity.html), including a quote by one of the Harvard economists responsible for the study with the error noting that ``the Ireland experience points to the profound challenges that the current strategy [which was based on this erroneous research] implies."  
-See also the _New Yorker_ article on "The Reinhart and Rogoff Controversy: A Summing Up" by John Cassidy in the Lecture Folder -- or linked [here](https://www.newyorker.com/news/john-cassidy/the-reinhart-and-rogoff-controversy-a-summing-up) --for more overview and links to this controversy.   
+Mistakes from analysis done using Excel for analysis have been identified as being (partially) responsible for what is widely believed to be a [failed global economic policy](https://www.washingtonpost.com/news/wonk/wp/2013/04/16/is-the-best-evidence-for-austerity-based-on-an-excel-spreadsheet-error/). See, for example, a story about the impact in [Ireland](https://www.nytimes.com/2010/06/29/business/global/29austerity.html), including a quote by one of the Harvard economists responsible for the study with the error noting that ``the Ireland experience points to the profound challenges that the current strategy [which was based on this erroneous research] implies." (See also the _New Yorker_ article on "The Reinhart and Rogoff Controversy: A Summing Up" by John Cassidy in the Lecture Folder -- or linked [here](https://www.newyorker.com/news/john-cassidy/the-reinhart-and-rogoff-controversy-a-summing-up) --for more overview and links to this controversy.)   
 
 <div style="text-align:center">
 ![**Source of many, many errors: World Economy**](figs/WashPoRR.png){width=70%}
 </div>
 
-What happened? As the screenshot of the working spreadsheet analyzed by Herndon, Ash, and Pollin shows, the analysis done in Excel used a formula that averaged cells `L30:L44`, incorrectly omitting the five countries in rows 45--49.[^wp-excel] There were other errors that contributed to the difference as well.
+So what happened? As the screenshot of the working spreadsheet analyzed by Herndon, Ash, and Pollin shows, the analysis was done in Excel and it used a formula that averaged cells `L30:L44` -- incorrectly omitting the five countries in rows 45--49.[^wp-excel] 
 
 <div style="text-align:center">
 ![**The Excel range error in the working spreadsheet**](figs/WP_Excel_Excerpt.png){width=85%}
 </div>
 
-[^wp-excel]: Brad Plumer, “Is the Evidence for Austerity Based on an Excel Spreadsheet Error?” *The Washington Post*, April 16, 2013. Plumer credits Mike Konczal for explaining and illustrating the formula problem and notes that the spreadsheet error itself changed the result by about 0.3 percentage points. [Read the article](https://www.washingtonpost.com/news/wonk/wp/2013/04/16/is-the-best-evidence-for-austerity-based-on-an-excel-spreadsheet-error/).
+[^wp-excel]: Brad Plumer, “Is the Evidence for Austerity Based on an Excel Spreadsheet Error?” *The Washington Post*, April 16, 2013. Plumer credits Mike Konczal for explaining and illustrating the formula problem and notes that the spreadsheet error excluding Belgium changed the result by about 0.3 percentage points. There were other errors that contributed to the difference as well. [Read the article](https://www.washingtonpost.com/news/wonk/wp/2013/04/16/is-the-best-evidence-for-austerity-based-on-an-excel-spreadsheet-error/).
 
 And using Excel for data entry has contributed to many well-documented errors in [Medical Research](https://www.nature.com/articles/d41586-021-02211-4) due to "auto-correct" changing value names.  
 
@@ -109,7 +107,7 @@ This includes inspecting your data and getting a sense of the type of data you h
 
 OK, enough cautionary tales. Let's get R ready and then put it to work.
 
-## RECAP: Starting out
+## Starting out
 
 We are going to work with R via RStudio -- an Integrated Development Environment (IDE) that combines coding and evaluation in a single application.
 
