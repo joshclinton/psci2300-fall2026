@@ -83,10 +83,7 @@ See also the _New Yorker_ article on "The Reinhart and Rogoff Controversy: A Sum
 ![**Source of many, many errors: World Economy**](figs/WashPoRR.png){width=70%}
 </div>
 
-What happened? The screenshot below shows the working spreadsheet analyzed by Herndon, Ash, and Pollin.  
-The displayed formula averages cells `L30:L44` rather than `L30:L49`, placing five country rows outside the selected range.  
-Belgium is the omitted country with an available value in this particular column.  
-The spreadsheet error accounted for only a small portion of the difference between the published and revised estimates.[^wp-excel]
+What happened? As the screenshot of the working spreadsheet analyzed by Herndon, Ash, and Pollin shows, the analysis done in Excel used a formula that averaged cells `L30:L44`, incorrectly omitting the five countries in rows 45--49.[^wp-excel] There were other errors that contributed to the difference as well.
 
 <div style="text-align:center">
 ![**The Excel range error in the working spreadsheet**](figs/WP_Excel_Excerpt.png){width=85%}
