@@ -1,0 +1,674 @@
+---
+title: "Hello World! Intro to R, RStudio, and Working With Data"
+author: "Prof. Josh Clinton"
+institute: "Vanderbilt University"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+<style>
+figure,
+.figure {
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+figcaption,
+.caption {
+  font-size: 1.2em;
+}
+</style>
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+## Learning Objectives
+
+- Why do we use R to work with data rather than a spreadsheet?
+
+- Getting started with R and RStudio and getting data into R
+
+- What is "wrangling" and how do we do it?
+
+- Application: Voter turnout in recent U.S. elections
+
+- How do we measure voter turnout? Does it matter whether we use the voting-age population or the voting-eligible population?
+
+- Functions: `library`, `getwd`, `setwd`, `read.csv`, `names`, `view`, `glimpse`, `head`, `filter`, `select`, `summarize`, `mean`, `median`
+
+
+
+## Data Wrangling?
+
+<div style="text-align:center">
+![**We Need a Horse, Lasso**](figs/Wrangler.png){width=70%}
+</div>
+
+*Data Wrangling:* The process of getting the data ready for analysis, including: accessing data, reformatting in appropriate ways (format, orientation), creating variables, recoding values, and selecting variables and/or observations of interest for analysis.
+
+How you process and recode data is critical!  Principles that should guide us include:
+
+- *Understanding:* Can others understand what you did and why?  Can you follow what you did if you come back to the code in a year?
+
+- *Replication:* Can others do what you did? Art depends on _personality_, science depends on _replication_.
+
+- *Robustness:* Does your code "break" easily? You cannot (easily) fix in your analysis what you screw up in your data! (Especially if you are unaware!)
+
+We want to do things that are understandable and sensible.  
+Always imagine that you are handing the code off to someone else -- can they understand what you are doing? 
+Can they follow what you have done to the data?  The goal in data wrangling is to provide a set of steps that will take you from the raw data to the data being analyzed in clear and understandable steps so that others can see exactly the choices that you have made (and make other choices if desired to see the robustness of your inferences).
+
+Data wrangling in R gives us the ability to do this because we can document and explain the exact steps we are taking to organize the data. 
+Using code to make changes means anyone and everyone can observe what we did. 
+
+<div style="text-align:center">
+![**Don't Be This Guy**](figs/Excel.png){width=70%}
+</div>
+
+In contrast, if you make changes to your data in a spreadsheet like Excel or Google Sheets or Numbers it can be impossible for someone else to figure out what you did.  
+What variables did you rename, what transformations did you do, how did you recode values?  
+
+Similar concerns arise when we use AI -- how can we check what was done to replicate that in the future?  
+We will discuss the implications for how we structure workflows using AI when we get there.
+
+People using Excel for analysis have been identified as being (partially) responsible for what is widely believed to be a [failed global economic policy](https://www.washingtonpost.com/news/wonk/wp/2013/04/16/is-the-best-evidence-for-austerity-based-on-an-excel-spreadsheet-error/).  
+The costs of that error were tremendous -- see, for example, a story about the impact in [Ireland](https://www.nytimes.com/2010/06/29/business/global/29austerity.html), including a quote by one of the Harvard economists responsible for the study with the error noting that ``the Ireland experience points to the profound challenges that the current strategy [which was based on this erroneous research] implies."  
+See also the _New Yorker_ article on "The Reinhart and Rogoff Controversy: A Summing Up" by John Cassidy in the Lecture Folder -- or linked [here](https://www.newyorker.com/news/john-cassidy/the-reinhart-and-rogoff-controversy-a-summing-up) --for more overview and links to this controversy.   
+
+<div style="text-align:center">
+![**Source of many, many errors: World Economy**](figs/WashPoRR.png){width=70%}
+</div>
+
+And using Excel for data entry has resulted in well-documented errors in [Medical Research](https://www.nature.com/articles/d41586-021-02211-4) due to "auto-correct" changing value names.  
+
+<div style="text-align:center">
+![**Source of many, many errors: Medical Research**](figs/GeneExcel.png){width=70%}
+</div>
+
+In fact, the person who publicized the issue -- Dr. Jennifer Byrne - was named a Top 10 Person in Science in 2017 because of her data sleuthing  [2017](https://www.nature.com/immersive/d41586-017-07763-y/index.html) and she developed an entire program to find and correct errors produced by data entry in Excel! Link [here](https://www.eurekalert.org/news-releases/810347). 
+Discouragingly, note that the estimate that 30\% of published papers analyzing genetic sequences were incorrect due to the sequences being ``auto-corrected" by Excel was mentioned in a story that was written 5 years after Dr. Byrne received the award and after the creation of a program specifically designed to prevent this!
+
+<div style="text-align:center">
+![**Dr. Byrne, Cancer Researcher, Data Detective**](figs/Byrne.png){width=70%}
+</div>
+
+So the goal of this topic is to give you some basic tools to be able to manipulate data and get it ready for analysis.  
+This includes inspecting your data and getting a sense of the type of data you have.
+
+OK, enough cautionary tales. Let's get R ready and then put it to work.
+
+## RECAP: Starting out
+
+We are going to work with R via RStudio -- an Integrated Development Environment (IDE) that combines coding and evaluation in a single application.
+
+When you start out (in this class) it is always a good idea to have a clean -- i.e., empty -- workspace so that your analysis is based on the code that you are doing rather than some manipulations that were done previously.
+Do not be one of those students at the end of the class who has every dataset they worked with in class saved and loaded in their Environment. 
+
+If you are starting out with an empty workspace your R Studio should say the "Environment is empty" in the Environment tab. 
+It is always a good idea to always start with an empty environment because the data manipulations we are doing will not be cumulative.  
+
+<div style="text-align:center">
+![**Starting Out**](figs/StartScreen.png){width=70%}
+</div>
+
+To that end, when you quit RStudio, **DO NOT** save workspace image.  
+This will ensure that you are always starting with a clean and empty workspace which means that there is never a possibility of using "old" data in your analyses. 
+If you are working on a larger project across several sessions it sometimes makes sense to save it, but for this class you should get in the practice of writing self-contained code that reads and wrangles the data you need to analyze every time rather than relying on earlier work.
+
+<div style="text-align:center">
+![**DO NOT SAVE YOUR WORKSPACE WHEN YOU EXIT**](figs/SaveEnvironment.png){width=45%}
+</div>
+
+When starting out it can be easy to forget that R needs to be told where to look to find things!
+
+1. For **every** assignment/lecture create a new folder on your computer (e.g., "Topic 3").  
+2. Download the code and data into this folder. (Or move them from the Download folder to that folder).  Or create a new RMarkdown file and  _save_ the code to this folder.  
+
+Now we need to make sure that R knows where it is and can find the data we want to load.  
+There are at least three ways to do this.
+
+The easiest way to do this is to simply have the `*.RMD` file and data in the same folder and then double-click on the `*.RMD` file.  
+This will open the `*.RMD` file and set the working directory to the location of where the file is.
+
+We can also use RStudio to accomplish the same task.
+
+1. Open your code in RStudio.
+
+2.  <div style="text-align:center">
+    ![**Using the GUI to Select Directory**](figs/Setwd.png){width=70%}
+    </div>
+
+3. The GUI will automatically change the directory, but you should also copy and paste the resulting code snippet in Console to your code!
+
+Finally, we can use functions in R to determine where we are and then change the working directory.
+
+In the Console window of RStudio we can figure out where R thinks it is either by looking at the title bar for the Console panel or by using the `getwd` (get working directory) function.
+
+```{r}
+getwd()
+```
+If this is different than where your code and data is there will be trouble!
+
+Because R is object-oriented, we can actually save this as an object and use it! 
+Assuming that you are in the correct directory (and you got there either by double-clicking or using the GUI), define a new object that has the name of where these files are:
+
+```{r}
+mydir <- getwd()
+```
+
+Now manually set the working directory to be the directory where your code and data is located using `setwd` (set working directory) and the location we just saved to the object `mydir`!
+
+```{r}
+setwd(mydir)
+```
+
+**Warning!**
+
+What R "sees" when working in the Console window (or using an R Script) is different from what it "sees" using RMarkdown! 
+You can `Knit` a RMarkdown document to conduct analysis without any object ever appearing in the Global Environment.
+
+- Knitting RMarkdown (*.RMD) files does _not_ create tibbles/objects in the Global Environment!
+
+*Quick Exercise*  Clear out the Global Environment and `Knit` this document.  
+Confirm that the code will run and nothing will be created in the Global Environment.
+
+While this makes sense once the code/project is completed, it can make coding more difficult because we often want to be able to manipulate the code and objects while working.  
+To do so we are going to write and evaluate chunks one-at-a-time to ensure the objects are created in the Global Environment.
+
+So getting started we _always_ start our code by:
+
+1. Loading the `tidyverse` library and any other libraries we are going to use.
+
+```{r, message=FALSE}
+library(tidyverse)
+```
+
+2. Checking to make sure that R is looking in the right spot to find your data and code using Rstudio or code.
+```{r}
+getwd()
+```
+
+3. Now get that data!  
+One method is to use the Graphical User Interface (GUI) to select menus that will find and read in the data of interest.  
+If you are getting data from some other format (e.g., data saved in a basic text format (comma or tab delimited) or in another statistical package (e.g., STATA or SAS)) we want to `Import Dataset`.  
+
+<div style="text-align:center">
+![**RStudio Starting Out**](figs/GUIImport.png){width=70%}
+</div>
+If you are loading in data that is already formatted in R then you go to the RStudio menu: `File > Open File...`.  (Note that this menu also has the `File > Import Dataset` option.) 
+
+Because we want to document what dataset we are using, for replicability we want to copy and paste the resulting code into our RMarkdown file so that next time we can run the code directly!
+
+A second way to access data is to use some functions directly in R.  
+This is what the GUI is actually doing behind the scenes.  
+We are going to focus on three functions in this class:
+- `load`
+- `read_rds`
+- `url`
+
+We can also read in non-R files -- sometimes using additional packages to expand the skills of R. 
+For example, we can read in comma-delimited files (`read.csv`), tab-delimited files (`read.delim`), Excel-created files (`read.xls`, `read.xlsx`), and files from other statistical languages (e.g., `read.dta`, `read.sav`). 
+Reading in non-R objects/data requires reading in the data and also assigning the data to a new R object.
+
+<div class="alert alert-info">
+**MOTIVATION QUESTION**
+What is turnout in recent US elections?
+</div>
+
+Why do we care?
+
+Some think more turnout is good because it shows that more people are involved in the political process and the decision therefore represents the input of more individuals and is therefore more legitimate. 
+Others disagree. 
+Regardless, this also raises the question of how we measure turnout. Turnout is the fraction of people who vote relative to what? People of voting age? People who are eligible to vote under U.S. state law? Does this difference matter?
+
+Let's work through these issues together and find out.
+
+
+## Loading Data
+
+Now we're ready to load in data. 
+We are going to load in some data that is organized in a `csv` comma-delimited file.  
+This is a common way of storing data that is not unique to any particular program. 
+(We will see others in the weeks to come -- including some data formats that are unique to R.)
+
+The data is turnout in US elections over time (in the thousands).  
+The website where most of the data was obtained is called (clickable link): [The United States Election Project](https://www.electproject.org/election-data/voter-turnout-data).
+
+The data on self-reported turnout based on the American National Election Survey (ANES) was collected from this website [here](https://electionstudies.org/data-tools/anes-guide/anes-guide.html?chart=turnout).  
+Note that the ANES was originally created to track political opinions and behavior over time going back to 1948.  
+Since 1977 it has been supported by a grant from the National Science Foundation. 
+The cost/budget for the 2024 ANES was 14 million dollars.
+
+We will almost always be working with data in this class -- which we will interchangeably call a dataset, dataframe, and/or tibble to maximize your confusion. 
+
+However, we first need to make sure that R is looking in the right place. 
+Because we keep our files in a particular directory, we need to point R to the right place. 
+This is called setting the working directory, and can be done either by using the command `setwd` or in RStudio by going to "Session-->Set Working Directory-->Choose Directory." 
+Choose the directory where the file currently resides on your computer. 
+Make sure to always set the working directory at the beginning of each session---not doing so causes a lot of headaches for new users.
+
+```{r}
+df = read.csv("turnout.csv") 
+```
+
+You'll notice that the code above starts with `df`. 
+This is just an arbitrary -- but hopefully descriptive! -- name for the object you are creating. 
+Then there's an equal sign `=`. This is an assignment operator. 
+Then there's a function, `read.csv`, with parentheses, and an argument, `"turnout.csv"`. 
+Here's how to think about this.
+
+- Functions in R always have arguments within parentheses. This function, `read.csv`, opens a certain type of data--CSV data. (We will use others later in the class.) This function has one argument, which is the name of the file I want to open. 
+- Assignment operators take the result of a function and assign it to an object name.
+- Objects in R store information locally so that it can be accessed again. 
+
+So the command above says, "Use the function `read.csv` to open the file `turnout.csv` and assign the result to the object named `df`." 
+
+<div class="alert alert-warning">
+**WARNING: Knitting versus incremental code chunks**
+</div>
+
+While the ability to directly integrate coding and analysis in the same document is powerful, it can sometimes be confusing as what R is aware of in the Global Environment differs from what it is aware of when knitting a document!  
+What R "sees" when working in the Console window (or using an R Script) is different from what it "sees" using RMarkdown! 
+You can `Knit` a RMarkdown document to conduct analysis without any object ever appearing in the Global Environment.
+Knitting RMarkdown (*.Rmd) files does _not_ create tibbles/objects in the Global Environment!
+
+
+
+*Quick Exercise*  Clear out the Global Environment -- which should only contain `df` -- and `Knit` this document.  Confirm that the code will run and nothing will be created in the Global Environment.
+
+While this makes sense once the code/project is completed, it can make coding more difficult because we often want to be able to manipulate the code and objects while working.  
+To do so we are going to write and evaluate chunks one-at-a-time to ensure the objects are created in the Global Environment.
+
+Once we are finished, we can knit the entire document to keep a clean record.
+
+OK, back to business!  
+
+In the code chunk below ``Run All Code Chunks Above" to get us back to where we were.
+
+Now let's take a quick look at the object `df`:
+
+```{r}
+df
+```
+
+NOTE: the `eval=FALSE` in the chunk title means that when the document is knit, the code chunk will be printed, but not actually run/evaluated. 
+If you want to see what this does, try knitting the document with `eval=TRUE` (which is the default) and you will see that the dataframe itself is now being printed in the knit document.  
+For this class, *you* will almost always use `eval=TRUE` but the posted notes will almost always have `eval=FALSE` to suppress lengthy outputs.
+
+This is just the first part of the data frame. 
+All data frames have the exact same structure. 
+Each row is an observation or a case. 
+In this example, each row is a year. 
+Each column is a characteristic of the case, what we call a variable. 
+Let's use the `names` command to see what variables are in the dataset. 
+
+
+```{r}
+names(df)
+```
+
+It's hard to know what these mean without some more information. 
+We usually use a codebook to get more information about a dataset. 
+Because we use very short names for variables, it's useful to have some more information (fancy name: metadata) that tells us about those variables. 
+Below you'll see the `R` name for each variable next to a description of each variable. 
+
+
+| Name           | Definition                                                                                                                                                                                             |
+|----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| year         | Election Year                                                                                                                                                                                                |
+| VEP         | Number of Voting Eligible persons in US -- i.e., all citizens over the age of 18 who are eligible to vote (in thousands)                                                                                                                                                                                      |
+| VAP         | Number of Voting Age persons in US - i.e., everyone in the US over the age of 18  (in thousands)                                                                                                                                                                                     |
+| Total.Ballots.Counted  | How many votes were cast in the election (in thousands)                                                                                                                                                                              |
+| ANES.Est        | Turnout Estimated using self-reported voting behavior in the ANES                                                                                                                                                                           |
+| Felons         | Number of non-eligible felons  (in thousands)                                                                                                                                                                                         |
+| Noncit       | Number of non-eligible non-citizens  (in thousands)                                                                                                                                                   |
+| Overseas       | Number of eligible overseas voters  (in thousands)                                                                                                                                           |
+
+What fraction of Americans vote? This seems like a simple question. We have the number of ballots, but what belongs in the denominator? This becomes a politically contested question with important implications.
+
+- Everyone old enough to vote? (`VAP`)
+- Everyone legally eligible to vote? (`VEP`)
+- Everyone who tells a survey that they voted? (`ANES.Est`)
+- Everyone who is living in the United States?
+
+Those are not the same quantities. What do you predict will happen when we compare them?
+
+## Looking at datasets
+
+We can also look at the whole dataset using `view`. 
+
+```{r}
+view(df)
+```
+
+You'll notice that this data is arranged in a rectangular format, with each row showing a different election year and each column representing a different characteristic of that election. Datasets are always structured this way--- cases (or units) will form the rows, and the characteristics of those cases-- or variables--- will form the columns. Unlike working with spreadsheets, this structure is always assumed for datasets.
+
+Another way to look at a data object is to `glimpse` -- which shows the observations for each variable.  Note that when you `glimpse` a dataset the columns will become rows.
+
+```{r}
+glimpse(df)
+```
+
+If you just want to take a look at the first few rows of all the variables we can also take a look using `head` -- i.e., header.
+
+```{r}
+head(df)
+```
+
+For any named variable, we can also access it by referencing the variable directly:
+
+```{r}
+df$ANES.Est
+```
+
+Note that the ANES data is missing for midterm elections after 2002 because the ANES discontinued its midterm time-series studies after 2002.
+In R, missing data is coded as `NA`
+
+## New Objects
+
+R allows you to define anything as a new object that is saved in the local memory.  
+If I want to create a new variable that is the turnout using the voting eligible population we can use:
+
+```{r}
+VEPturnout = df$Total.Ballots.Counted/df$VEP
+```
+
+Note where this lives!
+
+Let's redo to put it into `df` (more on this next time as there are several ways to do this).
+
+```{r}
+df$VEPturnout = df$Total.Ballots.Counted/df$VEP
+```
+
+Always check to make sure it looks right...
+```{r}
+df$VEPturnout
+```
+
+*Quick Exercise* Now let's do the same to create a variable for turnout using Voting Age population.
+
+```{r}
+# INSERT CODE HERE
+```
+
+
+If I want to create a copy of the entire dataset for some reason, I can do:
+
+```{r}
+copy.df = df
+```
+
+
+## Filter and Select
+
+In exploring data, many times we want to look at smaller parts of the dataset. 
+There are two commands we'll introduce today and review again next time to help with this.
+
+\-`filter` selects only those cases or rows that meet some logical criteria.
+
+\-`select` selects only those variables or columns that meet some criteria
+
+For more on these, please see this [vignette](https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html).
+
+Let's just inspect the data for all of the variables we have related to the 2024 elections.
+
+```{r}
+df %>%
+  filter(year == 2024)
+```
+
+What's that weird looking `%>%` thing? 
+That's called a pipe. 
+This is how we chain commands together in R. Think of it as saying "and then" to R. In the above case, we said, take the data *and then* filter it to contain only observations related to the year 2024.
+
+In words, the command says the following:
+
+Take the dataframe `df` _and then_ filter it to just those cases where `year` is equal to 2024. 
+Notice the "double equals" sign, that's a logical operator asking if `year` is equal to 2024 or not.
+
+Question, are we saving this for future use?  
+
+*Quick Exercise* Create a new object containing all of the data from 2024 in a new object called `df2024`:
+
+```{r}
+# INSERT CODE HERE
+```
+
+`filter` takes logical tests as its argument. The code `year == 2024` is a logical statement that will be true of just one case in the dataset--when the year is 2024. The `==` is a logical test, asking if this is equal to that. Other common logical and relational operators for R include:
+
+-   `>`, `<`: greater than, less than
+-   `>=`, `<=`: greater than or equal to, less than or equal to
+-   `!`: not, as in `!=` not equal to
+-   `&`: AND
+-   `|`: OR
+
+Many times, we don't want to see everything -- perhaps we want to choose a few variables. 
+`select` allows us to select only the variables we want. 
+In this case, the VEP, VAP, and total ballots counted.
+
+```{r}
+df2024 %>%
+  select(year, Total.Ballots.Counted, VAP, VEP)
+```
+
+How big is the difference?
+
+```{r}
+df2024$VAP - df2024$VEP
+```
+
+Why? We can always use R as a calculator:
+
+```{r}
+df2024$Noncit + df2024$Felons - df2024$Overseas
+```
+
+Note that we can also combine these tools.
+For example, we can use `&` to look at all of the recent elections from 2014 through 2020:
+
+```{r}
+df %>%
+  filter(year >= 2014 & year <= 2020) %>%
+  select(year, VAPturnout, VEPturnout, ANES.Est)
+```
+
+What pattern do you see in turnout across presidential and midterm elections? 
+What do you notice about the ANES estimates?
+
+We can use `|` when we want observations that meet any one of several conditions. This selects the three most recent presidential elections:
+
+```{r}
+df %>%
+  filter(year == 2016 | year == 2020 | year == 2024) %>%
+  select(year, VAPturnout, VEPturnout, ANES.Est)
+```
+
+*Quick Exercise* Use `|` to select the 2014, 2018, and 2022 midterm elections. Show `year`, `VAPturnout`, `VEPturnout`, and `ANES.Est`.
+
+```{r}
+# INSERT CODE HERE
+```
+
+
+## Summarizing Data
+
+There are lots of ways to summarize data and we do so using functions.
+One way is to use functions like `mean` and `median` applied directly to a variable in a dataset.
+
+Let's use the variables we created:
+
+```{r}
+mean(df$VEPturnout)
+mean(df$VAPturnout)
+```
+
+Now let's compare to the estimate based on survey self-reports in the American National Election Study:
+
+```{r}
+mean(df$ANES.Est)
+```
+
+What? That does not look like a number...
+
+```{r}
+# INSERT CODE HERE
+```
+
+Rather than doing things one at a time, we can also use the `summarize` command. 
+Inside that command, we tell R two things: what to call the new variable we're creating, and what numerical summary we would like using the named tibble. 
+The code below summarizes the average turnout estimates from the American National Election Study.
+
+
+```{r}
+df%>%
+  summarize(AvgANES = mean(ANES.Est, na.rm = TRUE))
+```
+
+This seems far clunkier than before!  
+But we use summarize because we can do multiple at once:
+
+```{r}
+df%>%
+  summarize(AvgVAP = mean(VAPturnout),
+            AvgVEP = mean(VEPturnout))
+```
+
+We can also combine commands, so that we do multiple summaries at the same time to see what percentage of VAP each of the breakouts is.  
+
+```{r}
+df2024 %>%
+  summarize(
+    NoncitizenPct = Noncit / VAP,
+    FelonPct = Felons / VAP,
+    OverseasPct = Overseas / VAP
+  )
+```
+
+We can also multiply by 100 if we want to make it prettier...
+
+```{r}
+df2024 %>%
+  summarize(
+    NoncitizenPct = 100 * Noncit / VAP,
+    FelonPct = 100 * Felons / VAP,
+    OverseasPct = 100 * Overseas / VAP
+  )
+```
+
+Now let's compare all three measures of turnout:
+
+```{r}
+df %>%
+  summarize(AvgANES = mean(ANES.Est,na.rm=TRUE),
+            AvgVEP = mean(???),
+            AvgVAP = mean(???))
+```
+
+We can also combine this with the filter we learned about earlier to see if this has changed over time?
+
+```{r}
+df%>%
+  filter(year < 2010) %>%
+  summarize(AvgVEPturnout = mean(VEPturnout, na.rm = TRUE))
+```
+
+Versus:
+
+```{r}
+df%>%
+  filter(year >= 2010) %>%
+  summarize(AvgVEPturnout = mean(VEPturnout, na.rm = TRUE))
+```
+
+*Quick Exercise* How does that compare with the turnout estimate using the ANES? 
+
+```{r}
+df %>%
+  filter(year < 2010) %>%
+  summarize(AvgANES = mean(XXX))
+```
+
+```{r}
+df %>%
+  filter(year >= 2010) %>%
+  summarize(AvgANES = mean(XXX))
+```
+
+THINK! Is that a fair comparison?  What is going on given what we saw in the data itself?
+
+What do you observe?  Do you believe that? What might give you pause about that conclusion?
+
+## Challenge yourself?
+
+With these tools you can answer a lot of descriptive questions: 
+- Is turnout increasing over time? If so, by how much?
+- Does it vary between presidential and midterm elections? If so, by how much?
+
+How could you use filter, select and the ability to create new datsets to do this?  Based on this, what do you expect turnout in 2026 to be?
+
+
+How could you use these tools to determine differences between midterm and presidential elections? Or over time? If you had to predict what turnout in 2026 would be, how would you do that?
+
+## New R Functions
+
+| Function | What it does |
+|---|---|
+| `library()` | Loads an installed R package for the current session. |
+| `getwd()` | Shows the working directory where R is currently looking for files. |
+| `setwd()` | Changes the working directory where R looks for files. |
+| `read.csv()` | Reads a comma-delimited data file into R. |
+| `names()` | Shows the names of the variables in a dataset. |
+| `view()` | Opens the entire dataset in RStudio's data viewer. |
+| `glimpse()` | Provides a compact look at the variables and observations in a dataset. |
+| `head()` | Shows the first few rows of a dataset. |
+| `c()` | Combines values into a collection. |
+| `filter()` | Selects rows that meet specified conditions. |
+| `select()` | Selects variables, or columns, from a dataset. |
+| `summarize()` | Calculates a summary of a dataset or variable. |
+| `mean()` | Calculates the average of a variable. |
+| `median()` | Calculates the median of a variable. |
+| `%>%` | Passes the result of one command to the next command: "and then." |
+
+## Works Cited
+
+### Data
+
+American National Election Studies. “ANES Guide: Voter Turnout.”
+[https://electionstudies.org/data-tools/anes-guide/anes-guide.html?chart=turnout](https://electionstudies.org/data-tools/anes-guide/anes-guide.html?chart=turnout).
+
+McDonald, Michael P. “United States Voter Turnout.” University of Florida
+Election Lab. [https://election.lab.ufl.edu/voter-turnout/](https://election.lab.ufl.edu/voter-turnout/).
+The course file `turnout.csv` combines turnout, voting-age population,
+voting-eligible population, and eligibility-component estimates from these
+sources; its 2024 administrative values remain provisional.
+
+### Writings and Documentation
+
+Cassidy, John. 2013. “The Reinhart and Rogoff Controversy: A Summing Up.”
+*The New Yorker*, April 26.
+[https://www.newyorker.com/news/john-cassidy/the-reinhart-and-rogoff-controversy-a-summing-up](https://www.newyorker.com/news/john-cassidy/the-reinhart-and-rogoff-controversy-a-summing-up).
+
+Lewis, Dyani. 2021. “Autocorrect Errors in Excel Still Creating Genomics
+Headache.” *Nature*, August 13.
+[https://doi.org/10.1038/d41586-021-02211-4](https://doi.org/10.1038/d41586-021-02211-4).
+
+Phillips, Nicky. 2017. “Jennifer Byrne: Error Sleuth.” In “Nature’s 10: Ten
+People Who Mattered This Year.” *Nature*.
+[https://www.nature.com/immersive/d41586-017-07763-y/index.html](https://www.nature.com/immersive/d41586-017-07763-y/index.html).
+
+Plumer, Brad. 2013. “Is the Evidence for Austerity Based on an Excel
+Spreadsheet Error?” *The Washington Post*, April 16.
+[https://www.washingtonpost.com/news/wonk/wp/2013/04/16/is-the-best-evidence-for-austerity-based-on-an-excel-spreadsheet-error/](https://www.washingtonpost.com/news/wonk/wp/2013/04/16/is-the-best-evidence-for-austerity-based-on-an-excel-spreadsheet-error/).
+
+Thomas Jr., Landon. 2010. “In Ireland, a Picture of the High Cost of Austerity.”
+*The New York Times*, June 28.
+[https://www.nytimes.com/2010/06/29/business/global/29austerity.html](https://www.nytimes.com/2010/06/29/business/global/29austerity.html).
+
+Wickham, Hadley, Romain François, Lionel Henry, Kirill Müller, and Davis Vaughan.
+“Introduction to dplyr.”
+[https://dplyr.tidyverse.org/articles/dplyr.html](https://dplyr.tidyverse.org/articles/dplyr.html).

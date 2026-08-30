@@ -1,0 +1,121 @@
+[
+  {
+    "objectID": "syllabus.html",
+    "href": "syllabus.html",
+    "title": "Syllabus",
+    "section": "",
+    "text": "Warning\n\n\n\nDraft. Aspects of this syllabus may change. Last update: August 30, 2026.\nAXLE: Social and Behavioral Sciences · CORE: LB–Inquiry Lab · Eligible for Public Policy Studies\nHow can we use polls to predict election outcomes? What is the impact of minimum wage laws on employment? How can we detect evidence of discrimination? When does a correlation indicate causation? This course will teach you how to address these and other social science questions through data analysis. The course will introduce basic principles of statistical inference and programming skills for data analysis with the goal of providing you with the foundation necessary to analyze data in your own research and to also become more informed and critical consumers of statistical claims made in the news media, in policy reports, and in academic research.\nI do not assume you know anything, but I do assume that you are curious, capable, and self-driven as you are a Commodore.\nI love this stuff. In part because I think what we are going to learn about is terribly important, perhaps moreso now than every before. Fundamentally, this class about making and evaluating arguments. It is a class about how, not what, to think about the world and it is a class that I hope will both empower you and also transform how you see and understand the world.\nA central thesis of this class is that to use data is to make an argument about the world – but an argument that follows some strict rules about the form that the argument takes and also uses language that contains meaning (e.g., correlation, regression). Data is often used to support different sides of an argument about the world, this class aspired to help you better interpret, evaluate, and make data-based claims.\nThis class is not about math, statistics, or programming; it is about developing critical thinking skills and empowering you with a set of skills to navigate our data-rich reality. I see data science as an endeavor that is based on thinking and creativity – identifying puzzles, questioning claims, figuring out how to answer questions with non-obvious answers.\nIt is also an ongoing quest that demands intellectual humility.\nWhile it would be hard to characterize Feynman as humble, his point about the epistemic humility that is required to be truly scientific is worth noting as it is a perspective that I hope this course take seriously."
+  },
+  {
+    "objectID": "syllabus.html#who-should-and-should-not-take-this-course",
+    "href": "syllabus.html#who-should-and-should-not-take-this-course",
+    "title": "Syllabus",
+    "section": "Who Should and Should Not Take This Course",
+    "text": "Who Should and Should Not Take This Course\nPSCI 2300 is an introductory statistics and data analysis course, and I encourage students who take this course to continue using statistics. In today’s information-overloaded world, data are available everywhere and the role of statistics is rapidly increasing in academia, business, medicine, public policy, and many other parts of society. I strongly believe that it is an essential skill that everyone benefits from. To quote a headline from The New York Times: “For Today’s Graduate, Just One Word: Statistics.”\nHere is a checklist to consider when deciding whether to take this class:\n\nI am a political science major or someone who is interested in quantitative social science.\nIn addition to developing my knowledge of statistical concepts, I want to learn the computational skills needed to manipulate and analyze data using the open-source statistical language R.\nI am willing to spend time outside of classroom each week to keep up with the course materials.\nI would like to use statistics in a paper and/or job in the future.\nI understand that this is an introductory class so we will focus primarily, but not exclusively, on developing a conceptual understanding. We will not dive too deep into the mathematical foundations or advanced computational models and methods."
+  },
+  {
+    "objectID": "syllabus.html#contact-information",
+    "href": "syllabus.html#contact-information",
+    "title": "Syllabus",
+    "section": "Contact Information",
+    "text": "Contact Information\nProf. Josh Clinton: josh.clinton@vanderbilt.edu\nOffice Hours: Commons 342: Fridays, 9:00–11:00 a.m. (or by email)\nSign-Up for a 30-minute slot: https://calendly.com/josh-clinton/office-hours-jdc\nTeaching Assistant:\nAlexander Dean: alexander.r.dean@vanderbilt.edu\nOffice Hours: Mondays 9:00–11:00 a.m.\nSign-Up for a 15-minute slot (or 2 if needed): [TBA]\nWhen signing up for office hours please let us know what issue you are having. It also helps if you send us the code in advance so we can take a look at it before you arrive. It is very hard to debug code in real time so the more advance information we have on the issue you are having the better!"
+  },
+  {
+    "objectID": "syllabus.html#logistics",
+    "href": "syllabus.html#logistics",
+    "title": "Syllabus",
+    "section": "Logistics",
+    "text": "Logistics\nSessions:\nMW from 2:30 PM to 3:45 PM in Commons 335\nSessions will be interactive and vary over the course of the semester. The modal class will consist of me introducing concepts and code motivated by real-world questions and data and running the analyses in real-time with you running the same analyses in class. Every class will also have portions that will prompt you to write new code snippets building off of what we are covering to make sure you are tracking with what we are doing. I strongly believe in the importance of being question-driven, not data driven, in your analyses (for reasons that will become clear.). As a result, we will explore data science concepts motivated around trying to answer “real world” questions using actual, real data.\nAll session notes/code – and any data we will be using – will be posted in the appropriate folder prior to each class on the course website. Make sure you download all of this prior to class and place in the relevant folder. (If I must make last minute changes that require you to download new files in class, I will let you know.)\nWe meet 28 times. I am away the week of the midterm election because I have to project the 2026 midterm elections for NBC News and away Dec 2 because Vanderbilt has me giving a talk in Palm Beach on prediction markets. The TA will administer Midterm 2 in class on Nov 2 and oversee the working meeting on Dec 2; there is no class Nov 4 (you’re welcome!).\nTextbook: None. We will use notes I circulate based on content that either I or my various collaborators have created. There are some free O’Reilly books available via the Vanderbilt Library that may also be useful and which cover similar material. In general, they are more code-driven than question driven. Perhaps the closest to this class – which isn’t very close! – is R for Data Science by Wickham, Çetinkaya-Rundel, and Grolemund: https://r4ds.hadley.nz/\nSoftware: Yes please! Everything we use is freely available. I will circulate information on how to get everything installed if needed.\nWe will program using the open-source statistical software R: http://www.r-project.org.\nWe will interact with R using the IDE (Interactive Design Environment) called RStudio: https://posit.co/downloads/\nWe will create documents and code using Rmarkdown: https://rmarkdown.rstudio.com/"
+  },
+  {
+    "objectID": "syllabus.html#what-you-will-learn",
+    "href": "syllabus.html#what-you-will-learn",
+    "title": "Syllabus",
+    "section": "What you will learn",
+    "text": "What you will learn\nThis course carries Vanderbilt’s CORE Inquiry Lab (LB) designation. Inquiry Lab courses teach students how rigorous research is designed, conducted, analyzed, and communicated. Through the class survey project and the other analyses in this course, you will:\n\nformulate research questions and design and execute studies to investigate them;\nanalyze quantitative data using appropriate methods, interpret the results in context, and diagnose problems in data collection and analysis;\nvisualize results and communicate research findings effectively in writing and oral presentations; and\npractice ethical research and work effectively with others.\n\nThe course also satisfies the AXLE Social and Behavioral Sciences requirement for students governed by AXLE and may satisfy part of the Methods of Public Policy requirement for the Public Policy Studies major.\nBy the end of this course you will be able to:\n\nLoad, clean, and combine real data in R — and recognize the operations where data manipulation silently goes wrong.\nDescribe and visualize data to answer a specific question, honestly.\nQuantify uncertainty using resampling: confidence intervals, margins of error, and what they do and do not mean.\nReason about causal claims — what experiments can show, what observational data can and cannot support, and how to tell the difference.\nBuild and evaluate simple predictive models — regression, classification, and clustering — and know when they are being oversold.\nVerify analyses you did not write yourself — including output produced by AI tools. Modern tools will happily produce code and conclusions for you; this course teaches you to be the person in the room who can tell whether they are right."
+  },
+  {
+    "objectID": "syllabus.html#ai-policy",
+    "href": "syllabus.html#ai-policy",
+    "title": "Syllabus",
+    "section": "AI Policy",
+    "text": "AI Policy\nNo AI through Session 6. Do not use AI before Session 7. Never ever use AI for answering in-class questions. We will decide and discuss how to use AI on problem sets in Session 7 and we will actively use AI when analyzing the survey we field.\nThe rules for quizzes and exams are fixed: they are completed on paper, in class, closed-book, and without devices or AI."
+  },
+  {
+    "objectID": "syllabus.html#course-assessment",
+    "href": "syllabus.html#course-assessment",
+    "title": "Syllabus",
+    "section": "Course Assessment",
+    "text": "Course Assessment\nIt is my hope and expectation that anyone can be successful in this course if they put the work in and they are proactive with their learning. I know all of you want good grades, but you have to earn them – I cannot give you an A simply because you want to go to Law School. There is almost nothing I dislike more than dealing with grade complaints. If there is a mistake in grading – which is exceptionally rare – that is one thing, but if you are worried about your performance use the resources and assessments in the class to compensate for that. The TA and I are resources so use us - I do not enjoy giving bad grades, but I cannot give gifts. There is no hard curve in the class so how well you do is not a function of how well others do.\nIf you have/need additional accommodations please make sure that you take care of that through the Student Access office so that they can communicate directly with me.\n\n\n\nComponent\nWeight\n\n\n\n\nProblem sets (6, completion-graded, lowest dropped)\n10%\n\n\nQuizzes (6, in class, lowest two dropped)\n15%\n\n\nMidterm exams (2 × 15%)\n30%\n\n\nGroup project\n15%\n\n\nFinal exam (cumulative)\n30%\n\n\n\nClass Extra credit. Four ways to earn a little back: (1) Participation – up to 1% based on engagement in class – be active and take ownership of your education!; (2) Exams (possible) bonus items; (3) AI Fail — documented catches of an AI tool producing wrong output or interpretation: submit the prompt, the output, and your R analysis demonstrating the error; (4) DataViz Fail – an example of a bad visualization of a relationship, or a bad intereprtation of a visualization: submit the image/offensive interprtation and a memo explaining the error.\nProblem sets (10%). There are six, graded on good-faith completion — full credit for a serious attempt. If you get stuck, explain why you think it is wrong. Problem sets are deliberately low-stakes because they are practice - each one is followed by an in-class quiz based directly on the problem set so if you understand the problem set you will ace the quiz. I drop the lowest problem set – so each problem set is effectively 2% of your final grade.\nQuizzes (15%). Six short (~15 minute) paper-and-pencil quizzes at the start of class. Each quiz occurs on the day its problem set is due and is based directly on that problem set. Dates are in the schedule. Your lowest two quiz scores are dropped – no makeup quizzes.\nExams (60% total). Two in-class midterms (Wed Sep 30 and Mon Nov 2) and a cumulative final on Monday, December 14 at 3:00 p.m. (registrar-assigned slot). The TA will administer Midterm 2 while I am away for NBC election work. All exams are paper-and-pencil, closed-book, no devices. I will share practice problems so you have a sense of what to expect. Exams may include bonus items worth extra credit depending on the vibes of the class.\nGroup project (15%): design, analyze, and interpret an original survey. We will design, field, and analyze a survey in class. We will divide into teams, brainstorm, write questions, figure out an analysis plan, present and defend it, get data, analyze the data (perhaps using AI), interpret the results (using your brain), create a presentation (perhaps using AI), and then give it to class. There will be some sub-assignments along the way: a memo presenting and justifying the question wording and analysis plan, a presentation rubric, and a post-action report.\nFour graded components:\n\nProposed Question What to ask and why?\nWritten deliverable (memo + code): completion-graded; AI permitted with disclosure.\nPresentation: team grade against a rubric. Q&A follows each talk but is not scored.\nPost Action Report: short, in-class paper and pencil questions about your team’s project."
+  },
+  {
+    "objectID": "syllabus.html#notes-on-problem-sets",
+    "href": "syllabus.html#notes-on-problem-sets",
+    "title": "Syllabus",
+    "section": "Notes on Problem Sets",
+    "text": "Notes on Problem Sets\nFor problem sets you are required to submit an electronic copy of the Rmarkdown file and compiled output to Brightspace using xxx.Rmd and xxx.pdf respectively as file names where xxx is your VUID. Both must be submitted for credit!\nIf you worked with others on the problem set, note that on your submitted problem set. If you use AI (once permitted) note that as well (model-type).\nIn my opinion, problem sets present an opportunity for you to collaborate and work together. At the same time, there is a clear distinction between permissible collaboration and unacceptable plagiarism. Programming necessitates that you reach your own understanding of the problem and discover a path to its solution – talking things through can help you identify a reasonable solution and help you correct errors in your code. During this time, collaborations are permitted and encouraged. When it comes time to write the final code and analyses, however, such discussions are no longer appropriate: the code and writing must be your own. The same goes with AI. Once we discuss it in class you can use it to help figure out possible coding errors in the ways that we discuss, but never simply ask it to give you the answer – you are all better than that.\nDo not, under any circumstances, simply copy and paste another person’s code. Incorporating someone else’s code into your program in any form is a violation of academic regulations. Abetting plagiarism or unauthorized collaboration by sharing your code is also prohibited. Sharing code in digital form is an especially egregious violation: do not e-mail your code to anyone. Novices often have the misconception that copying and mechanically transforming a program (by rearranging independent code, renaming variables, or similar operations) makes it something different.\nIf you have any questions about these matters, please ask or consult the VU Honor System guidelines: https://www.vanderbilt.edu/student_handbook/the-honor-system/#statement-of-the-honor-code &gt;"
+  },
+  {
+    "objectID": "syllabus.html#course-norms",
+    "href": "syllabus.html#course-norms",
+    "title": "Syllabus",
+    "section": "Course norms",
+    "text": "Course norms\nPolitics is the subject of this course, and Fall 2026 is an election season. You are welcome to your political commitments — and this classroom evaluates analysis, not conclusions. The standard for every claim does not depend on the conclusion, but the method and process: what are the data, what was done, and does the evidence support it?\nFor session dates, topics, assessments, and course materials, see the Schedule."
+  },
+  {
+    "objectID": "syllabus.html#footnotes",
+    "href": "syllabus.html#footnotes",
+    "title": "Syllabus",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nFeynman, Richard P. 1955. “The Value of Science.” Engineering and Science 19 (3): 13–15; quotation on p. 14. Originally delivered at the autumn 1955 meeting of the National Academy of Sciences.↩︎\nPublic-domain photograph from Engineering and Science 23 (5), via Wikimedia Commons.↩︎"
+  },
+  {
+    "objectID": "lectures/02_intro_turnout/index.html",
+    "href": "lectures/02_intro_turnout/index.html",
+    "title": "Hello World! Intro to R, RStudio, and Working With Data",
+    "section": "",
+    "text": "View Lecture\nDownload the R Markdown file\nDownload the turnout data"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "PSCI 2300 — Data and Politics I: Computation and Visualization",
+    "section": "",
+    "text": "Instructor\nProf. Josh Clinton\n\n\nMeetings\nMonday & Wednesday, 2:30–3:45pm"
+  },
+  {
+    "objectID": "index.html#course-at-a-glance",
+    "href": "index.html#course-at-a-glance",
+    "title": "PSCI 2300 — Data and Politics I: Computation and Visualization",
+    "section": "",
+    "text": "Instructor\nProf. Josh Clinton\n\n\nMeetings\nMonday & Wednesday, 2:30–3:45pm"
+  },
+  {
+    "objectID": "index.html#what-this-course-is",
+    "href": "index.html#what-this-course-is",
+    "title": "PSCI 2300 — Data and Politics I: Computation and Visualization",
+    "section": "What this course is",
+    "text": "What this course is\nApplied, data-driven, research design into political, social, and economic questions using R. I do not assume that you have any prior programming or statistics, but I do assume that you are curious, capable, and self-driven because you are all Commodores! Fundamentally, this class about making and evaluating arguments using data. It is a class about how – not what – to think about the world and it is a class that I hope will empower and transform how you see and understand the world."
+  },
+  {
+    "objectID": "index.html#where-things-live",
+    "href": "index.html#where-things-live",
+    "title": "PSCI 2300 — Data and Politics I: Computation and Visualization",
+    "section": "Where things live",
+    "text": "Where things live\n\nThis website is the canonical home for the schedule, lecture materials, labs, code, and data. Bookmark it. The Schedule links to each session’s lecture, code, and data.\nBrightspace is used for grades, assignment submission, and readings that cannot be posted publicly."
+  },
+  {
+    "objectID": "schedule.html",
+    "href": "schedule.html",
+    "title": "Schedule",
+    "section": "",
+    "text": "The course meets Monday and Wednesday for 28 sessions. Available materials are linked from the corresponding session title below before class.\nQuizzes happen at the start of class on the dates marked. PS = problem set posted that day. Due dates are listed below and on the Syllabus."
+  },
+  {
+    "objectID": "schedule.html#problem-sets-and-quizzes",
+    "href": "schedule.html#problem-sets-and-quizzes",
+    "title": "Schedule",
+    "section": "Problem Sets and Quizzes",
+    "text": "Problem Sets and Quizzes\nEach quiz occurs at the start of class on the day its problem set is due and is based directly on that problem set.\n\n\n\nProblem set\nPosted\nDue\nQuiz\n\n\n\n\nPS1\nSep 2\nSep 9\nQuiz 1 · Sep 9\n\n\nPS2\nSep 14\nSep 21\nQuiz 2 · Sep 21\n\n\nPS3\nSep 28\nOct 5\nQuiz 3 · Oct 5\n\n\nPS4\nOct 12\nOct 19\nQuiz 4 · Oct 19\n\n\nPS5\nOct 19\nOct 26\nQuiz 5 · Oct 26\n\n\nPS6\nNov 11\nNov 18\nQuiz 6 · Nov 18"
+  }
+]
