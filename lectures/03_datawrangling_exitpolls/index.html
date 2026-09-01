@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="dcterms.date" content="2026-09-02">
+<meta name="description" content="Using the 2024 Cooperative Election Study to inspect, recode, and summarize survey data.">
 
-<title>Schedule – PSCI 2300 — Fall 2026</title>
+<title>Session 3. Data Wrangling and the Gender Gap – PSCI 2300 — Fall 2026</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -61,23 +63,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-03f9807de618bff308c2425e29cd4db3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-03f9807de618bff308c2425e29cd4db3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -109,7 +111,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="robots" content="noindex, nofollow">
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -119,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">PSCI 2300 — Fall 2026</span>
     </a>
   </div>
@@ -130,15 +132,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.html"> 
+    <a class="nav-link" href="../../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./syllabus.html"> 
+    <a class="nav-link" href="../../syllabus.html"> 
 <span class="menu-text">Syllabus</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./schedule.html" aria-current="page"> 
+    <a class="nav-link" href="../../schedule.html"> 
 <span class="menu-text">Schedule</span></a>
   </li>  
 </ul>
@@ -152,28 +154,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#problem-sets-and-quizzes" id="toc-problem-sets-and-quizzes" class="nav-link active" data-scroll-target="#problem-sets-and-quizzes">Problem Sets and Quizzes</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">Schedule</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title">Session 3. Data Wrangling and the Gender Gap</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
+<div>
+  <div class="description">
+    Using the 2024 Cooperative Election Study to inspect, recode, and summarize survey data.
+  </div>
+</div>
 
 
 <div class="quarto-title-meta">
 
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 2, 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -183,236 +190,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>The course meets Monday and Wednesday for 28 sessions. Available materials are linked from the corresponding session title below before class.</p>
-<p><strong>Quizzes</strong> happen at the start of class on the dates marked. <strong>PS</strong> = problem set posted that day. Due dates are listed below and on the <a href="./syllabus.html">Syllabus</a>.</p>
-<!-- This table matches Fall_2026/Lectures/README.md. -->
-<table class="schedule-table table-striped table-hover caption-top table">
-<thead>
-<tr class="header">
-<th>Date</th>
-<th>Session</th>
-<th>Assessment</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Aug 26 W</td>
-<td>Introduction: Why This? Why Me?</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Aug 31 M</td>
-<td><a href="./lectures/02_intro_turnout/index.html">Hello World! Intro to R, RStudio, and Working With Data</a></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>Sep 2 W</td>
-<td><a href="./lectures/03_datawrangling_exitpolls/index.html">Data Wrangling: Surveying the Gap</a></td>
-<td>PS1 posted</td>
-</tr>
-<tr class="even">
-<td>Sep 7 M</td>
-<td>WORKSHOP: Wrangling with Authenticity</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>Sep 9 W</td>
-<td>Univariate Description: Electoral Competitiveness &amp; Himmicanes?</td>
-<td><strong>Quiz 1</strong> · PS1 due</td>
-</tr>
-<tr class="even">
-<td>Sep 14 M</td>
-<td>Resampling Uncertainty: Red beats Blue?</td>
-<td>PS2 posted</td>
-</tr>
-<tr class="odd">
-<td>Sep 16 W</td>
-<td>Leveraging AI: What it is, How it helps, How it hurts, How to use</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Sep 21 M</td>
-<td>Principles of DataViz: Do you launch?</td>
-<td><strong>Quiz 2</strong> · PS2 due</td>
-</tr>
-<tr class="odd">
-<td>Sep 23 W</td>
-<td>Univariate Visualizing: Insurance Fraud and Polling Error</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Sep 28 M</td>
-<td>Conditional Visualizing: Plotting Polls</td>
-<td>PS3 posted</td>
-</tr>
-<tr class="odd">
-<td>Sep 30 W</td>
-<td><strong>Midterm 1</strong></td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Oct 5 M</td>
-<td>Randomized Experiments &amp; Causal Effects: Turning Out Social Pressure</td>
-<td><strong>Quiz 3</strong> · PS3 due</td>
-</tr>
-<tr class="odd">
-<td>Oct 7 W</td>
-<td>WORKSHOP: Auditing discrimination</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Oct 12 M</td>
-<td>Observational Causality?: Home Fields, Minimum Wages, Expanding Medicaid</td>
-<td>PS4 posted</td>
-</tr>
-<tr class="odd">
-<td>Oct 14 W</td>
-<td>Correlation &amp; Regression: Floridian Butterfly Ballots</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Oct 19 M</td>
-<td>Regression &amp; prediction: Launches, Ballots, and Olympic Sprinters</td>
-<td><strong>Quiz 4</strong> · PS4 due · PS5 posted</td>
-</tr>
-<tr class="odd">
-<td>Oct 21 W</td>
-<td>Predicting Elections: Aggregating Polls?</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Oct 26 M</td>
-<td>Prediction Markets: Aggregating Wisdom?</td>
-<td><strong>Quiz 5</strong> · PS5 due</td>
-</tr>
-<tr class="odd">
-<td>Oct 28 W</td>
-<td>WORKSHOP: Writing a survey instrument</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Nov 2 M</td>
-<td><strong>Midterm 2</strong></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>Nov 4 W</td>
-<td><strong>No class — election week</strong></td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Nov 9 M</td>
-<td>Multiple Regression: Catching the Google Flu</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>Nov 11 W</td>
-<td>Multiple Regression: More than a crosstab</td>
-<td>PS6 posted</td>
-</tr>
-<tr class="even">
-<td>Nov 16 M</td>
-<td>Logits and LASSOs: Who you with?</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>Nov 18 W</td>
-<td>Text As Data: Who wrote the <em>Federalist Papers</em>?</td>
-<td><strong>Quiz 6</strong> · PS6 due</td>
-</tr>
-<tr class="even">
-<td>Nov 23 M</td>
-<td><strong>No class — Thanksgiving break</strong></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>Nov 25 W</td>
-<td><strong>No class — Thanksgiving break</strong></td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Nov 30 M</td>
-<td>WORKSHOP: Survey Data and weighting</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>Dec 2 W</td>
-<td>WORKSHOP: Analysis, Interpretation, Visualization</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Dec 7 M</td>
-<td>Team presentations</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>Dec 9 W</td>
-<td>Wrap-Up Review</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Dec 14 M, 3:00 p.m.</td>
-<td><strong>Final exam</strong></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<section id="problem-sets-and-quizzes" class="level2">
-<h2 class="anchored" data-anchor-id="problem-sets-and-quizzes">Problem Sets and Quizzes</h2>
-<p>Each quiz occurs at the start of class on the day its problem set is due and is based directly on that problem set.</p>
-<table class="assessment-schedule-table table-striped table-hover caption-top table">
-<thead>
-<tr class="header">
-<th>Problem set</th>
-<th>Posted</th>
-<th>Due</th>
-<th>Quiz</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>PS1</td>
-<td>Sep 2</td>
-<td>Sep 9</td>
-<td>Quiz 1 · Sep 9</td>
-</tr>
-<tr class="even">
-<td>PS2</td>
-<td>Sep 14</td>
-<td>Sep 21</td>
-<td>Quiz 2 · Sep 21</td>
-</tr>
-<tr class="odd">
-<td>PS3</td>
-<td>Sep 28</td>
-<td>Oct 5</td>
-<td>Quiz 3 · Oct 5</td>
-</tr>
-<tr class="even">
-<td>PS4</td>
-<td>Oct 12</td>
-<td>Oct 19</td>
-<td>Quiz 4 · Oct 19</td>
-</tr>
-<tr class="odd">
-<td>PS5</td>
-<td>Oct 19</td>
-<td>Oct 26</td>
-<td>Quiz 5 · Oct 26</td>
-</tr>
-<tr class="even">
-<td>PS6</td>
-<td>Nov 11</td>
-<td>Nov 18</td>
-<td>Quiz 6 · Nov 18</td>
-</tr>
-</tbody>
-</table>
+<p><a href="lecture.html" class="btn btn-primary" role="button">View Lecture</a></p>
+<p><a href="Session3_DataWrangling_ExitPolls.Rmd" class="btn btn-outline-secondary" role="button" download="">Download the R Markdown file</a></p>
+<p><a href="ces2024.csv" class="btn btn-outline-secondary" role="button" download="">Download the CES 2024 data</a></p>
+<p><a href="CES2024_Lecture3_Subset_Codebook.html" class="btn btn-outline-secondary" role="button">View the CES subset codebook</a></p>
 
 
 <!-- -->
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -867,70 +652,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Schedule"</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>The course meets Monday and Wednesday for 28 sessions. </span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>Available materials are linked from the corresponding session title below before class.</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>**Quizzes** happen at the start of class on the dates marked. </span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>**PS** = problem set posted that day. Due dates are listed below and on the</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Syllabus</span><span class="co">](syllabus.qmd)</span>.</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- This table matches Fall_2026/Lectures/README.md. --&gt;</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Date <span class="pp">|</span> Session <span class="pp">|</span> Assessment <span class="pp">|</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Aug 26 W <span class="pp">|</span> Introduction: Why This? Why Me? <span class="pp">|</span> <span class="pp">|</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Aug 31 M <span class="pp">|</span> <span class="co">[</span><span class="ot">Hello World! Intro to R, RStudio, and Working With Data</span><span class="co">](lectures/02_intro_turnout/index.qmd)</span> <span class="pp">|</span> <span class="pp">|</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Sep 2 W <span class="pp">|</span> <span class="co">[</span><span class="ot">Data Wrangling: Surveying the Gap</span><span class="co">](lectures/03_datawrangling_exitpolls/index.qmd)</span> <span class="pp">|</span> PS1 posted <span class="pp">|</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Sep 7 M <span class="pp">|</span> WORKSHOP: Wrangling with Authenticity <span class="pp">|</span> <span class="pp">|</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Sep 9 W <span class="pp">|</span> Univariate Description: Electoral Competitiveness <span class="sc">\&amp;</span> Himmicanes? <span class="pp">|</span> **Quiz 1** · PS1 due <span class="pp">|</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Sep 14 M <span class="pp">|</span> Resampling Uncertainty: Red beats Blue? <span class="pp">|</span> PS2 posted   <span class="pp">|</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Sep 16 W <span class="pp">|</span> Leveraging AI: What it is, How it helps, How it hurts, How to use <span class="pp">|</span> <span class="pp">|</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Sep 21 M <span class="pp">|</span> Principles of DataViz: Do you launch? <span class="pp">|</span> **Quiz 2** · PS2 due   <span class="pp">|</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Sep 23 W <span class="pp">|</span> Univariate Visualizing: Insurance Fraud and Polling Error <span class="pp">|</span> <span class="pp">|</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Sep 28 M <span class="pp">|</span> Conditional Visualizing: Plotting Polls <span class="pp">|</span> PS3 posted  <span class="pp">|</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Sep 30 W <span class="pp">|</span> **Midterm 1** <span class="pp">|</span> <span class="pp">|</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Oct 5 M <span class="pp">|</span> Randomized Experiments <span class="sc">\&amp;</span> Causal Effects: Turning Out Social Pressure <span class="pp">|</span> **Quiz 3** · PS3 due <span class="pp">|</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Oct 7 W <span class="pp">|</span> WORKSHOP: Auditing discrimination <span class="pp">|</span> <span class="pp">|</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Oct 12 M <span class="pp">|</span> Observational Causality?: Home Fields, Minimum Wages, Expanding Medicaid <span class="pp">|</span> PS4 posted <span class="pp">|</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Oct 14 W <span class="pp">|</span> Correlation &amp; Regression: Floridian Butterfly Ballots <span class="pp">|</span> <span class="pp">|</span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Oct 19 M <span class="pp">|</span> Regression <span class="sc">\&amp;</span> prediction: Launches, Ballots, and Olympic Sprinters <span class="pp">|</span> **Quiz 4** · PS4 due · PS5 posted <span class="pp">|</span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Oct 21 W <span class="pp">|</span> Predicting Elections: Aggregating Polls? <span class="pp">|</span> <span class="pp">|</span></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Oct 26 M <span class="pp">|</span> Prediction Markets: Aggregating Wisdom? <span class="pp">|</span> **Quiz 5** · PS5 due <span class="pp">|</span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Oct 28 W <span class="pp">|</span> WORKSHOP: Writing a survey instrument <span class="pp">|</span>  <span class="pp">|</span></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Nov 2 M <span class="pp">|</span> **Midterm 2** <span class="pp">|</span>  <span class="pp">|</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Nov 4 W <span class="pp">|</span> **No class — election week** <span class="pp">|</span>  <span class="pp">|</span></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Nov 9 M <span class="pp">|</span> Multiple Regression: Catching the Google Flu <span class="pp">|</span>  <span class="pp">|</span></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Nov 11 W <span class="pp">|</span> Multiple Regression: More than a crosstab <span class="pp">|</span> PS6 posted <span class="pp">|</span></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Nov 16 M <span class="pp">|</span> Logits and LASSOs: Who you with? <span class="pp">|</span> <span class="pp">|</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Nov 18 W <span class="pp">|</span> Text As Data: Who wrote the _Federalist Papers_? <span class="pp">|</span> **Quiz 6** · PS6 due <span class="pp">|</span></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Nov 23 M <span class="pp">|</span> **No class — Thanksgiving break** <span class="pp">|</span> <span class="pp">|</span></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Nov 25 W <span class="pp">|</span> **No class — Thanksgiving break** <span class="pp">|</span> <span class="pp">|</span></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Nov 30 M <span class="pp">|</span> WORKSHOP: Survey Data and weighting <span class="pp">|</span> <span class="pp">|</span></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Dec 2 W <span class="pp">|</span> WORKSHOP: Analysis, Interpretation, Visualization <span class="pp">|</span>  <span class="pp">|</span></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Dec 7 M <span class="pp">|</span> Team presentations <span class="pp">|</span>  <span class="pp">|</span></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Dec 9 W <span class="pp">|</span> Wrap-Up Review <span class="pp">|</span>  <span class="pp">|</span></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Dec 14 M, 3:00 p.m. <span class="pp">|</span> **Final exam** <span class="pp">|</span>  <span class="pp">|</span></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>: {.schedule-table .striped .hover}</span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="fu">## Problem Sets and Quizzes</span></span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>Each quiz occurs at the start of class on the day its problem set is due and</span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>is based directly on that problem set.</span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Problem set <span class="pp">|</span> Posted <span class="pp">|</span> Due <span class="pp">|</span> Quiz <span class="pp">|</span></span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|---|</span></span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> PS1 <span class="pp">|</span> Sep 2 <span class="pp">|</span> Sep 9 <span class="pp">|</span> Quiz 1 · Sep 9 <span class="pp">|</span></span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> PS2 <span class="pp">|</span> Sep 14 <span class="pp">|</span> Sep 21 <span class="pp">|</span> Quiz 2 · Sep 21 <span class="pp">|</span></span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> PS3 <span class="pp">|</span> Sep 28 <span class="pp">|</span> Oct 5 <span class="pp">|</span> Quiz 3 · Oct 5 <span class="pp">|</span></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> PS4 <span class="pp">|</span> Oct 12 <span class="pp">|</span> Oct 19 <span class="pp">|</span> Quiz 4 · Oct 19 <span class="pp">|</span></span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> PS5 <span class="pp">|</span> Oct 19 <span class="pp">|</span> Oct 26 <span class="pp">|</span> Quiz 5 · Oct 26 <span class="pp">|</span></span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> PS6 <span class="pp">|</span> Nov 11 <span class="pp">|</span> Nov 18 <span class="pp">|</span> Quiz 6 · Nov 18 <span class="pp">|</span></span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>: {.assessment-schedule-table .striped .hover}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Session 3. Data Wrangling and the Gender Gap"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2026-09-02"</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "Using the 2024 Cooperative Election Study to inspect, recode, and summarize survey data."</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">View Lecture</span><span class="co">](lecture.html)</span>{.btn .btn-primary role="button"}</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Download the R Markdown file</span><span class="co">](Session3_DataWrangling_ExitPolls.Rmd)</span>{.btn .btn-outline-secondary role="button" download=""}</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Download the CES 2024 data</span><span class="co">](ces2024.csv)</span>{.btn .btn-outline-secondary role="button" download=""}</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">View the CES subset codebook</span><span class="co">](CES2024_Lecture3_Subset_Codebook.html)</span>{.btn .btn-outline-secondary role="button"}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">

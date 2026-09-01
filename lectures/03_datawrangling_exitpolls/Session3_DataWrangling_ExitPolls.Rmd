@@ -1,0 +1,632 @@
+---
+title: "Session 3. Data Wrangling and the Gender Gap"
+author: "Prof. Josh Clinton"
+institute: "Vanderbilt University"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+# Learning Objectives
+
+- Use polling data to describe what happened in the 2024 election.
+
+- Use `count`, `mutate`, `if_else`, and `summarize` to answer a substantive political question.
+
+- Learn why we must inspect and sometimes recode variables before analyzing them.
+
+- Calculate a descriptive "gender gap" in presidential vote choice.
+
+- Understand why a difference between men and women does **not** mean that gender caused the difference.
+
+- Think about the data we have available and its limitations. Your conclusions are only as good as the data you have!
+
+The main question for today is:
+
+> What can the 2024 Cooperative Election Study tell us about the gender gap in presidential voting, and what can it **not** tell us?
+
+# Polls \& Exit Polls in US Elections
+
+Elections determine who wins and loses, but not why. To try to figure out the meaning of elections we often turn to polling. We can use polling results to compare the responses of people supporting the winners and losers, as well as the reasons they say they voted the way they did.
+
+Polls are also important for trying to understand support for each candidate. Because we have a secret ballot, even if we can determine who votes, we cannot determine how people vote. As a result, people turn to polls to make statements about whether a candidate is more likely to be supported by some types of voters than others. Do younger voters vote differently than older voters? Those with college degrees versus those without? These types of questions motivate a great deal of political punditry.
+
+When we think about election polling, we can distinguish ordinary pre-election polls from Exit Polls. Ordinary pre-election polls are the polls discussed before an election by news organizations, universities, pollsters, and candidates. They try to get a sense of where the race is and often form the basis of (too) much media coverage.
+
+Exit Polls are conducted on or immediately before Election Day and are covered by news organizations on Election Night as being _THE_ official account of what happened. They are used to help interpret an election -- why voters voted the way they did and whether some types of voters were more likely to support one candidate than another. Intelligent prognosticators do not use them to project who will win (at least not at NBC); that is what actual voting data is for.
+
+What is the difference between a pre-election poll and an Exit Poll? Increasingly little, to be honest. Exit Polls include some Election Day interviews, but with the rise of early and mail voting they have been forced to look more like ordinary surveys than they did in the past.
+
+<div style="text-align:center">
+![Filling Out an Exit Poll](figs/ExitPollImage.png){width=50%}
+</div>
+
+For those who are interested, [this report](https://www.aei.org/research-products/report/the-exit-polls-a-history-and-trends-over-time-1972-2020/) provides a history of Exit Polls. This will not be on the exam, but it gives useful context.
+
+Here is a visualization of the [2024 National Exit Poll Results](https://www.nbcnews.com/politics/2024-elections/exit-polls). We are going to ask some of the same questions that the Election Night team was trying to answer, but we will use a public academic survey.
+
+The data we will analyze come from the Cooperative Election Study (CES), a survey conducted collectively by academics across the country. We will not focus on all of the details yet. We are going to work with a subset containing all 60,000 respondents but only seven variables. I have saved you some work by cleaning some, but not all, of the data. (Ugh...)
+
+The survey contains specific questions and responses, but responses are sometimes recorded as a `1`, `3`, or `4`. Interpreting those numbers requires comparing them to the question and response categories in the codebook. This is why we must always look before analyzing.
+
+# What Kind of Question Are We Asking?
+
+There are several different ways we might use these data.
+
+*Predictive:* Use the data to predict an outcome of interest.
+
+- Who will win the election?
+- What predicts whether an individual supports Harris or Trump?
+
+*Descriptive:* Use the data to describe an event or a group of people.
+
+- What proportion of respondents report voting for Harris or Trump?
+- How does reported support vary by gender, age, or education?
+- How do Harris and Trump voters vary in their political opinions?
+
+*Causal:* Use the data to determine whether changing one thing would change another.
+
+- Did some experience or characteristic cause someone to support a candidate?
+
+Today we are doing **descriptive** analysis. We will compare reported vote choice across gender categories. We are not estimating what would happen if we somehow changed a person's gender while leaving everything else the same.
+
+> **The refrain for today:** We are comparing groups, not estimating the causal effect of gender.
+
+A difference between groups can be politically important without being causal. But it is important that our words accurately describe what we have learned.
+
+# Load and Look at the Data
+
+Let's get rolling.
+
+```{r setup, message=FALSE}
+library(tidyverse)
+
+ces = read.csv("ces2024.csv")
+```
+
+In most of the work we will do in PSCI 2300, rows refer to observations -- here, survey respondents -- and columns refer to characteristics of those observations, which we call variables.
+
+```{r}
+dim(ces)
+```
+
+Whenever we do anything using data, we should first inspect the data to make sure it makes sense. The function `glimpse` gives us a quick summary by printing the variables and the first few observations to the screen.
+
+```{r}
+glimpse(ces)
+```
+What can we learn immediately?
+
+- There are `r nrow(ces)` respondents and `r ncol(ces)` variables.
+- Some variables contain numbers (`<int>`) and some contain strings of letters (`<chr>`).
+- Some variables contain missing data, denoted by `NA` in R.
+- Some numeric variables are really category labels. The number `2` for education is not mathematically twice the number `1`!
+
+A second way to get a sense of the data is to use `summary`.
+
+```{r}
+summary(ces)
+```
+
+This reveals a potential problem. `TS_g2024` has a value of `-99`, even though the meaningful voting values are `1` (a validated record of voting) and `0` (matched to the voter file but no record of voting). The code `-99` means that the respondent could not be matched to the voter file.
+
+R does not know that. R will happily average the value `-99` as if it were a meaningful number. The computer will do exactly what we ask, even if what we ask makes no sense.
+
+# Renaming variables using `rename`
+
+It is always good practice to have variables that have meaningful names so that you can determine what it contains without referring to some additional document.  The `rename` function allow us to do this. Several of our variables have very bad names. It is always good practice to label your variables so they are easily understood! 
+
+Bad names lead to errors -- especially when you are juggling several projects and/or need to pass the project off to someone else. Get in the habit now.
+
+```{r,eval = FALSE}
+ces |>
+  rename(selfreport_voted = CC24_401,
+         validated_voted = TS_g2024)
+```
+
+What did this do to `ces`?  Nothing.  If we want the changes to stick we need to define either a new tibble or else redefine `ces` to be the renamed tibble as follows.  Changes must be assigned if we want them to stick!
+
+```{r}
+ces = ces |>
+  rename(selfreport_voted = CC24_401,
+         validated_voted = TS_g2024)
+```
+
+Usually we need to `rename` a variable only when we are first loading in a dataset.  And in this class you will likely never have to `rename` as we usually -- but not always -- give you clean data that is sensibly named.
+
+# Creating new variables using `mutate`
+
+We do not have an age variable here.  That is going to be a problem.  But we do have birth year (`birthyr`) that we can use to calculate age.  
+
+```{r}
+ces = ces |>
+  mutate(age = 2024 - birthyr)
+```
+
+Check to see if it was created in the Global Environment window!
+
+# Basic Summaries Using `count`
+
+For variables that take on a small number of discrete values, it is helpful to see how frequently each value occurs. We can use `count` to do so.
+
+The R pipe `|>` should be read as "and then." In English, the following says: start with the `ces` data **and then** count each value of `presvote`.
+
+NOTE: R is case-sensitive
+
+```{r, eval=FALSE}
+ces |>
+  select(Presvote)
+```
+
+Try this...
+
+```{r}
+ces |>
+  count(presvote)
+```
+
+This is an important reminder to inspect your data before doing analysis. The data include Harris and Trump voters, people who selected other candidates, people who did not vote for president, and people whose vote choice is missing.
+
+We can also inspect the gender variable. The codebook tells us that `1` is Man, `2` is Woman, `3` is Non-binary, and `4` is Other.
+
+```{r}
+ces |>
+  count(gender4)
+```
+
+Notice how much data are behind each category. Comparisons involving small groups will be more uncertain. This does not make those groups unimportant; it means the survey gives us less information about them.
+
+*Quick Exercise:* Use `count` to inspect the possible values of `pid3`. Are the values stored as numbers or as character labels?
+
+```{r, eval=FALSE}
+# INSERT CODE HERE
+```
+
+# Missing Data That Look Like Numbers: A Return to Turnout
+
+Let's inspect the voter-file variable before calculating anything.
+
+```{r}
+ces |>
+  count(validated_voted)
+```
+
+What happens if we ignore the codebook and calculate its mean?
+
+```{r}
+ces |>
+  summarize(PctValidated = mean(validated_voted))
+```
+
+A mean of negative 32.7?! R did not produce an error because the code is syntactically valid. It produced a nonsensical answer because `-99` is a code, not a quantity.
+
+So what does missing mean here? The code `-99` means the respondent was not matched to the voter file. It does **not** necessarily mean the respondent did not vote. The distinction matters because different ways of handling the unmatched respondents produce very different turnout estimates.
+
+So what should we do?  Do we count people who cannot be matched as nonvoters?  Or do we drop them?  This is a decision that requires an argument!
+
+Suppose we treat everyone who was not matched as a nonvoter. We can temporarily recode `-99` to `0` and calculate the mean without saving the resulting tibble:
+
+```{r}
+ces |>
+  mutate(validated_voted = if_else(validated_voted == -99, 0, validated_voted)) |>
+  summarize(PctValidated = mean(validated_voted))
+```
+
+This says that about 61 percent of the full sample has a validated vote. But that calculation assumes every unmatched respondent did not vote. Is that an assumption we are willing to make?
+
+Suppose instead that we exclude the unmatched respondents and calculate the proportion who voted among those who were successfully matched:
+
+```{r}
+ces |>
+  filter(validated_voted != -99) |>
+  summarize(PctValidatedAmongMatched = mean(validated_voted))
+```
+
+Now the estimate is about 92 percent. Huge difference! So which should we use? Recall from last time that the VAP was 59.2\% and the VEP was 64.3\%.
+
+# Moving on...
+
+For our analysis, we will treat unmatched respondents as missing rather than declaring them to be nonvoters. We will use `rename` to give the variable a more meaningful name and `mutate` to recode `-99` as missing data.
+
+NOTE: one `=` assigns; two `==` compare!
+
+```{r}
+ces = ces |>
+  mutate(validated_voted = if_else(validated_voted == -99,
+                                   NA,
+                                   validated_voted))
+```
+
+Read the `if_else` command as follows:
+
+- If `validated_voted` equals `-99`, replace it with missing data.
+- Otherwise, leave its existing value unchanged as `validated_voted`.
+
+We should always check that a mutation did what we intended.
+
+```{r}
+ces |>
+  count(validated_voted)
+```
+
+This decision means that "Not matched to the voter file" and "did not vote" are two different statements about the data.
+
+In addition to validated vote, we also have what voters said they were going to do -- self-report.  We often distrust these estimates because who wants to admit to being a bad citizen? 
+
+Well, let's see how many of those people there are!
+
+```{r}
+ces |>
+  count(selfreport_voted)
+```
+
+Ugh.  What does that even mean? Let's clean it up with a `mutation` to calculate percentages for each response:
+
+```{r}
+ces |>
+  count(selfreport_voted) |>
+  mutate(Pct = n/sum(n))
+```
+
+So 73\% said they voted.  And the validated turnout is nearly twenty percentage points higher than the unverified self-report? And both are well above the actual VAP of 59.2\% and the VEP of 64.3\%.
+
+QUESTION: What is going on? 
+
+Note that we can also do multiple counts to see how the values of variables relate to one another. (We will return to this when we learn about `group_by` function.)
+
+```{r,eval = FALSE}
+ces |>
+  count(validated_voted,selfreport_voted) 
+```
+
+# Constructing the Comparison We Want: Gender Gap
+
+Our question concerns the two major-party candidates, so we will create a new tibble containing just the respondents who reported voting for either Harris or Trump. If we have a large dataset it can be useful to create a smaller dataset to save computer memory and speed processing time.  This is not a concern for any of the data we will use, but it is a useful illustration.   
+
+NOTE: Character values require quotation marks
+
+```{r, eval=FALSE}
+ces |>
+  filter(presvote == Harris)
+```
+
+
+
+```{r}
+ces_2cand = ces |>
+  filter(presvote == "Harris" | presvote == "Trump")
+```
+
+Here `|` means OR. We retain an observation if the respondent reported voting for Harris **or** reported voting for Trump. Any other response -- including missing data! -- is dropped.
+
+How many observations remain?
+
+```{r}
+dim(ces_2cand)
+```
+
+Now we create a binary variable that takes on the value `1` for Harris voters and `0` for Trump voters.
+
+```{r}
+ces_2cand = ces_2cand |>
+  mutate(HarrisVoter = if_else(presvote == "Harris", 1, 0))
+```
+
+Always think about what the `0` means in a binary variable. Because we first filtered the data to Harris and Trump voters, every `0` in `HarrisVoter` means the respondent reported voting for Trump. Without that filter, a Kennedy or Stein voter would also have been coded `0`, which would answer a different question.
+
+Let's check our work.
+
+```{r}
+ces_2cand |>
+  count(presvote, HarrisVoter)
+```
+
+The mean of a variable containing only zeroes and ones is the proportion taking on the value one. We can therefore calculate the two-party Harris share using `summarize` and `mean`.
+
+```{r}
+ces_2cand |>
+  summarize(PctHarris = mean(HarrisVoter))
+```
+
+The raw, unweighted CES data imply that Harris won the two-party vote by a substantial margin. She did not. In the actual election, Trump received 49.8 percent and Harris received 48.3 percent of all votes cast. We will return to this puzzle after looking at the gender gap.
+
+# The Gender Gap in the 2024 Election
+
+Of historical interest: is there a difference in how men and women vote?
+
+When doing data science, you always want to be question driven. There is a large amount of discretion in data science, and well-defined questions help prevent you from pursuing spurious relationships.
+
+Much of what we do in data science requires an argument: Why should I trust your data? Why did you measure things the way you did? Do things change if I measure them differently? Could another characteristic or experience explain the comparison?
+
+Questions about a gender gap immediately raise measurement questions:
+
+- What exactly are we interested in measuring?
+- How was gender asked and recorded?
+- Which comparisons are supported by the amount of data we have?
+- Are we describing a difference, or claiming that gender caused a difference?
+
+The CES asks respondents, "What is your gender?" with four categories: Man, Woman, Non-binary, and Other. Because the last two categories contain relatively few respondents in this survey, our in-class calculation will focus on the difference between respondents identifying as women and men. The other categories remain in the original data and are important to inspect.
+
+We first create a version containing only respondents coded as men or women and then create a binary variable called `woman` for this specific comparison.
+
+```{r}
+ces_gender = ces_2cand |>
+  filter(gender4 == 1 | gender4 == 2) |>
+  mutate(woman = if_else(gender4 == 2, 1, 0)) 
+```
+
+This row-level tibble contains the variables we will need when we return to the
+gender gap in Lecture 6. Save the entire R object—not just the two group
+averages—so we can resample its respondents later.
+
+```{r save-gender-data}
+saveRDS(ces_gender, "CES2024_GenderGap.rds")
+```
+
+Unlike a CSV file, an `.rds` file preserves the variable types and other R
+information in the object. The course will also provide an official copy so
+Lecture 6 does not depend on this local file surviving.
+
+How many respondents are behind each comparison?
+
+```{r}
+ces_gender |>
+  count(gender4)
+```
+
+Now calculate the proportion of women who reported voting for Harris.
+
+```{r}
+Women = ces_gender |>
+  filter(woman == 1) |>
+  summarize(PctHarris = mean(HarrisVoter))
+
+Women
+```
+
+And repeat the same operation for men.
+
+```{r}
+Men = ces_gender |>
+  filter(woman == 0) |>
+  summarize(PctHarris = mean(HarrisVoter))
+
+Men
+```
+
+The descriptive gender gap is the difference between these proportions.
+
+```{r}
+GenderGap = Women$PctHarris - Men$PctHarris
+
+round(GenderGap, digits = 3)
+```
+
+How should we describe this result?
+
+> Among men and women in the two-party CES sample, women were about `r round(100 * GenderGap, 1)` percentage points more likely than men to report voting for Harris.
+
+That sentence describes the people in this sample. It does **not** say that being a woman caused Harris support to increase by `r round(100 * GenderGap, 1)` percentage points.
+
+# Does the Gender Gap Differ by Age?
+
+The overall gender gap combines respondents of many different ages. Is the gap the same among younger and older voters?
+
+We will compare respondents ages 18--24 with respondents ages 65 and older. First, create a tibble for each age group.
+
+```{r}
+Voters18to24 = ces_gender |>
+  filter(age >= 18 & age <= 24)
+
+Voters65Plus = ces_gender |>
+  filter(age >= 65)
+```
+
+How much data do we have for each comparison?
+
+```{r}
+Voters18to24 |>
+  count(woman)
+
+Voters65Plus |>
+  count(woman)
+```
+
+Now repeat the same analysis we used for the overall gender gap. Among respondents ages 18--24:
+
+```{r}
+Women18to24 = Voters18to24 |>
+  filter(woman == 1) |>
+  summarize(PctHarris = mean(HarrisVoter))
+
+Men18to24 = Voters18to24 |>
+  filter(woman == 0) |>
+  summarize(PctHarris = mean(HarrisVoter))
+
+GenderGap18to24 = Women18to24$PctHarris - Men18to24$PctHarris
+
+Women18to24
+Men18to24
+round(GenderGap18to24, digits = 3)
+```
+
+Among respondents ages 65 and older:
+
+```{r}
+Women65Plus = Voters65Plus |>
+  filter(woman == 1) |>
+  summarize(PctHarris = mean(HarrisVoter))
+
+Men65Plus = Voters65Plus |>
+  filter(woman == 0) |>
+  summarize(PctHarris = mean(HarrisVoter))
+
+GenderGap65Plus = Women65Plus$PctHarris - Men65Plus$PctHarris
+
+Women65Plus
+Men65Plus
+round(GenderGap65Plus, digits = 3)
+```
+
+The descriptive gender gap is about `r round(100 * GenderGap18to24, 1)` percentage points among respondents ages 18--24 and `r round(100 * GenderGap65Plus, 1)` percentage points among respondents ages 65 and older.
+
+This reveals something hidden by the overall average: there is not one gender gap that describes every part of the sample. The size of the gap differs depending on which respondents we compare.
+
+But be careful. Finding that the gender gap differs across age groups still does not establish that gender caused vote choice. Nor does it establish that age caused the gender gap to change. These remain descriptive comparisons.
+
+# Why This Is Not a Causal Effect
+
+The relationship is a **correlation**. It is not necessarily a causal relationship, and it certainly does not reveal what it is about gender that may be related to differences in vote choice.
+
+Moreover, women and men in the survey also differ in age, education, race and ethnicity, religion, geography, party identification, political experiences, and many other ways. Each of those characteristics may themselves be related to voting and looking only at group differences includes and combines the effects of all of those possibilities.
+
+Gender is also connected to identity, social experience, treatment by others, and political socialization. What, exactly, would it mean to change gender while holding all of those things constant? Before estimating a causal effect, we would need a much more precise causal question and a research design capable of answering it.
+
+Our calculation supports this claim:
+
+> Women and men in the CES reported different rates of support for Harris.
+
+It does not, by itself, support this claim:
+
+> Gender caused the difference in Harris support.
+
+This distinction also affects the language we use. "Women were more likely than men in this sample to report voting for Harris" is descriptive. "Being a woman increased support for Harris" is causal.
+
+There may also be important intersectional comparisons. Does the gender gap vary by age, race, education, religion, or other experiences? Those are interesting descriptive questions. Finding that the gap varies does not, on its own, turn the analysis into a causal one.
+
+# Also, Can We Trust the Survey's Account of the Election?
+
+The CES contains 60,000 respondents. That sounds like an enormous amount of data. But a large amount of data cannot guarantee that the people in the data represent the population we want to describe.
+
+We already showed that the survey is much more likely to contain voters than non-voters.  But that is not necessarily a problem (so long as we are not interested in estimating turnout!).  In fact, if voters are more likely to take the survey than non-voters maybe that is a good thing as it means that more of our data consists of voters with opinions that are more relevant for understanding the electorate. If 
+
+The raw CES sample says Harris won the two-party vote. The actual election says Trump won. Perhaps the problem is that some respondents said they voted even though they did not. We can examine respondents who both reported a major-party presidential vote and were matched to a validated record of voting.
+
+```{r}
+ces_2cand |>
+  filter(validated_voted == 1) |>
+  summarize(PctHarris = mean(HarrisVoter))
+```
+
+```{r,eval = FALSE}
+ces_2cand |>
+  summarize(PctHarris = mean(HarrisVoter))
+```
+
+The discrepancy does not disappear. In fact, it gets slightly worse.
+
+The problem is not simply who really voted. It is also who is represented in the raw data. Survey researchers use weights to make samples better represent the electorate, but weights are not included in this teaching extract. We will return to that problem later in the course.
+
+This gives us two related warnings:
+
+1. A precisely calculated answer can still answer the wrong question if the variable was coded incorrectly.
+
+2. A very large sample can still give a misleading description if it does not represent the population of interest.
+
+Finally, the fact that the CES misses the overall election result should make us careful about treating the raw gender-gap estimate as a description of the national electorate. We have correctly calculated a gender gap **in this sample**. Generalizing it beyond this sample requires an additional argument about who is represented and how.
+
+<div style="text-align:center">
+**YOUR CONCLUSIONS ARE ONLY AS GOOD AS THE DATA YOU HAVE!**
+</div>
+
+# What We Did Today
+
+We began with a political question rather than a list of functions. We then:
+
+1. Loaded and inspected the CES data.
+2. Counted the possible values before analyzing them.
+3. Recoded a numeric missing-value code as missing data.
+4. Selected the observations relevant to a two-party comparison.
+5. Created a binary variable using `mutate` and `if_else`.
+6. Used the mean of that binary variable to calculate a proportion.
+7. Calculated a descriptive gender gap.
+8. Explained why that gap is not necessarily causal.
+9. Compared the survey's implication with what actually happened.
+
+The code is important. But the larger lesson is that data analysis always combines code with substantive judgment. R will calculate what we tell it to calculate. It cannot determine whether the comparison is meaningful or whether our words overstate what the evidence can establish.
+
+# Extension: Does vote choice vary by education?
+
+The education variable contains numeric codes. We can use `case_when` to replace them with meaningful labels.
+
+```{r,eval = FALSE}
+ces_educ = ces |>
+  mutate(education = case_when(
+    educ == 1 ~ "No HS",
+    educ == 2 ~ "High school graduate",
+    educ == 3 ~ "Some college",
+    educ == 4 ~ "2-year degree",
+    educ == 5 ~ "4-year degree",
+    educ == 6 ~ "Post-graduate"
+  ))
+
+ces_educ |>
+  count(educ, education)
+```
+
+The `case_when` function evaluates each condition and assigns the corresponding value when the condition is true. It is especially useful when a variable has more than two categories.
+
+
+The following examples extend today's analysis. They are useful practice and starting points for later lectures; we do not need to complete all of them in class.
+
+We can define college graduates as respondents with a four-year or post-graduate degree.
+
+```{r,eval = FALSE}
+ces_gender = ces_gender |>
+  mutate(collegegrad = if_else(educ == 5 | educ == 6, 1, 0))
+```
+
+Calculate Harris support among college graduates:
+
+```{r,eval = FALSE}
+ces_gender |>
+  filter(collegegrad == 1) |>
+  summarize(PctHarris = mean(HarrisVoter))
+```
+
+*Quick Exercise:* Repeat the analysis among respondents without a four-year degree. What is the descriptive education gap?
+
+
+# New R Functions Introduced in Lecture 3
+
+Functions already introduced in Lecture 2 are intentionally omitted.
+
+| Function or symbol | What it does |
+|---|---|
+| `dim()` | Reports the number of rows and columns. |
+| `nrow()` | Reports the number of rows. |
+| `ncol()` | Reports the number of columns. |
+| `summary()` | Summarizes values and missing data. |
+| `count()` | Counts observations associated with each value or combination of values. |
+| `rename()` | Changes the name of a variable. |
+| `mutate()` | Creates or changes variables. |
+| `if_else()` | Assigns one value when a condition is true and another when it is false. |
+| `case_when()` | Assigns values using multiple conditions. |
+| `round()` | Rounds a number. |
+| `sum()` | Adds numeric values; here it is used to create the denominator for a proportion. |
+| `saveRDS()` | Saves one R object, including its variable types, in an `.rds` file. |
+
+# Works Cited
+
+### Data
+
+Schaffner, Brian, Marissa Shih, Stephen Ansolabehere, and Jeremy Pope. 2025.
+“Cooperative Election Study Common Content, 2024.” Harvard Dataverse, V9.
+[https://doi.org/10.7910/DVN/X11EP6](https://doi.org/10.7910/DVN/X11EP6).
+The course file `ces2024.csv` is a seven-variable teaching
+extract from this dataset.
+
+Federal Election Commission. 2025. “Official 2024 Presidential General
+Election Results.” Compiled from state election offices.
+[https://www.fec.gov/documents/5644/2024presgeresults.pdf](https://www.fec.gov/documents/5644/2024presgeresults.pdf).
+
+### Writings and Context
+
+American Enterprise Institute. 2022. “The Exit Polls: A History and Trends over
+Time, 1972–2020.”
+[https://www.aei.org/research-products/report/the-exit-polls-a-history-and-trends-over-time-1972-2020/](https://www.aei.org/research-products/report/the-exit-polls-a-history-and-trends-over-time-1972-2020/).
+
+NBC News. 2024. “2024 National Exit Poll Results.”
+[https://www.nbcnews.com/politics/2024-elections/exit-polls](https://www.nbcnews.com/politics/2024-elections/exit-polls).
