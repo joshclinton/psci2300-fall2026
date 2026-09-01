@@ -386,7 +386,11 @@ Now calculate the proportion of women who reported voting for Harris.
 Women = ces_gender |>
   filter(woman == 1) |>
   summarize(PctHarris = mean(HarrisVoter))
+```
 
+To print that to the console window:
+
+```{r}
 Women
 ```
 
@@ -396,7 +400,10 @@ And repeat the same operation for men.
 Men = ces_gender |>
   filter(woman == 0) |>
   summarize(PctHarris = mean(HarrisVoter))
+```
 
+And to see...
+```{r}
 Men
 ```
 
