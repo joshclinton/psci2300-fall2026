@@ -9,6 +9,10 @@ output:
     toc_float: true
 ---
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
 # Learning Objectives
 
 - Use polling data to describe what happened in the 2024 election.
@@ -99,7 +103,7 @@ glimpse(ces)
 ```
 What can we learn immediately?
 
-- There are `r nrow(ces)` respondents and `r ncol(ces)` variables.
+- There are 60,000 respondents and 7 variables.
 - Some variables contain numbers (`<int>`) and some contain strings of letters (`<chr>`).
 - Some variables contain missing data, denoted by `NA` in R.
 - Some numeric variables are really category labels. The number `2` for education is not mathematically twice the number `1`!
@@ -157,7 +161,7 @@ NOTE: R is case-sensitive
 
 ```{r, eval=FALSE}
 ces |>
-  select(Presvote)
+  count(Presvote)
 ```
 
 Try this...
@@ -292,7 +296,7 @@ ces |>
   filter(presvote == Harris)
 ```
 
-
+NOTE: if you masked `select` with `stats` library use: `dplyr::filter()`.
 
 ```{r}
 ces_2cand = ces |>
@@ -406,9 +410,9 @@ round(GenderGap, digits = 3)
 
 How should we describe this result?
 
-> Among men and women in the two-party CES sample, women were about `r round(100 * GenderGap, 1)` percentage points more likely than men to report voting for Harris.
+> Among men and women in the two-party CES sample, women were about 4.9 percentage points more likely than men to report voting for Harris.
 
-That sentence describes the people in this sample. It does **not** say that being a woman caused Harris support to increase by `r round(100 * GenderGap, 1)` percentage points.
+That sentence describes the people in this sample. It does **not** say that being a woman caused Harris support to increase by 4.9 percentage points.
 
 # Does the Gender Gap Differ by Age?
 
@@ -470,7 +474,7 @@ Men65Plus
 round(GenderGap65Plus, digits = 3)
 ```
 
-The descriptive gender gap is about `r round(100 * GenderGap18to24, 1)` percentage points among respondents ages 18--24 and `r round(100 * GenderGap65Plus, 1)` percentage points among respondents ages 65 and older.
+The descriptive gender gap is about 6.6 percentage points among respondents ages 18--24 and 10.6 percentage points among respondents ages 65 and older.
 
 This reveals something hidden by the overall average: there is not one gender gap that describes every part of the sample. The size of the gap differs depending on which respondents we compare.
 
