@@ -1,5 +1,5 @@
 ---
-title: "Session 3. Data Wrangling and the Gender Gap"
+title: "Data Wrangling: Surveying the Gap"
 author: "Prof. Josh Clinton"
 institute: "Vanderbilt University"
 date: "`r Sys.Date()`"
