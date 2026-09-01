@@ -163,7 +163,7 @@ Because R is object-oriented, we can actually save this as an object and use it!
 Assuming that you are in the correct directory (and you got there either by double-clicking or using the GUI), define a new object that has the name of where these files are:
 
 ```{r}
-mydir <- getwd()
+mydir = getwd()
 ```
 
 Now manually set the working directory to be the directory where your code and data is located using `setwd` (set working directory) and the location we just saved to the object `mydir`!
@@ -281,7 +281,6 @@ While the ability to directly integrate coding and analysis in the same document
 What R "sees" when working in the Console window (or using an R Script) is different from what it "sees" using RMarkdown! 
 You can `Knit` a RMarkdown document to conduct analysis without any object ever appearing in the Global Environment.
 Knitting RMarkdown (*.Rmd) files does _not_ create tibbles/objects in the Global Environment!
-
 
 
 *Quick Exercise*  Clear out the Global Environment -- which should only contain `df` -- and `Knit` this document.  Confirm that the code will run and nothing will be created in the Global Environment.
@@ -424,13 +423,14 @@ For more on these, please see this [vignette](https://cran.rstudio.com/web/packa
 Let's just inspect the data for all of the variables we have related to the 2024 elections.
 
 ```{r}
-df %>%
+df |>
   filter(year == 2024)
 ```
 
-What's that weird looking `%>%` thing? 
+What's that weird looking `|>` thing? 
 That's called a pipe. 
 This is how we chain commands together in R. Think of it as saying "and then" to R. In the above case, we said, take the data *and then* filter it to contain only observations related to the year 2024.
+NOTE: if your `filter` command does not work it is likely that you have loaded the `stats` library as well.  Fix this by using `dplyr::filter()` instead to force it to selct the right library.
 
 In words, the command says the following:
 
@@ -458,7 +458,7 @@ Many times, we don't want to see everything -- perhaps we want to choose a few v
 In this case, the VEP, VAP, and total ballots counted.
 
 ```{r}
-df2024 %>%
+df2024 |>
   select(year, Total.Ballots.Counted, VAP, VEP)
 ```
 
@@ -474,12 +474,28 @@ Why? We can always use R as a calculator:
 df2024$Noncit + df2024$Felons - df2024$Overseas
 ```
 
+Suppose we wanted to know how close the 2024 Presidential National Popular Vote margin was. President Trump beat Vice President Harris by 2,284,967 votes.
+
+Since our measures are in thousands, lets create an object with the vote share in thousands.
+```{r}
+margin24thousands = 2284967/1000
+```
+
+So now the question is -- how do we measure close?  Based on ballots cast? Based on eligible voters? Based on all voting age individuals.  After all, although the president is elected via an election, the outcome matters for all eligible voters and people living in the country.  But this is a decision that requires an argument about what you are interested in about who should be included in the denominator! 
+
+```{r}
+margin24thousands/df2024$Total.Ballots.Counted
+margin24thousands/df2024$VAP
+margin24thousands/df2024$VEP
+```
+
+
 Note that we can also combine these tools.
 For example, we can use `&` to look at all of the recent elections from 2014 through 2020:
 
 ```{r}
-df %>%
-  filter(year >= 2014 & year <= 2020) %>%
+df |>
+  filter(year >= 2014 & year <= 2020) |>
   select(year, VAPturnout, VEPturnout, ANES.Est)
 ```
 
@@ -489,8 +505,8 @@ What do you notice about the ANES estimates?
 We can use `|` when we want observations that meet any one of several conditions. This selects the three most recent presidential elections:
 
 ```{r}
-df %>%
-  filter(year == 2016 | year == 2020 | year == 2024) %>%
+df |>
+  filter(year == 2016 | year == 2020 | year == 2024) |>
   select(year, VAPturnout, VEPturnout, ANES.Est)
 ```
 
@@ -531,7 +547,7 @@ The code below summarizes the average turnout estimates from the American Nation
 
 
 ```{r}
-df%>%
+df |>
   summarize(AvgANES = mean(ANES.Est, na.rm = TRUE))
 ```
 
@@ -539,7 +555,7 @@ This seems far clunkier than before!
 But we use summarize because we can do multiple at once:
 
 ```{r}
-df%>%
+df |>
   summarize(AvgVAP = mean(VAPturnout),
             AvgVEP = mean(VEPturnout))
 ```
@@ -547,8 +563,9 @@ df%>%
 We can also combine commands, so that we do multiple summaries at the same time to see what percentage of VAP each of the breakouts is.  
 
 ```{r}
-df2024 %>%
+df2024 |>
   summarize(
+    VEPPct = VEP/VAP,
     NoncitizenPct = Noncit / VAP,
     FelonPct = Felons / VAP,
     OverseasPct = Overseas / VAP
@@ -558,8 +575,9 @@ df2024 %>%
 We can also multiply by 100 if we want to make it prettier...
 
 ```{r}
-df2024 %>%
+df2024 |>
   summarize(
+    VEPPct = 100*VEP/VAP,
     NoncitizenPct = 100 * Noncit / VAP,
     FelonPct = 100 * Felons / VAP,
     OverseasPct = 100 * Overseas / VAP
@@ -569,7 +587,7 @@ df2024 %>%
 Now let's compare all three measures of turnout:
 
 ```{r}
-df %>%
+df |>
   summarize(AvgANES = mean(ANES.Est,na.rm=TRUE),
             AvgVEP = mean(???),
             AvgVAP = mean(???))
@@ -578,31 +596,23 @@ df %>%
 We can also combine this with the filter we learned about earlier to see if this has changed over time?
 
 ```{r}
-df%>%
-  filter(year < 2010) %>%
+df |>
+  filter(year < 2010) |>
   summarize(AvgVEPturnout = mean(VEPturnout, na.rm = TRUE))
 ```
 
 Versus:
 
 ```{r}
-df%>%
-  filter(year >= 2010) %>%
+df |>
+  filter(year >= 2010) |>
   summarize(AvgVEPturnout = mean(VEPturnout, na.rm = TRUE))
 ```
 
 *Quick Exercise* How does that compare with the turnout estimate using the ANES? 
 
 ```{r}
-df %>%
-  filter(year < 2010) %>%
-  summarize(AvgANES = mean(XXX))
-```
 
-```{r}
-df %>%
-  filter(year >= 2010) %>%
-  summarize(AvgANES = mean(XXX))
 ```
 
 THINK! Is that a fair comparison?  What is going on given what we saw in the data itself?
@@ -638,7 +648,7 @@ How could you use these tools to determine differences between midterm and presi
 | `summarize()` | Calculates a summary of a dataset or variable. |
 | `mean()` | Calculates the average of a variable. |
 | `median()` | Calculates the median of a variable. |
-| `%>%` | Passes the result of one command to the next command: "and then." |
+| `|>` | Passes the result of one command to the next command: "and then." |
 
 ## Works Cited
 
