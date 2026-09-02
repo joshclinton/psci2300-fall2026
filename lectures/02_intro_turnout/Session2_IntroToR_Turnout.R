@@ -59,7 +59,7 @@ df$VEPturnout = df$Total.Ballots.Counted / df$VEP
 df$VEPturnout
 
 # Exercise: Create turnout using the voting-age population (VAP).
-df$VAPturnout = df$Total.Ballots.Counted / df$VAP
+
 
 # Assignment makes a copy of the entire data frame.
 copy.df = df

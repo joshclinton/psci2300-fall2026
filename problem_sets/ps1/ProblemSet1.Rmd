@@ -1,0 +1,93 @@
+---
+title: 'PSCI 2300 Problem Set 1'
+author: "YOUR NAME HERE"
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+# 2022 Michigan Exit Poll: DUE SEPT 9TH BY NOON
+
+This is _real_ data and the Problem Set is going to have you do some of what we were doing on Election Night 2022.  The tasks I am having you do is what _real_ people were doing in the _real_ world.
+
+Recall that problem sets are graded by completion.  This is because I want to incentivize you to do it on your own.  There is no failing and if you make a good faith effort you will get full credit. Do try to figure things out on your own - or with friends. Or get in touch with me or Alex (I am out the rest of the week, but I check email and we can also meet next week if you email me). AI can do this in 3 seconds, but I want you to get some capacity to get a sense of what is being done.
+
+HINT: Nothing on this Problem Set is intentionally tricky. Copy and Paste is your friend for avoiding silly syntax errors. But always understand what you are copy and pasting. As a test, you should be able to explain -- briefly -- what each chunk is doing.
+
+To submit on Brightspace, you have two options. 
+
+1) [Preferred] You can fill in the answers in the spots below. (To do this you want to test things out by using the `Run Current Chunk` and then, when everything works, do thje `Knit` from above.). Make sure you save the name of this file to contain your VUNET ID!
+
+2) [Acceptable] You can also just use an R-Script. Go: File -> New File -> R Script.  Include your code.  Note that R will try to read text as code unless you flag it as a comment so use a `#` to denote text (see class scripts!).
+
+The questions below are in *italics*.  Place your text responses after each question and before each code chunk.
+
+1. *Load required libraries and the `NEPData_2022.rds` dataset into memory. (Located on Brightspace.) This is the data of all of the Exit Polls that were conducted prior to election day to measure the opinions of early voters. It was chosen from voter file records to target those who were likely to vote early based on their past voting behavior.*
+
+```{r }
+# Answer:
+```
+
+2. *There is a variable called `vote.mode` in the dataset.  How many Early voters versus Election Data voters are there in the data?*
+
+```{r }
+# Answer:
+```
+
+
+3. *Know your data! How many survey respondents are there in the data and how many different states were included in the National Exit Poll?*
+
+```{r }
+# Answer:
+```
+
+
+4. *Let's focus on Michigan. Create a new object named `MI.data` that consists of just respondents from Michigan.*
+
+```{r }
+# Answer:
+```
+
+5. *In the United States, the ability of voters to vote before Election Day either using in-person early voting or voting by mail varies by state. How many Early and Election Day voters are in the Exit Poll from Michigan (MI)? How does that compare to the percentage overall in the National Exit Poll*
+
+```{r }
+# Answer:
+```
+
+5. *How many variables are in `MI.data`?*  
+
+```{r }
+# Answer:
+```
+
+6. *Let's simplify -- change MI.data so that it only includes the following variables: `PROP3MI22`, `VOTE2020`,`SEX`,`AGE10`,`vote.mode`.*
+
+```{r }
+# Answer:
+```
+
+7. *Let's consider first the support for Proposition 3 -- the Right to Reproductive Freedom Initiative that many have talked about as being critical for the Democrats' success in Michigan.  This variable, called `PROP3MI22` is a complete mess.  In terms of the meaning of the values, 1 = Support, 2 = Oppose, and the other values are all essentially garbage. Recode or create a new variable that takes on the value of 1 for Support and 0 for Oppose. (There are multiple ways to do this!)  Present a `count` of the resulting variable.  By way of background, [here](https://ballotpedia.org/Michigan_Proposal_3,_Right_to_Reproductive_Freedom_Initiative_(2022)) is some information [here](https://www.nbcnews.com/politics/2022-elections/michigan-ballot-measures) is the final exit poll results (after weighting).*
+
+```{r }
+# Answer:
+```
+
+8.  *Calculate the percentage of voters who supported the proposition using the `summarize` function.  How does that compare to the actual results reported [here](https://ballotpedia.org/Michigan_Proposal_3,_Right_to_Reproductive_Freedom_Initiative_(2022))?*
+
+```{r }
+# Answer:
+```
+
+9.  *Let's see how this vary by Sex and AGE.  Create a variable that takes on the value of "Female" if `SEX == 2`, "Male" if `SEX == 1` and is missing otherwise. Create another variable called `YoungerVoters` that takes on the value of 1 if `AGE10` is less than 6 and 0 otherwise. Using these two new variables, how many older and younger Male and Female respondents are there?*
+
+```{r }
+# Answer:
+```
+
+10. *Now compute the percentage of respondents who support Proposition 3 in each of these four groups: Younger Males, Younger Females, Older Males, and Older Females.  What do you observe?  If you had to go on national TV and talk about the differences, would you say that there are bigger differences by age or by sex?  What supports that conclusion? (NOTE: I am not expecting you to do any statistical tests -- I just want you to talk about the numbers you get and what you think they mean.)*
+
+```{r }
+# Answer:
+```
+
