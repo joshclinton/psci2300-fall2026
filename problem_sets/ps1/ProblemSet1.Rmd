@@ -23,7 +23,7 @@ To submit on Brightspace, you have two options.
 
 The questions below are in *italics*.  Place your text responses after each question and before each code chunk.
 
-1. *Load the required libraries and the [`NEPData_2022.csv`](NEPData_2022.csv) dataset into memory. Download the dataset from this page. This is the data from the Exit Polls that were conducted prior to Election Day to measure the opinions of early voters. The sample was chosen from voter-file records to target people who were likely to vote early based on their past voting behavior.*
+1. *Load the required libraries and the `NEPData_2022.csv` dataset into memory. [Download the dataset here](NEPData_2022.csv). This is the data from the Exit Polls that were conducted prior to Election Day to measure the opinions of early voters. The sample was chosen from voter-file records to target people who were likely to vote early based on their past voting behavior.*
 
 ```{r }
 # Answer:
