@@ -1709,9 +1709,10 @@ use create a new variable – via <code>mutate</code> – to define the new
 values based on the old variable. So this code creates a new variable
 called <code>gender2</code> that is defined to be <code>Man</code> when
 <code>gender4</code> takes on the value of 1, <code>gender2</code> is
-the value of <code>Woman</code> when <code>gender4</code> taks on the
-value of 2, and it is missing (<code>NA</code>) when
-<code>gender4</code> is either <code>3</code> or <code>4</code>.</p>
+assigned the value of <code>Woman</code> when <code>gender4</code> takes
+on the value of 2, and it is defined to be missing (<code>NA</code>)
+when <code>gender4</code> is either <code>3</code> or
+<code>4</code>.</p>
 <pre class="r"><code>ces = ces |&gt;
   mutate(gender2 = case_when(
     gender4 == 1 ~ &quot;Man&quot;,
@@ -1719,7 +1720,10 @@ value of 2, and it is missing (<code>NA</code>) when
     gender4 == 3 ~ NA,
     gender4 == 4 ~ NA)
     )</code></pre>
-<p>We can check this using the <code>table</code> command:</p>
+<p>Let’s count it:</p>
+<pre class="r"><code>ces |&gt;
+  count(gender2)</code></pre>
+<p>Note that we can use the <code>table</code> command:</p>
 <pre class="r"><code>table(ces$gender4)
 table(ces$gender2)</code></pre>
 <p><em>Quick Exercise:</em> Use <code>count</code> to inspect the
@@ -1858,8 +1862,13 @@ cast. We will return to this puzzle after looking at the gender gap.</p>
 </div>
 <div id="the-gender-gap-in-the-2024-election" class="section level1">
 <h1>The Gender Gap in the 2024 Election</h1>
-<p>Of historical interest: is there a difference in how men and women
-vote?</p>
+<p>Political differences based on gender have a length history in the
+United States, but the focus on differences in polling data has been
+noted by some as starting around1980. See, for example, TIME’s <a href="https://time.com/5903399/gender-gap-politics/">history of the
+electoral gender gap</a>. More recently, we have seen coverage of this
+related to the 2024 election – see, for example – a recent piece in : <a href="https://www.theatlantic.com/family/2026/05/little-gen-z-midterm-election-trump/687190/">“The
+Great Gen Z Dividing Line”</a> on the political divide between young men
+and young women.</p>
 <p>When doing data science, you always want to be question driven. There
 is a large amount of discretion in data science, and well-defined
 questions help prevent you from pursuing spurious relationships.</p>
@@ -2205,6 +2214,11 @@ General Election Results.” Compiled from state election offices. <a href="http
 <h3>Writings and Context</h3>
 <p>American Enterprise Institute. 2022. “The Exit Polls: A History and
 Trends over Time, 1972–2020.” <a href="https://www.aei.org/research-products/report/the-exit-polls-a-history-and-trends-over-time-1972-2020/">https://www.aei.org/research-products/report/the-exit-polls-a-history-and-trends-over-time-1972-2020/</a>.</p>
+<p>Hill, Faith. 2026. “The Great Gen Z Dividing Line.” <em>The
+Atlantic</em>, May 18. <a href="https://www.theatlantic.com/family/2026/05/little-gen-z-midterm-election-trump/687190/">https://www.theatlantic.com/family/2026/05/little-gen-z-midterm-election-trump/687190/</a>.</p>
+<p>Kahn, Suzanne. 2020. “Women Tend to Vote for Democratic Presidential
+Candidates More Than Men Do. Here’s How That Gender Gap First Came to
+Be.” <em>TIME</em>, October 23. <a href="https://time.com/5903399/gender-gap-politics/">https://time.com/5903399/gender-gap-politics/</a>.</p>
 <p>NBC News. 2024. “2024 National Exit Poll Results.” <a href="https://www.nbcnews.com/politics/2024-elections/exit-polls">https://www.nbcnews.com/politics/2024-elections/exit-polls</a>.</p>
 </div>
 </div>

@@ -182,7 +182,7 @@ ces |>
 
 Notice how much data are behind each category. Comparisons involving small groups will be more uncertain. This does not make those groups unimportant; it means the survey gives us less information about them.
 
-We can recode these to more informative labels if we want.  Suppose for example, that we want to focus attention on the categories with the largest number of responses. The `case_when` function lets use create a new variable -- via `mutate` -- to define the new values based on the old variable. So this code creates a new variable called `gender2` that is defined to be `Man` when `gender4` takes on the value of 1, `gender2` is the value of `Woman` when `gender4` taks on the value of 2, and it is missing (`NA`) when `gender4` is either `3` or `4`. 
+We can recode these to more informative labels if we want.  Suppose for example, that we want to focus attention on the categories with the largest number of responses. The `case_when` function lets use create a new variable -- via `mutate` -- to define the new values based on the old variable. So this code creates a new variable called `gender2` that is defined to be `Man` when `gender4` takes on the value of 1, `gender2` is assigned the value of `Woman` when `gender4` takes on the value of 2, and it is defined to be missing (`NA`) when `gender4` is either `3` or `4`. 
 
 ```{r}
 ces = ces |>
@@ -194,7 +194,14 @@ ces = ces |>
     )
 ```
 
-We can check this using the `table` command:
+Let's count it: 
+
+```{r}
+ces |>
+  count(gender2)
+```
+
+Note that we can use the `table` command:
 
 ```{r}
 table(ces$gender4)
@@ -357,7 +364,8 @@ The raw, unweighted CES data imply that Harris won the two-party vote by a subst
 
 # The Gender Gap in the 2024 Election
 
-Of historical interest: is there a difference in how men and women vote?
+Political differences based on gender have a length history in the United States, but the focus on differences in polling data has been noted by some as starting around1980. See, for example, TIME's [history of the electoral gender gap](https://time.com/5903399/gender-gap-politics/). More recently, we have seen coverage of this related to the 2024 election -- see, for example -- a recent piece in \textit{The Atlantic}:  [“The Great Gen Z Dividing Line”](https://www.theatlantic.com/family/2026/05/little-gen-z-midterm-election-trump/687190/)
+on the political divide between young men and young women. 
 
 When doing data science, you always want to be question driven. There is a large amount of discretion in data science, and well-defined questions help prevent you from pursuing spurious relationships.
 
@@ -657,6 +665,14 @@ Election Results.” Compiled from state election offices.
 American Enterprise Institute. 2022. “The Exit Polls: A History and Trends over
 Time, 1972–2020.”
 [https://www.aei.org/research-products/report/the-exit-polls-a-history-and-trends-over-time-1972-2020/](https://www.aei.org/research-products/report/the-exit-polls-a-history-and-trends-over-time-1972-2020/).
+
+Hill, Faith. 2026. “The Great Gen Z Dividing Line.” *The Atlantic*, May 18.
+[https://www.theatlantic.com/family/2026/05/little-gen-z-midterm-election-trump/687190/](https://www.theatlantic.com/family/2026/05/little-gen-z-midterm-election-trump/687190/).
+
+Kahn, Suzanne. 2020. “Women Tend to Vote for Democratic Presidential
+Candidates More Than Men Do. Here’s How That Gender Gap First Came to Be.”
+*TIME*, October 23.
+[https://time.com/5903399/gender-gap-politics/](https://time.com/5903399/gender-gap-politics/).
 
 NBC News. 2024. “2024 National Exit Poll Results.”
 [https://www.nbcnews.com/politics/2024-elections/exit-polls](https://www.nbcnews.com/politics/2024-elections/exit-polls).
