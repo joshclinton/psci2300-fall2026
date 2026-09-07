@@ -184,9 +184,6 @@ ces_gender = ces_2cand |>
   filter(gender4 == 1 | gender4 == 2) |>
   mutate(woman = if_else(gender4 == 2, 1, 0))
 
-# Save the row-level data for Lecture 6. The official course copy will also be
-# provided, so Lecture 6 does not depend on this classroom file surviving.
-saveRDS(ces_gender, "CES2024_GenderGap.rds")
 
 # How many respondents are behind each comparison?
 ces_gender |>
