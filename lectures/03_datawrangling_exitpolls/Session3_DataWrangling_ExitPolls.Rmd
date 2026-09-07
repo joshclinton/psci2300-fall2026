@@ -364,8 +364,7 @@ The raw, unweighted CES data imply that Harris won the two-party vote by a subst
 
 # The Gender Gap in the 2024 Election
 
-Political differences based on gender have a length history in the United States, but the focus on differences in polling data has been noted by some as starting around1980. See, for example, TIME's [history of the electoral gender gap](https://time.com/5903399/gender-gap-politics/). More recently, we have seen coverage of this related to the 2024 election -- see, for example -- a recent piece in \textit{The Atlantic}:  [“The Great Gen Z Dividing Line”](https://www.theatlantic.com/family/2026/05/little-gen-z-midterm-election-trump/687190/)
-on the political divide between young men and young women. 
+Political differences based on gender have a length history in the United States, but the focus on differences in polling data has been noted by some as starting around1980. See, for example, TIME's [history of the electoral gender gap](https://time.com/5903399/gender-gap-politics/). More recently, we have seen coverage of this related to the 2024 election. See, for example, a recent piece in The Atlantic about demographic differences in voting:  [“The Great Gen Z Dividing Line”](https://www.theatlantic.com/family/2026/05/little-gen-z-midterm-election-trump/687190/). 
 
 When doing data science, you always want to be question driven. There is a large amount of discretion in data science, and well-defined questions help prevent you from pursuing spurious relationships.
 
