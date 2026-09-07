@@ -20,7 +20,6 @@
 
 library(tidyverse)
 
-
 # ---- 2. Load and inspect the CES data ---------------------------------------
 
 # Each row is a survey respondent. Each column is a variable.
@@ -83,7 +82,6 @@ ces |>
 # character labels?
 
 
-
 # ---- 6. Missing values and validated turnout -------------------------------
 
 # Inspect the voter-file variable before calculating anything.
@@ -97,9 +95,7 @@ ces |>
 # One possibility: treat unmatched respondents as nonvoters. This changes -99
 # to 0 temporarily, without saving the change to ces.
 ces |>
-  mutate(validated_voted = if_else(validated_voted == -99,
-                                   0,
-                                   validated_voted)) |>
+  mutate(validated_voted = if_else(validated_voted == -99,0,validated_voted)) |>
   summarize(PctValidated = mean(validated_voted))
 
 # Another possibility: calculate turnout only among matched respondents.
@@ -107,19 +103,19 @@ ces |>
   filter(validated_voted != -99) |>
   summarize(PctValidatedAmongMatched = mean(validated_voted))
 
-# Which approach answers the question we care about? This requires an argument,
-# not just code.
+# Which approach answers the question we care about?
+# This requires an argument, not just code!
 
 # For today's analysis, treat unmatched respondents as missing. Remember:
 # one = assigns a value; two == compare values.
 ces = ces |>
-  mutate(validated_voted = if_else(validated_voted == -99,
-                                   NA,
-                                   validated_voted))
+  mutate(validated_voted = if_else(validated_voted == -99,NA,validated_voted))
 
 # Always check that a mutation did what we intended.
 ces |>
   count(validated_voted)
+
+# What should we do?
 
 
 # ---- 7. Self-reported turnout ----------------------------------------------
@@ -163,8 +159,7 @@ ces_2cand |>
 ces_2cand |>
   summarize(PctHarris = mean(HarrisVoter))
 
-# The raw, unweighted CES data imply that Harris won the two-party vote. She
-# did not. We will return to that problem below.
+# Reactions?
 
 
 # ---- 9. Calculate the descriptive gender gap -------------------------------
@@ -184,6 +179,8 @@ ces_gender |>
   count(gender4)
 
 # Proportion of women who reported voting for Harris.
+# How big is this and why would I do this?
+
 Women = ces_gender |>
   filter(woman == 1) |>
   summarize(PctHarris = mean(HarrisVoter))
@@ -202,11 +199,6 @@ GenderGap = Women$PctHarris - Men$PctHarris
 
 round(GenderGap, digits = 3)
 round(100 * GenderGap, digits = 1)
-
-# Interpretation: Among men and women in the two-party CES sample, women were
-# about 5 percentage points more likely than men to report voting for Harris.
-# This describes a difference in the sample. It does not establish that gender
-# caused the difference.
 
 
 # ---- 10. Does the gender gap differ by age? ---------------------------------
@@ -255,8 +247,10 @@ Women65Plus
 Men65Plus
 round(GenderGap65Plus, digits = 3)
 
-# Finding different gaps across age groups remains descriptive. It does not
-# establish that either gender or age caused vote choice.
+# Age Versus Gender?  How would we compare?
+
+# What if we were to restrict the analysis to validated voters?
+
 
 
 # ---- 11. Can we trust the survey's account? ---------------------------------
