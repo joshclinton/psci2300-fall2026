@@ -78,6 +78,20 @@ ces |>
 ces |>
   count(gender4)
 
+# Create a new variable?
+
+ces = ces |>
+  mutate(gender2 = case_when(
+    gender4 == 1 ~ "Man",
+    gender4 == 2 ~ "Woman",
+    gender4 == 3 ~ NA,
+    gender4 == 4 ~ NA)
+    )
+
+table(ces$gender4)
+table(ces$gender2)
+
+
 # Exercise: Use count() to inspect pid3. Are its values stored as numbers or
 # character labels?
 

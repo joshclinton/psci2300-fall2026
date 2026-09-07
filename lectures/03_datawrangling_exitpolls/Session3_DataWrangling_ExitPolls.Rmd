@@ -17,7 +17,7 @@ knitr::opts_chunk$set(eval = FALSE)
 
 - Use polling data to describe what happened in the 2024 election.
 
-- Use `count`, `mutate`, `if_else`, and `summarize` to answer a substantive political question.
+- Use `count`, `mutate`, `if_else`, `case_when`, and `summarize` to answer a substantive political question.
 
 - Learn why we must inspect and sometimes recode variables before analyzing them.
 
@@ -181,6 +181,25 @@ ces |>
 ```
 
 Notice how much data are behind each category. Comparisons involving small groups will be more uncertain. This does not make those groups unimportant; it means the survey gives us less information about them.
+
+We can recode these to more informative labels if we want.  Suppose for example, that we want to focus attention on the categories with the largest number of responses. The `case_when` function lets use create a new variable -- via `mutate` -- to define the new values based on the old variable. So this code creates a new variable called `gender2` that is defined to be `Man` when `gender4` takes on the value of 1, `gender2` is the value of `Woman` when `gender4` taks on the value of 2, and it is missing (`NA`) when `gender4` is either `3` or `4`. 
+
+```{r}
+ces = ces |>
+  mutate(gender2 = case_when(
+    gender4 == 1 ~ "Man",
+    gender4 == 2 ~ "Woman",
+    gender4 == 3 ~ NA,
+    gender4 == 4 ~ NA)
+    )
+```
+
+We can check this using the `table` command:
+
+```{r}
+table(ces$gender4)
+table(ces$gender2)
+```
 
 *Quick Exercise:* Use `count` to inspect the possible values of `pid3`. Are the values stored as numbers or as character labels?
 
