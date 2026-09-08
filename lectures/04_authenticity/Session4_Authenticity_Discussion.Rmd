@@ -1,0 +1,245 @@
+---
+title: "Workshop: Wrangling Authentic Beliefs"
+author: "Prof. Josh Clinton"
+institute: "Vanderbilt University"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+# Learning Objectives
+
+- Identify the paper's causal claim and how its treatment and outcome are
+  measured.
+- Determine what comparison would identify the claimed effect.
+- State the pattern we should observe before inspecting the data.
+- Use `count`, `mutate`, `filter`, `group_by`, and `summarize` to investigate
+  the posted data.
+- Explain how decisions about cleaning, recoding, and variable names affect an
+  analysis.
+
+Today we will investigate a published experimental finding. We will begin with
+what the authors claim, identify what pattern we should observe if that claim
+is correct, and then inspect the posted data.
+
+# The Paper and Its Claim
+
+Read “The Moral Virtue of Authenticity: How Inauthenticity Produces Feelings of
+Immorality and Impurity” by Business School professors at Harvard,
+Northwestern, and Columbia. (Not too shabby!)
+
+What is the main claim of the paper and why do we care?
+
+YOUR ANSWER HERE:
+
+# Experiment 4: Study Design
+
+The paper reports five experiments. We will focus on Study 4.
+
+You can skim most of the article. I do not expect you to understand every part of the analysis. Focus on what the researchers did and what we should observe if their argument is right.
+
+The complete text of the Experiment 4 materials appears at the bottom.
+
+## Participants
+
+Who participated in Study 4? 
+
+YOUR ANSWER HERE:
+
+Does the sample matter for evaluating the claim? Why or why not?
+
+YOUR ANSWER HERE:
+
+## Treatment: 
+
+Participants first reported whether they supported including course-difficulty ratings in Harvard’s Q Guide. They were then assigned to three writing conditions? Why?
+
+YOUR ANSWER HERE:
+
+Do the authors have a group that did not write an essay at all? Does that matter?
+
+YOUR ANSWER HERE:
+
+## Outcome: What was the outcome of interest to the researchers?
+
+YOUR ANSWER HERE:
+
+What do you think of that?
+
+YOUR ANSWER HERE:
+
+## Expected Pattern: i.e., Hypotheses
+
+Before looking at the data, what should we expect if the authors' claims are true?
+
+YOUR ANSWER HERE:
+
+This is important. If we do not say what pattern we expect before opening the data, it becomes very easy to tell a story about whatever pattern we happen to find.
+
+# Appendix: Experiment 4 Materials
+
+The following is the complete Experiment 4 section from the authors' posted
+Materials and Methods.
+
+Participants first received some general instructions:
+
+> Welcome!
+>
+> This is an online survey that will take about 10-15 minutes. You will receive
+> a $10 Amazon gift card for completing this survey. You will be able to
+> complete the survey and receive payment only if you are currently an
+> undergraduate at Harvard and have a valid Harvard ID card.
+>
+> When ready, please press \>\>
+
+Participants were then asked to confirm they were college students at Harvard.
+
+> Please indicate your email address (necessary in order for you to receive
+> payment): ___
+>
+> Please indicate your Harvard ID: __________
+>
+> Welcome. In today's session, you'll complete a variety of tasks. Please read
+> the instructions to each task carefully.
+>
+> Before you start working on your first task, we would like to ask you to
+> answer a few questions.
+>
+> 1. Are you a college student at Harvard?
+>
+>    - Yes
+>    - No
+>
+> 2. We are interested in your opinion regarding the issue of whether or not
+>    difficulty ratings should be a part of the Q guide (where students can
+>    view ratings/reviews for all Harvard courses by the past students who have
+>    taken them). Are you in support of the inclusion of difficulty ratings in
+>    the Q guide?
+>
+>    - Yes, I am in SUPPORT of the inclusion of difficulty ratings in the Q
+>      guide
+>    - No, I am AGAINST the inclusion of difficulty ratings in the Q guide
+>
+> 3. How strongly do you hold this opinion? (i.e., the opinion you indicated in
+>    your answer #2) (from 1 “not at all” to 7 “very much so”)
+>
+> 4. Your age: _______
+>
+> 5. Your gender
+>
+>    - Male
+>    - Female
+>    - Other (please indicate)
+>
+> 6. Year in School: ________
+
+> Your first task is to write an essay on a current topic. Please follow the
+> instructions carefully and take 5-10 minutes to complete this task.
+
+All participants were told, “We are interested in the effectiveness of writing
+on current topics of interest to students.”
+
+The rest of the instructions varied by condition.
+
+**Low-choice counterattitudinal condition**
+
+> We are randomly assigning people to write either a short essay that indicates
+> they are in favor of including difficulty ratings in the Q guide or a short
+> essay that indicates that they are against it. You have been assigned to
+> write a list of arguments in favor of/against [depending on their initial
+> opinion] including difficulty ratings in the Q guide. Therefore, you must
+> argue in support of/against including difficulty ratings in the Q guide.
+
+**High-choice counterattitudinal condition**
+
+> We are asking people to write a short essay about including difficulty
+> ratings in the Q guide. While we would like to stress the voluntary nature of
+> your decision regarding which side of the issue to write on, we would like
+> you to list arguments in favor of/against including difficulty ratings in the
+> Q guide. Although you are under no obligation to write this, it would be very
+> helpful for us.
+
+High-choice participants had to check a box to confirm their willingness to
+write the counter-attitudinal essay.
+
+**High-choice pro-attitudinal essay condition**
+
+The instructions were the same as in the high-choice counterattitudinal
+condition but participants were asked to write about the perspective they were
+in support of.
+
+In all conditions, the last part of the instructions read:
+
+> We will be using the essay you write to describe this issue to current
+> undergraduates at Harvard. So it is important that you be as persuasive and
+> convincing as possible to convey the message that difficulty ratings should
+> be included in the Q guide.
+
+All essays used the same starting statement that we will provide: “I believe
+that Harvard College should/should not include difficulty ratings in the Q
+guide because …”.
+
+After the writing task, participants received a list of products and indicated
+how desirable they found them to be.
+
+> You will now be presented with a list of products. Please indicate how
+> desirable you find them right now. (7-point scale ranging from 1=Completely
+> undesirable to 7=Completely desirable)
+>
+> - Dove shower soap
+> - Post-It Notes
+> - Nantucket Nectar juice
+> - Crest toothpaste
+> - Windex cleaner
+> - Energizer batteries
+> - Tide detergent
+> - Sony CD cases
+> - Snickers bars
+> - Lysol disinfectant
+
+Next, participants indicated the extent to which the writing task they had
+completed earlier made them feel inauthentic and reported how much choice they
+thought they had in writing the essay they wrote.
+
+> Now please answer the following questions about your experience in completing
+> the writing task earlier in this study by indicating the extent to which you
+> agree with each statement. (7-point scale ranging from 1=Strongly disagree to
+> 7=Strongly agree)
+>
+> After writing the essay...
+>
+> - …I did not know how I really felt inside
+> - …I felt as if I did not know myself very well
+> - …I felt out of touch with the ‘real me’
+> - …I felt alienated from myself
+>
+> How much choice did you have in writing the essay you wrote? (1 = None at all;
+> 7 = A lot)
+
+# Works Cited
+
+## Data and Study Materials
+
+Gino, Francesca, Maryam Kouchaki, and Adam D. Galinsky. 2015. “The Moral Virtue
+of Authenticity: How Inauthenticity Produces Feelings of Immorality and
+Impurity.” *Psychological Science* 26: 983–996. Retracted.
+[https://doi.org/10.1177/0956797615575277](https://doi.org/10.1177/0956797615575277).
+
+Gino, Francesca, Maryam Kouchaki, and Adam D. Galinsky. “Materials, Methods, and
+Posted Data for ‘The Moral Virtue of Authenticity.’” Open Science Framework.
+[https://osf.io/sd76g/](https://osf.io/sd76g/). The course file
+`GKG_Study4_Class.csv` is a teaching copy of the posted
+Study 4 CSV. The only transformation is removal of trailing white space from
+`yearSchool`; the preserved source is `GKG_Study4.csv`.
+
+## Writing
+
+Simonsohn, Uri, Joseph P. Simmons, and Leif D. Nelson. 2023. “Data Falsificada
+(Part 2): ‘My Class Year Is Harvard.’” *Data Colada* 110, June 20.
+[https://datacolada.org/110](https://datacolada.org/110).
