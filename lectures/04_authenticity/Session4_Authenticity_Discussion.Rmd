@@ -1,5 +1,5 @@
 ---
-title: "Workshop: Wrangling Authentic Beliefs"
+title: "Wrangling with Authenticity"
 author: "Prof. Josh Clinton"
 institute: "Vanderbilt University"
 date: "`r Sys.Date()`"
