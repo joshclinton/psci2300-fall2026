@@ -33,7 +33,7 @@ knitr::opts_chunk$set(eval = FALSE)
 Are female-named hurricanes deadlier than male-named hurricanes?
 </div>
 
-In 2014, a research team published a peer-reviewed paper titled ["Female hurricanes are deadlier than male hurricanes"](https://doi.org/10.1073/pnas.1402786111) in a prominent general interest science journal (Jung, Shavitt, Viswanathan, and Hilbe 2014, *Proceedings of the National Academy of Sciences* 111(24): 8782–8787).  Initially, this may seem ridiculous, after all names are assigned by a set procedure. Currently, when wind speeds reach a sustained 39 mph it is assigned the next name on a list used by the World Meteorological Organization. There are six lists with names in alphabetical order that rotate every year. If windspeeds reach 74,ph it becomes a hurricane.  The name of a hurricane that becomes deadly or destructive is retired.   
+In 2014, a research team published a peer-reviewed paper titled ["Female hurricanes are deadlier than male hurricanes"](https://doi.org/10.1073/pnas.1402786111) in a prominent general interest science journal (Jung, Shavitt, Viswanathan, and Hilbe 2014, *Proceedings of the National Academy of Sciences* 111(24): 8782–8787).  Initially, this may seem ridiculous, after all names are assigned by a set procedure. Currently, when wind speeds reach a sustained 39 mph it is assigned the next name on a list used by the World Meteorological Organization. There are six lists with names in alphabetical order that rotate every year. If windspeeds reach 74 mph it becomes a hurricane.  The name of a hurricane that becomes deadly or destructive is retired.   
 
 The argument of the paper was _not_ that the storms differ physically. Instead, researchers claimed that people take a hurricane with a feminine-sounding name less seriously and are less likely to prepare or evacuate and, as a result, more people die.
 
@@ -54,7 +54,9 @@ And now for something completely different (as Monty Python would say). We are h
 
 The strategy of gerrymandering is well-known. Consider three ways of assigned the same 50 precincts with the same overall 60/40 split of voters into two very sets of five districts.
 
-![How to Steal an Election. Steven Nass, via Wikimedia Commons, CC BY-SA 4.0.](images/gerrymandering_nass.png){width=85%}
+![](images/gerrymandering_nass.png){width=85%}
+
+
 Redistricting is all about how to allocate voters to different districts and how that allocation affects political power and representation. There are all kinds of interesting questions here.
 - Which, if any, is "fair"? 
 - Suppose someone tells you "the average district barely changed after redistricting." Does that settle whether the lines mattered?
@@ -65,10 +67,6 @@ Redistricting is all about how to allocate voters to different districts and how
 If you want some more background on 2026, consider:
 
 - CBS News, [Maps show how Virginia, Texas, California, Missouri, North Carolina and Utah redistricting could affect congressional seats](https://www.cbsnews.com/news/texas-californias-redistricting-maps/). Before-and-after maps for each state.
-- Rose Institute of State and Local Government, Claremont McKenna College, [Proposition 50 Backgrounder](https://roseinstitute.cmc.edu/sites/default/files/Proposition%2050%20Backgrounder_101525_1.pdf). Academic explainer on California's redraw.
-- Votebeat, [Supreme Court lets Texas keep new congressional map in 2026 midterms](https://www.votebeat.org/texas/2025/12/05/texas-redistricting-ruling-supreme-court-map-2026-midterms/). Nonprofit election-administration newsroom.
-- The Texas Tribune, [Texas' new congressional map can be used, Supreme Court rules](https://www.texastribune.org/2026/04/27/texas-redistricting-map-ruling-us-supreme-court-upheld-2026-midterms/).
-- SCOTUSblog, [California urges court to permit it to use congressional map enacted to counter Republican gains in Texas](https://www.scotusblog.com/2026/01/california-urges-court-to-permit-it-to-use-congressional-map-enacted-to-counter-republican-gains-in-texas/).
 
 # Univariate Data Analysis
 
