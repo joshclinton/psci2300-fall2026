@@ -207,7 +207,7 @@ hurr |>
 
 If anything, the effect only increases!
 
-BOTTOM LINE: A real, peer-reviewed claim, summarized with a mean, looked convincing; the same data summarized with a median told a different and more honest story. The mean is easy to explain and it is what most people reach for — and it is exactly the wrong summary when a few extreme cases can dominate it.
+BOTTOM LINE: A real, peer-reviewed claim, summarized with a mean, looked convincing; the same data summarized with a median told a different and more honest story. The mean is easy to explain and it is what most people reach for — and it is exactly the wrong summary when a few extreme cases can dominate it. So is it true that female hurricanes are more deadly on average?  Well, it depends on what measure you think is best -- a decision that requires an argument.
 
 NOTE: Our work is *not* a reproduction of the published paper. Jung et al. deliberately set Katrina and Audrey aside as outliers and fit a statistical model using how feminine each name was (using tools we will learn later). Even so, we *have* shown that the headline depends on a couple of storms. If interested, the paper drew a formal published critique and a reply from the authors, both linked below.
 
@@ -261,7 +261,7 @@ Consider, for example, if one party won every single district 50.05 \% to 49.95 
 
 ## Continuous
 
-Let's start by taking a look at `dem_margin_2024map` -- Harris's percent minus Trump's percent in each district. It seems pretty likely that this is a continuous variable. Let's take a look at the 10 most Democratic districts in the United States by using the ``arrange` function that we are going to look at in `desc`ending order, and then print the top 10 using `head`. (There are lots of ways to do this -- this is just a fancy way.)
+Let's start by taking a look at `dem_margin_2024map` -- Harris's percent minus Trump's percent in each district. This is a continuous variable. Let's take a look at the 10 most Democratic districts in the United States by using the ``arrange` function that we are going to look at in `desc`ending order, and then print the top 10 using `head`. (There are lots of ways to do this -- this is just a fancy way.)
 
 ```{r}
 cd |> 
@@ -280,7 +280,7 @@ What do you observe about them?  Where are they?
 
 ## Measures for Continuous Variables
 
-The mean is used most of the time for continuous variables, but as we have seen, it can be VERY sensitive to outliers. The median (50th percentile) is usually better, but it can be difficult to explain to general audiences. 
+The mean is used most of the time for continuous variables, but as we have just seen, it can be VERY sensitive to outliers and lead misleading characterizations. The median (50th percentile) is usually better for describing what is ``typical," but the downside is that it can be difficult to explain to general audiences. 
 
 ```{r}
 cd |>
@@ -288,7 +288,7 @@ cd |>
             median_margin = median(dem_margin_2024map))
 ```
 
-So the *average* district was essentially tied, but the *median* district favored Trump by about 3 points.  Which is the "typical" district?
+So the *average* district was essentially tied, but the *median* district favored Trump by about 3 points.  So how should we decide what to say about the "typical" district?
 
 Why do they differ?  Look back at the 10 most Democratic districts: the most lopsided districts in the country are Democratic ones, -- just like the most catastrophic hurricanes had female names.
 
@@ -429,8 +429,6 @@ cd |>
             seats_new = sum(harris_won_2026map))
 ```
 
-The mean barely moves.  It cannot: the same votes are being added up, just in different piles.  But the median moves, and the number of districts Harris carried drops from 204 to 201.
-
 To see how, `group_by` state.  Because `redistricted` is 0/1, `sum(redistricted)` counts the redrawn districts in each state, and we can `filter` on that count *after* summarizing to keep only the states that changed something.
 
 ```{r}
@@ -464,7 +462,7 @@ cd |>
 
 Find the districts where the sign flips: TX-09, TX-32, and TX-35 went from Harris by 24 to 44 points to Trump by 10 to 20 points (cracked).  Now find TX-18 and TX-37, which went from Harris +40 and +49 to Harris +55 and +57 (packed).  The Democratic votes did not disappear; they were moved from districts where they produced a win into districts that were already won.
 
-Now California, where the tools were used in the other direction: the safest Democratic districts were *unpacked* -- CA-02 went from Harris +45 to +25, CA-04 from +31 to +15 -- and those voters were used to flip CA-01, CA-41 and CA-48 from Trump districts into Harris districts.  Spreading your own voters more thinly makes the median district less Democratic, but it wins more seats.  That is exactly the 50.05 to 49.95 logic from the start of class.
+Now California, where the tools were used in the other direction: the safest Democratic districts were *cracked* -- CA-02 went from Harris +45 to +25, CA-04 from +31 to +15 -- and those voters were used to flip CA-01, CA-41 and CA-48 from Trump districts into Harris districts.  Spreading your own voters more thinly makes the median district less Democratic in the hope of winning more seats.  
 
 *Quick Exercise* Do the same district-by-district look for Florida.  Which districts were cracked?  Which were packed?
 
@@ -472,13 +470,19 @@ Now California, where the tools were used in the other direction: the safest Dem
 # INSERT CODE HERE
 ```
 
-*Quick Exercise* Redo the competitiveness categories using `dem_margin_2026map`. Did redistricting make districts more or less competitive?
+*Quick Exercise* Redo the competitiveness categories using `dem_margin_2026map` to create a new variable called `competitive_2024map`. Did redistricting make districts more or less competitive?
 
 ```{r}
 # INSERT CODE HERE
 ```
 
-So which summary tells you what redistricting did?  Not the mean.  The median and the count of districts above zero do.  A single "average" would have told you nothing happened.
+*Quick Exercise* Can you compare the two measures of competitiveness?  Let's see how they compare under the new and old maps.
+
+```{r}
+# INSERT CODE HERE
+``` 
+
+So which measure reveals the effects of redistricting?  The mean? The median?
 
 # Differences in Percentages or Percent Difference?
 

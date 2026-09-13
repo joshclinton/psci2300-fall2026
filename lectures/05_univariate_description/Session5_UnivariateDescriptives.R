@@ -63,19 +63,15 @@ hurr |>
             mean_deaths   = mean(deaths),
             median_deaths = median(deaths))
 
-# The means support the claim. Do the medians?
 
-# Male names did not enter the rotation until 1979. Restrict the comparison
-# to the years when both kinds of names were in use.
+# Male names did not enter the rotation until 1979. Restrict the comparison.
+
 hurr |>
   filter(Year >= 1979) |>
   group_by(mf) |>
   summarize(n = n(),
             mean_deaths   = mean(deaths),
             median_deaths = median(deaths))
-
-# The mean gap does not go away. Which storms are driving it?
-
 
 # ---- 4. Motivating Claim 2: the 2024 presidential vote by district ---------
 
@@ -89,29 +85,26 @@ glimpse(cd)
 
 # ---- 5. Continuous: the Democratic margin -----------------------------------
 
-# The 10 most Democratic districts. dem_margin_2024map is Harris percent
-# minus Trump percent, so positive values are Harris districts.
+# The 10 most Democratic districts. 
+
 cd |>
   select(district, member, party, dem_margin_2024map) |>
   arrange(desc(dem_margin_2024map)) |>
   head(10)
 
-# Exercise: Do the same thing for the 10 most Republican districts. How do
-# they compare to the 10 most Democratic districts?
+# Exercise: Do the same thing for the 10 most Republican districts. How compare?
 
 
 
 # Mean versus median margin across all 435 districts.
+
 cd |>
   summarize(mean_margin = mean(dem_margin_2024map),
             median_margin = median(dem_margin_2024map))
 
-# The average district is essentially tied; the median district leans
-# Republican. Why do they differ? Look back at the 10 most Democratic
-# districts.
 
-# Exercise: Determine the typical value of harris_pct_2024map. Which measure
-# would you prefer, and why?
+# Exercise: Determine the typical value of harris_pct_2024map. 
+# Which measure would you prefer of partisanship? Of electoral leaning?
 
 
 
@@ -135,8 +128,8 @@ cd |>
 
 # ---- 6. Categorical (ordered): competitiveness ------------------------------
 
-# Create an ordered categorical variable with case_when(). abs() gives the
-# size of the margin regardless of who won.
+# Create an ordered categorical variable with case_when(). 
+# abs() gives the size of the margin regardless of who won.
 cd = cd |>
   mutate(competitive_2024map = case_when(
     abs(dem_margin_2024map) < 5 ~ "Toss-up (<5)",
@@ -189,6 +182,13 @@ cd |>
 # vote by about 1.5 points. What is the unit of analysis here?
 
 
+# Compare them
+
+cd |>
+  count(competitive_2024map,competitive_2026map)
+
+table(cd$competitive_2024map,cd$competitive_2026map)
+
 # ---- 9. What did redistricting do? -----------------------------------------
 
 # Same votes, different lines. Compare the mean, the median, and the number of
@@ -200,9 +200,6 @@ cd |>
             median_new = median(dem_margin_2026map),
             seats_old = sum(harris_won_2024map),
             seats_new = sum(harris_won_2026map))
-
-# The mean barely moves. It cannot: the same votes are being added up in
-# different piles. The median and the seat count do move.
 
 # By state. sum(redistricted) counts the redrawn districts in each state;
 # filtering on that count AFTER summarize() keeps only the states that
@@ -218,22 +215,14 @@ cd |>
             seats_new = sum(harris_won_2026map)) |>
   filter(n_redrawn > 0)
 
-# Texas: mean and median essentially unchanged, Harris districts 11 to 8.
-# California: mean unchanged, median falls, Harris districts 41 to 47.
-# How can the typical district move toward Republicans while Democrats win
-# more of them?
+# Texas district by district, sorted by the old margin. 
 
-# Texas district by district, sorted by the old margin. Find the districts
-# where the sign flips (cracked) and the safe districts that got safer
-# (packed).
 cd |>
   filter(state == "TX") |>
   select(district, party, dem_margin_2024map, dem_margin_2026map) |>
   arrange(dem_margin_2024map)
 
-# Exercise: Do the same district-by-district look for Florida. Which districts
-# were cracked? Which were packed?
-
+# Exercise: Do the same district-by-district look for Florida or California.
 
 
 # Exercise: Redo the competitiveness categories using dem_margin_2026map. Did
@@ -251,9 +240,6 @@ cd |>
 
 # Percent change: 100 * (new - old) / old.
 100*(37 - 44)/44
-
-# Same change, very different-sounding numbers.
-
 
 # ---- 11. A counterfactual: turning vote shifts into seats -------------------
 
@@ -281,8 +267,6 @@ cd |>
             seats_new_shift4 = sum(harris_won_new_shift4)) |>
   filter(n_redrawn > 0)
 
-# In Texas and Florida a 4-point swing changes nothing under the new lines.
-
 # A 13-point wave. Same code, different number. This time save the new
 # variables to cd.
 cd = cd |>
@@ -301,14 +285,6 @@ cd |>
             seats_new_shift13 = sum(harris_won_new_shift13)) |>
   filter(n_redrawn > 0)
 
-# Now the cushions give way: Texas 8 to 11, Florida 4 to 9. A map built to
-# withstand a normal election can hand over seats in a wave.
-
-# Exercise: What happens with a 4-point shift toward Republicans? With a
-# 2-point shift toward Democrats? How big a Democratic swing is needed to
-# reach 218 under the new lines?
-
-
-
-# A uniform swing is an assumption, not a fact. Real swings vary across
-# districts. Next session: uncertainty.
+# Exercise: What happens with a 4-point shift toward Republicans? 
+# With a 2-point shift toward Democrats? 
+# How big a Democratic swing is needed to reach 218 under the new lines?

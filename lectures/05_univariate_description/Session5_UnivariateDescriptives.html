@@ -11,7 +11,7 @@
 
 <meta name="author" content="Prof. Josh Clinton" />
 
-<meta name="date" content="2026-09-11" />
+<meta name="date" content="2026-09-13" />
 
 <title>Univariate Description: The Cases of Himmicanes and Congressional Redistricting</title>
 
@@ -1482,7 +1482,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Univariate Description: The Cases of
 Himmicanes and Congressional Redistricting</h1>
 <h4 class="author">Prof. Josh Clinton</h4>
-<h4 class="date">2026-09-11</h4>
+<h4 class="date">2026-09-13</h4>
 
 </div>
 
@@ -1770,7 +1770,9 @@ of names were used — i.e., from 1979 onward — using
 looked convincing; the same data summarized with a median told a
 different and more honest story. The mean is easy to explain and it is
 what most people reach for — and it is exactly the wrong summary when a
-few extreme cases can dominate it.</p>
+few extreme cases can dominate it. So is it true that female hurricanes
+are more deadly on average? Well, it depends on what measure you think
+is best – a decision that requires an argument.</p>
 <p>NOTE: Our work is <em>not</em> a reproduction of the published paper.
 Jung et al. deliberately set Katrina and Audrey aside as outliers and
 fit a statistical model using how feminine each name was (using tools we
@@ -1885,13 +1887,12 @@ mind as it is exactly the logic that redistricting exploits.)</p>
 <div id="continuous" class="section level2">
 <h2>Continuous</h2>
 <p>Let’s start by taking a look at <code>dem_margin_2024map</code> –
-Harris’s percent minus Trump’s percent in each district. It seems pretty
-likely that this is a continuous variable. Let’s take a look at the 10
-most Democratic districts in the United States by using the
-`<code>arrange</code> function that we are going to look at in
-<code>desc</code>ending order, and then print the top 10 using
-<code>head</code>. (There are lots of ways to do this – this is just a
-fancy way.)</p>
+Harris’s percent minus Trump’s percent in each district. This is a
+continuous variable. Let’s take a look at the 10 most Democratic
+districts in the United States by using the `<code>arrange</code>
+function that we are going to look at in <code>desc</code>ending order,
+and then print the top 10 using <code>head</code>. (There are lots of
+ways to do this – this is just a fancy way.)</p>
 <pre class="r"><code>cd |&gt; 
   select(district, member, party, dem_margin_2024map) |&gt; 
   arrange(desc(dem_margin_2024map)) |&gt; 
@@ -1904,15 +1905,16 @@ districts. How do they compare to the 10 most Democratic districts?</p>
 <div id="measures-for-continuous-variables" class="section level2">
 <h2>Measures for Continuous Variables</h2>
 <p>The mean is used most of the time for continuous variables, but as we
-have seen, it can be VERY sensitive to outliers. The median (50th
-percentile) is usually better, but it can be difficult to explain to
-general audiences.</p>
+have just seen, it can be VERY sensitive to outliers and lead misleading
+characterizations. The median (50th percentile) is usually better for
+describing what is ``typical,” but the downside is that it can be
+difficult to explain to general audiences.</p>
 <pre class="r"><code>cd |&gt;
   summarize(mean_margin = mean(dem_margin_2024map),
             median_margin = median(dem_margin_2024map))</code></pre>
 <p>So the <em>average</em> district was essentially tied, but the
-<em>median</em> district favored Trump by about 3 points. Which is the
-“typical” district?</p>
+<em>median</em> district favored Trump by about 3 points. So how should
+we decide what to say about the “typical” district?</p>
 <p>Why do they differ? Look back at the 10 most Democratic districts:
 the most lopsided districts in the country are Democratic ones, – just
 like the most catastrophic hurricanes had female names.</p>
@@ -2073,9 +2075,6 @@ lines. Let’s see what happened to the typical district? (Below,
             median_new = median(dem_margin_2026map),
             seats_old = sum(harris_won_2024map),
             seats_new = sum(harris_won_2026map))</code></pre>
-<p>The mean barely moves. It cannot: the same votes are being added up,
-just in different piles. But the median moves, and the number of
-districts Harris carried drops from 204 to 201.</p>
 <p>To see how, <code>group_by</code> state. Because
 <code>redistricted</code> is 0/1, <code>sum(redistricted)</code> counts
 the redrawn districts in each state, and we can <code>filter</code> on
@@ -2118,22 +2117,25 @@ Now find TX-18 and TX-37, which went from Harris +40 and +49 to Harris
 moved from districts where they produced a win into districts that were
 already won.</p>
 <p>Now California, where the tools were used in the other direction: the
-safest Democratic districts were <em>unpacked</em> – CA-02 went from
+safest Democratic districts were <em>cracked</em> – CA-02 went from
 Harris +45 to +25, CA-04 from +31 to +15 – and those voters were used to
 flip CA-01, CA-41 and CA-48 from Trump districts into Harris districts.
 Spreading your own voters more thinly makes the median district less
-Democratic, but it wins more seats. That is exactly the 50.05 to 49.95
-logic from the start of class.</p>
+Democratic in the hope of winning more seats.</p>
 <p><em>Quick Exercise</em> Do the same district-by-district look for
 Florida. Which districts were cracked? Which were packed?</p>
 <pre class="r"><code># INSERT CODE HERE</code></pre>
 <p><em>Quick Exercise</em> Redo the competitiveness categories using
-<code>dem_margin_2026map</code>. Did redistricting make districts more
+<code>dem_margin_2026map</code> to create a new variable called
+<code>competitive_2024map</code>. Did redistricting make districts more
 or less competitive?</p>
 <pre class="r"><code># INSERT CODE HERE</code></pre>
-<p>So which summary tells you what redistricting did? Not the mean. The
-median and the count of districts above zero do. A single “average”
-would have told you nothing happened.</p>
+<p><em>Quick Exercise</em> Can you compare the two measures of
+competitiveness? Let’s see how they compare under the new and old
+maps.</p>
+<pre class="r"><code># INSERT CODE HERE</code></pre>
+<p>So which measure reveals the effects of redistricting? The mean? The
+median?</p>
 </div>
 </div>
 <div id="differences-in-percentages-or-percent-difference" class="section level1">
