@@ -137,7 +137,10 @@ cd = cd |>
     abs(dem_margin_2024map) < 20 ~ "Likely (10-20)",
     abs(dem_margin_2024map) >= 20 ~ "Safe (20+)"))
 
-# Count the categories. The most common category is the mode.
+# ---- 7. Categorical (unordered): state --------------------------------------
+
+# A mean or median of state makes no sense. count() gives the mode.
+
 cd |>
   count(competitive_2024map)
 
@@ -145,15 +148,6 @@ cd |>
 cd |>
   count(competitive_2024map) |>
   mutate(Pct = 100*n/sum(n))
-
-
-# ---- 7. Categorical (unordered): state --------------------------------------
-
-# A mean or median of state makes no sense. count() gives the mode.
-cd |>
-  count(state) |>
-  arrange(desc(n)) |>
-  head(10)
 
 
 # ---- 8. Categorical (binary): redrawn districts and Harris districts --------
@@ -287,4 +281,5 @@ cd |>
 
 # Exercise: What happens with a 4-point shift toward Republicans? 
 # With a 2-point shift toward Democrats? 
+
 # How big a Democratic swing is needed to reach 218 under the new lines?
