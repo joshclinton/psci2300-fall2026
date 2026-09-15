@@ -1,0 +1,105 @@
+---
+title: 'PSCI 2300 Problem Set 2'
+author: "YOUR NAME HERE"
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+# Midterm Forecaster?
+
+In class we talked about what would happen if there was a uniform shift -- i.e., the vote moved by the same direction in every district.  We did this by adding a number to `dem_margin_2024map` and `dem_margin_2026map`.  While that worked, it was also super crude.
+
+1. *To start load in the data `cd2026_by_presvote.csv`. In class we computed a measure of competitiveness based on the 2024 map.  Do the same using the 2026 map.  How did it change our characterization of how competitive the 2026 midterm is likely to be? Is it more or less competitive?*
+
+```{r}
+# INSERT ANSWER
+```
+
+2. *If we look only at California, what can you say about how redistricting changed the amount of competition?*
+
+```{r}
+# INSERT ANSWER
+```
+
+3.  *Now let's look by party. How does the number of competitive districts vary between seats held by Democrats and Republicans under the new map?  Which party has more competitive seats to defend?*
+
+```{r}
+# INSERT ANSWER
+```
+
+4. *Create a new variable called `shift` that takes on the value of the vote shift.  Make sure to save this inside of the `cd` object.  To start, set `shift` to be 3.*  
+
+```{r}
+# INSERT ANSWER
+```
+
+5. *Using that new variable, compare the number of seats under the 2024 map and 2026 map. HINT: we did something similar in class! Who wins a majority?  What is the effect of redistricting?*
+
+```{r}
+# INSERT ANSWER
+```
+
+6. *What if the shift is anti-incumbent and Democrats gain 3 percentage points and Republicans lose 3? How does the code for `shift` change? Think first!*
+
+```{r}
+# INSERT ANSWER
+```
+
+
+7. *What if the election shift only happens in toss-up districts? Create a new version of shift that is 5 in 2026 Toss-up districts and zero otherwise.  Do the results change?  Why or why not?*
+
+```{r}
+# INSERT ANSWER
+```
+
+
+8. *What if the election shift is larger in more Democratic districts? Create a new version of `shift` called `HarrisShift` that is $10 \times$ Harris's vote share in the 2026 map. What is the average and median value of `HarrisShift`? MAKE SURE TO LOOK AT THE VARIABLES TO SEE IF YOU NEED TO CHANGE THEM.*
+
+```{r}
+# INSERT ANSWER
+```
+
+9. *How does the average and median value of `HarrisShift` differ by whether the district is currently represented by a Democrat (`D`) or a Republican (`R`)?*
+
+```{r}
+# INSERT ANSWER
+```
+
+10. *How does this affect the amount of seats we predict each party to win*
+
+```{r}
+# INSERT ANSWER
+```
+
+11. *Who spoke in class on Sept 16?*
+```{r}
+# INSERT ANSWER
+```
+
+
+12.  *Your parent finds a piece of code in your bedroom and they are worried about what kind of stuff you have gotten yourself involved in. In language that most people would understand, explain what each part of the following code does and why it is important. No coding required. (That will be next PS).*
+
+```{r, eval = FALSE}
+SampledHarrisSupport <- NULL
+set.seed(2300)
+
+for (i in 1:100) {
+
+  one_estimate <- ces_gender %>%
+    slice_sample(prop = 1, replace = TRUE) %>%
+    summarize(
+      Iteration = i,
+      PctHarris = mean(HarrisVoter)
+    )
+
+  SampledHarrisSupport <- bind_rows(
+    SampledHarrisSupport,
+    one_estimate
+  )
+}
+
+SampledHarrisSupport
+```
+
