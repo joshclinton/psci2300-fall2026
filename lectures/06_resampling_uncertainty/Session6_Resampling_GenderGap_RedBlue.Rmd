@@ -1,0 +1,726 @@
+---
+title: "Session 6. Uncertainty: Is the Difference Real?"
+subtitle: "Polling, the Gender Gap, and Red Versus Blue"
+author: "Prof. Josh Clinton"
+institute: "Vanderbilt University"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# Learning Objectives
+
+- Explain the intuition behind a poll's margin of error.
+
+- Explain why a bootstrap samples with replacement.
+
+- Use a loop to repeat the same analysis many times.
+
+- Use `bind_rows()` to collect the result from each loop iteration.
+
+- Use resampling to see how much a percentage or difference of means might vary.
+
+- Use a bootstrap interval to ask whether a difference is distinguishable from zero.
+
+# A Familiar Number: The Margin of Error
+
+A poll might report 52 percent support with a margin of error of plus or minus
+3 percentage points. What does that margin of error mean? Why is there a margin
+of error if the poll has already counted every answer in its sample?
+
+The percentage is exact for the people who answered the poll. But those people
+are only one sample. A different sample would probably produce a somewhat
+different percentage.
+
+The margin of error describes this **sampling uncertainty**.
+
+We cannot repeatedly field the same survey. But we can use the sample we have
+to imitate that thought experiment:
+
+1. Draw a new sample from the observed sample.
+2. Calculate the estimate in that new sample.
+3. Repeat this many times.
+4. Examine how much the estimates vary.
+
+That procedure is called **resampling**. We will begin with one polling
+percentage, then return to the gender gap from Lecture 3.
+
+```{r libraries}
+library(tidyverse)
+```
+
+# Return to the 2024 CES
+
+In Lecture 3, we created an analysis-ready row-level tibble for the gender gap
+and saved it as an `.rds` file. We can read that R object back into memory
+without repeating the wrangling.
+
+```{r load-ces}
+ces_gender = readRDS("CES2024_GenderGap.rds")
+
+glimpse(ces_gender)
+```
+
+`HarrisVoter` equals 1 for a respondent who reported voting for Harris and 0
+for a respondent who reported voting for Trump. What does its mean represent?
+
+Because the variable contains only zeros and ones, its mean is the proportion
+who reported voting for Harris.
+
+```{r ces-group-means}
+ces_gender |>
+  summarize(
+    N = n(),
+    PctHarris = mean(HarrisVoter)
+  )
+```
+
+That is the exact percentage in this CES teaching sample. How much might it
+change if the CES had interviewed a different sample?
+
+# Samples, Populations, and Uncertainty
+
+The **sample** is the data we have: the people interviewed for the CES. The
+**population** is the larger group we want to learn about: voters beyond the
+particular people who answered this survey.
+
+A sample estimate will usually not be exactly equal to the population value.
+Sampling uncertainty is the variation created by observing one sample rather
+than another.
+
+Resampling uses the variation in the observed data to approximate what we might
+have found in other samples.
+
+# How Does `slice_sample()` Work?
+
+We can use `slice_sample()` to randomly draw rows from a data frame. To make
+each part of the function visible, begin with five CES respondents and add an
+identification number.
+
+```{r slice-sample-demo-data}
+ces_demo = ces_gender |>
+  select(gender4, presvote) |>
+  head(5) |>
+  mutate(case_id = 1:n(), .before = 1)
+
+ces_demo
+```
+
+The argument `n` tells `slice_sample()` how many rows to draw.
+
+```{r slice-sample-n}
+ces_demo |>
+  slice_sample(n = 3)
+```
+
+By default, the same row cannot be selected twice. Once a row is drawn, it is
+temporarily set aside. This is **sampling without replacement**.
+
+Instead of specifying the number of rows, `prop` tells `slice_sample()` what
+**proportion** of the rows to draw. Here `.4` means 40 percent of the five rows,
+so the result contains two rows.
+
+```{r slice-sample-prop}
+ces_demo |>
+  slice_sample(prop = .4)
+```
+
+Suppose we want an imaginary new poll with the same number of respondents as
+the observed poll. We might begin with `prop = 1`.
+
+```{r missing-replacement}
+ces_demo |>
+  slice_sample(prop = 1)
+```
+
+The code runs, but look at `case_id`. We sampled all five rows without
+replacement, so R had no choice but to return every row exactly once. It only
+changed their order. Would rearranging the respondents change their mean?
+
+This is a useful error: the function is correct, but a critical argument is
+missing.
+
+For a bootstrap sample, we use `prop = 1` because the new sample should be the
+same size as the original data. We also use `replace = TRUE`. After a row is
+drawn, it is put back and can be drawn again.
+
+```{r slice-sample-replacement}
+set.seed(1)
+
+ces_demo |>
+  slice_sample(prop = 1, replace = TRUE)
+```
+
+Look at `case_id`. Some respondents appear more than once and others do not
+appear at all. The bootstrap sample still contains five rows, but it is not
+identical to the original five rows.
+
+The complete instruction therefore means:
+
+- `prop = 1`: draw 100 percent as many rows as are in the original data;
+- `replace = TRUE`: put each selected row back so it can be selected again.
+
+# One Imaginary New Poll
+
+Now use those instructions with the entire CES dataset. Because we want our
+work to be reproducible, we set a seed before drawing.
+
+```{r one-ces-resample}
+set.seed(42)
+
+ces_gender |>
+  slice_sample(prop = 1, replace = TRUE) |>
+  summarize(PctHarris = mean(HarrisVoter))
+```
+
+Run the code several times without resetting the seed. The estimate changes
+because each resample contains a somewhat different collection of respondents.
+
+One resample shows what could happen once. It does not tell us how much the
+estimate usually changes. We need to repeat the same analysis many times.
+
+# What Does a Loop Do?
+
+A loop tells R to repeat a block of code. Begin with a loop that does nothing
+except print the value of `i`.
+
+```{r loop-counts}
+for (i in 1:5) {
+  print(i)
+}
+```
+
+Read the first line as: “For each value of `i` from 1 through 5, run the code
+inside the braces.”
+
+The braces identify what is repeated. On the first pass, `i` equals 1. On the
+second pass, `i` equals 2. The loop stops after the fifth pass.
+
+Now replace `print(i)` with the work we want to repeat:
+
+1. Draw a bootstrap sample.
+2. Calculate Harris support.
+3. Store the answer.
+
+# Do the Work Once Before Repeating It
+
+Before writing the loop, do the work once.
+
+```{r one-harris-estimate}
+one_estimate = ces_gender |>
+  slice_sample(prop = 1, replace = TRUE) |>
+  summarize(PctHarris = mean(HarrisVoter))
+
+one_estimate
+```
+
+`one_estimate` is a one-row tibble. If we repeat this step, we need an object
+that can collect each one-row answer.
+
+# What Does `bind_rows()` Do?
+
+Begin with an empty object.
+
+```{r empty-ces-container}
+SampledHarrisSupport = NULL
+```
+
+`bind_rows()` places the rows from one object underneath the rows in another
+object. Here the first object is empty, so the result contains the one row from
+`one_estimate`.
+
+```{r bind-first-result}
+SampledHarrisSupport = bind_rows(
+  SampledHarrisSupport,
+  one_estimate
+)
+
+SampledHarrisSupport
+```
+
+Now make another estimate and bind it to the object that already contains the
+first estimate.
+
+```{r bind-second-result}
+another_estimate = ces_gender |>
+  slice_sample(prop = 1, replace = TRUE) |>
+  summarize(PctHarris = mean(HarrisVoter))
+
+SampledHarrisSupport = bind_rows(
+  SampledHarrisSupport,
+  another_estimate
+)
+
+SampledHarrisSupport
+```
+
+Why are there now two rows? `bind_rows()` does not replace the first estimate.
+It adds the second estimate beneath it.
+
+# Put the Steps Inside a Loop
+
+Start with five iterations so we can inspect the result.
+
+```{r five-harris-resamples}
+SampledHarrisSupport = NULL
+set.seed(2300)
+
+for (i in 1:5) {
+
+  one_estimate = ces_gender |>
+    slice_sample(prop = 1, replace = TRUE) |>
+    summarize(
+      Iteration = i,
+      PctHarris = mean(HarrisVoter)
+    )
+
+  SampledHarrisSupport = bind_rows(
+    SampledHarrisSupport,
+    one_estimate
+  )
+}
+
+SampledHarrisSupport
+```
+
+The loop repeats the same commands five times. `bind_rows()` stores one answer
+on each pass. The value of `i` lets us see which pass produced each row.
+
+What should change if we replace `1:5` with `1:1000`? What should remain the
+same?
+
+# Repeat the Poll 1,000 Times
+
+Once the five-iteration loop works, change only the number of repetitions.
+
+```{r harris-bootstrap-loop}
+SampledHarrisSupport = NULL
+set.seed(2300)
+
+for (i in 1:1000) {
+
+  one_estimate = ces_gender |>
+    slice_sample(prop = 1, replace = TRUE) |>
+    summarize(PctHarris = mean(HarrisVoter))
+
+  SampledHarrisSupport = bind_rows(
+    SampledHarrisSupport,
+    one_estimate
+  )
+}
+```
+
+Each row now contains Harris support from one imaginary new poll.
+
+```{r inspect-ces-bootstrap}
+summary(SampledHarrisSupport)
+```
+
+The `summary()` output describes the **bootstrap distribution** numerically.
+Compare its median to Harris support in the original sample. The minimum,
+quartiles, and maximum show how much the estimate changes across resamples.
+
+# From a Margin of Error to an Interval
+
+We can use the 2.5th and 97.5th percentiles to identify the middle 95 percent
+of our resampled estimates.
+
+```{r ces-bootstrap-interval}
+SampledHarrisSupport |>
+  summarize(
+    Lower = quantile(PctHarris, .025),
+    Estimate = mean(PctHarris),
+    Upper = quantile(PctHarris, .975),
+    MarginOfError = (Upper - Lower) / 2
+  )
+```
+
+This is a **95 percent bootstrap interval**. Its margin of error is half the
+width of the interval.
+
+Does a narrow interval mean the CES estimate must match the election result?
+No. The bootstrap cannot add people who were systematically missing from the
+survey or correct a sample that overrepresents some kinds of respondents.
+The margin of error describes sampling error, not every possible source of
+polling error.
+
+# A Harder Question: Is the Gender Gap "Real"?
+
+In Lecture 3, we found different levels of Harris support among women and men.
+Calculate the two group means again.
+
+```{r gender-group-means}
+ces_gender |>
+  group_by(female) |>
+  summarize(
+    N = n(),
+    PctHarris = mean(HarrisVoter)
+  )
+```
+
+The statistic is now a **difference of means**: Harris support among women
+minus Harris support among men.
+
+```{r observed-gender-gap}
+Women = ces_gender |>
+  filter(female == 1) |>
+  summarize(PctHarris = mean(HarrisVoter))
+
+Men = ces_gender |>
+  filter(female == 0) |>
+  summarize(PctHarris = mean(HarrisVoter))
+
+GenderGap = Women$PctHarris - Men$PctHarris
+GenderGap
+```
+
+Women in this sample were about `r round(100 * GenderGap, 1)` percentage points
+more likely than men to report voting for Harris. That describes this sample.
+How much might the estimated gap change in a different sample?
+
+# Bootstrap the Gender Gap
+
+The loop has the same three parts: sample, calculate, store. Only the statistic
+inside the loop changes.
+
+```{r gender-gap-bootstrap-loop}
+SampledGenderGaps = NULL
+set.seed(2300)
+
+for (i in 1:1000) {
+
+  one_sample = ces_gender |>
+    slice_sample(prop = 1, replace = TRUE)
+
+  one_women = one_sample |>
+    filter(female == 1) |>
+    summarize(PctHarris = mean(HarrisVoter))
+
+  one_men = one_sample |>
+    filter(female == 0) |>
+    summarize(PctHarris = mean(HarrisVoter))
+
+  one_gap = tibble(
+    GenderGap = one_women$PctHarris - one_men$PctHarris
+  )
+
+  SampledGenderGaps = bind_rows(SampledGenderGaps, one_gap)
+}
+```
+
+```{r inspect-gender-gap-bootstrap}
+summary(SampledGenderGaps)
+```
+
+```{r gender-gap-bootstrap-interval}
+SampledGenderGaps |>
+  summarize(
+    Lower = quantile(GenderGap, .025),
+    Estimate = mean(GenderGap),
+    Upper = quantile(GenderGap, .975)
+  )
+```
+
+Does the interval include zero? Here the interval is above zero. The gender gap
+is distinguishable from zero as sampling error.
+
+Does that mean the gender gap is "real"? We need to be precise:
+
+- The difference is too large to explain easily as sampling variation alone.
+- It remains a descriptive association, not evidence that gender caused vote
+  choice.
+- The bootstrap does not fix people being missing or overrepresented in the
+  survey. This teaching extract is unweighted, and we already know its raw vote
+  estimate does not match the election result.
+
+The margin of error describes **sampling error**. It does not describe every
+possible source of error in a poll.
+
+# Same Method, New Question
+
+The bootstrap is useful because it is not limited to polling. We can use the
+same procedure for any statistic we can calculate in a sample.
+
+At the 2004 Athens Olympics, competitors in boxing, taekwondo, Greco-Roman
+wrestling, and freestyle wrestling were assigned red or blue outfits. Hill and
+Barton reported that red won significantly more often than blue in the pooled
+data ($p=.041$). They argued that wearing red might influence the outcome of a
+close contest.^[Russell A. Hill and Robert A. Barton. 2005. "[Red Enhances Human Performance in Contests](https://www.nature.com/articles/435293a)."
+*Nature* 435: 293.]
+
+Before opening the data, what is the question?
+
+- What is the unit being studied?
+- What is assigned to red or blue: the athlete or the position in a bout?
+- What is the outcome?
+- What comparison would show a red advantage?
+- Why does random assignment matter?
+- What would it mean for the difference to equal zero?
+
+The basic comparison is the rate at which red wins minus the rate at which blue
+wins. If color makes no difference, that difference should be zero. A positive
+difference means red won more often; a negative difference means blue won more
+often.
+
+The questions are now familiar:
+
+- How large was the red-blue difference?
+- How much might that estimate vary in a different sample of bouts?
+- Is the difference distinguishable from zero?
+
+```{r load-athens}
+athens = read_csv("athens.csv") |>
+  mutate(
+    red_win = if_else(winner == "Red", 1, 0),
+    blue_win = if_else(winner == "Blue", 1, 0)
+)
+```
+
+Each row is one bout. `red_win` equals 1 when red won and 0 when red lost.
+`blue_win` does the reverse. Before running the next chunk, what should the two
+means add to? Why?
+
+# The Red-Blue Difference of Means
+
+The mean of each indicator is the win rate for that color. 
+Calculate the two means and subtract.
+
+```{r observed-red-blue}
+athens |>
+  summarize(
+    RedWinRate = mean(red_win),
+    BlueWinRate = mean(blue_win),
+    Difference = RedWinRate - BlueWinRate
+  )
+```
+
+The estimated difference is about 8.5 percentage points. Red won more often in
+these data. Now apply the procedure we just learned.
+
+# Bootstrap the Red-Blue Difference
+
+```{r red-blue-bootstrap}
+SampledDifferences = NULL
+set.seed(2300)
+
+for (i in 1:1000) {
+
+  one_difference = athens |>
+    slice_sample(prop = 1, replace = TRUE) |>
+    summarize(
+      Difference = mean(red_win) - mean(blue_win)
+    )
+
+  SampledDifferences = bind_rows(
+    SampledDifferences,
+    one_difference
+  )
+}
+```
+
+```{r inspect-red-blue-bootstrap}
+summary(SampledDifferences)
+```
+
+Compare this summary to the CES bootstrap. Which set of estimates varies more
+from one resample to another?
+
+```{r red-blue-interval}
+SampledDifferences |>
+  summarize(
+    Lower = quantile(Difference, .025),
+    Estimate = mean(Difference),
+    Upper = quantile(Difference, .975)
+  )
+```
+
+Does this interval include zero? Is the Olympic estimate more or less precise
+than the CES gender-gap estimate? Why?
+
+Hill and Barton reported a statistically significant pooled result
+($p=.041$). Our simple difference using every bout in their posted supplement
+is less certain: its interval includes zero. This does not by itself prove that
+the published result is wrong. It tells us that the answer depends on exactly
+which comparison and analysis are being used. Their paper also examines
+rounds, weight classes, and contests between athletes of similar ability.
+
+That creates another question: which analysis was specified because it follows
+from the argument, and which analyses became important after looking at the
+data? We cannot answer that from the p-value alone.
+
+# Testing the Difference Against Zero
+
+A confidence interval asks whether zero is a plausible value for the population
+difference. A hypothesis test asks a closely related question:
+
+> If red and blue were equally likely to win, how often would chance produce a
+> difference at least as large as the one we observed?
+
+Under this **null hypothesis**, each bout is like a fair coin flip: red has a 50 percent chance of winning and blue has a 50 percent chance.
+
+```{r observed-difference-object}
+ObservedDifference = athens |>
+  summarize(Difference = mean(red_win) - mean(blue_win)) |>
+  pull(Difference)
+```
+
+Simulate 1,000 imaginary Olympics in which color has no advantage.
+
+```{r null-loop}
+NullDifferences = NULL
+fair_coin = tibble(red_win = c(0, 1))
+set.seed(2300)
+
+for (i in 1:1000) {
+
+  one_null = fair_coin |>
+    slice_sample(n = nrow(athens), replace = TRUE) |>
+    summarize(
+      Difference = mean(red_win) - mean(1 - red_win)
+    )
+
+  NullDifferences = bind_rows(NullDifferences, one_null)
+}
+```
+
+```{r inspect-null}
+summary(NullDifferences)
+```
+
+The null differences are centered near zero because they come from a world in
+which red and blue are equally likely to win. We now count how many imaginary
+Olympics produced a difference at least as far from zero as the observed
+difference, in either direction.
+
+```{r p-value}
+NullDifferences |>
+  summarize(
+    p_value = mean(abs(Difference) >= abs(ObservedDifference))
+  )
+```
+
+This simulated **p-value** is the fraction of fair-coin results at least as extreme as the observed result. 
+A small p-value is evidence against the no-difference hypothesis. 
+It is not the probability that the null hypothesis is true.
+
+# What Happens When We Add More Data?
+
+The Athens result comes from one Olympic Games. 
+We now have comparable results from Olympics held between 1996 and 2020.
+
+```{r load-all-olympics}
+olympics = read_csv(
+  "olympics.csv"
+) |>
+  mutate(
+    red_win = if_else(winner == "Red", 1, 0),
+    blue_win = if_else(winner == "Blue", 1, 0)
+  )
+```
+
+Calculate the difference for each Olympic year.
+
+```{r differences-by-year}
+olympics |>
+  group_by(year) |>
+  summarize(
+    N = n(),
+    Difference = mean(red_win) - mean(blue_win)
+  )
+```
+
+The result is not stable across Olympics. In some years red wins more; in
+others, blue wins more.
+
+Now calculate the difference using all of the contests.
+
+```{r pooled-difference}
+olympics |>
+  summarize(
+    RedWinRate = mean(red_win),
+    BlueWinRate = mean(blue_win),
+    Difference = RedWinRate - BlueWinRate
+  )
+```
+
+The apparent red advantage is much smaller when we include more data. Use the
+same bootstrap one more time.
+
+```{r all-years-bootstrap}
+AllYearsDifferences = NULL
+set.seed(2300)
+
+for (i in 1:1000) {
+
+  one_difference = olympics |>
+    slice_sample(prop = 1, replace = TRUE) |>
+    summarize(
+      Difference = mean(red_win) - mean(blue_win)
+    )
+
+  AllYearsDifferences = bind_rows(
+    AllYearsDifferences,
+    one_difference
+  )
+}
+
+AllYearsDifferences |>
+  summarize(
+    Lower = quantile(Difference, .025),
+    Estimate = mean(Difference),
+    Upper = quantile(Difference, .975)
+  )
+```
+
+Does this interval include zero? What has changed since we looked only at
+Athens in 2004?
+
+# What Have We Learned?
+
+- A margin of error describes how much an estimate might change across samples.
+- Bootstrap resampling imitates repeated samples using the data we have.
+- The same procedure works for a poll percentage or a difference of means.
+- A confidence interval helps us ask whether zero is plausible.
+- A hypothesis test asks how surprising our estimate would be if the true
+  difference were zero.
+- Sampling uncertainty is only one kind of uncertainty; resampling cannot fix
+  a sample that poorly represents the population.
+- A finding from one dataset can weaken when more evidence becomes available.
+
+# New R Functions Introduced in Lecture 6
+
+Functions introduced in earlier lectures are intentionally omitted.
+
+| Function | What it does |
+|---|---|
+| `slice_sample()` | Randomly draws rows from a data frame. |
+| `set.seed()` | Makes random results reproducible. |
+| `tibble()` | Creates a data frame in tidyverse format. |
+| `bind_rows()` | Adds rows to the bottom of a data frame. |
+| `quantile()` | Returns values at specified percentiles. |
+| `pull()` | Extracts one variable from a data frame as a vector. |
+| `abs()` | Returns the absolute distance from zero. |
+| `nrow()` | Returns the number of rows in a data frame. |
+| `for` | Repeats a block of code a specified number of times. |
+
+# Works Cited
+
+Hill, Russell A., and Robert A. Barton. 2005. “Red Enhances Human Performance
+in Contests.” *Nature* 435: 293.
+[https://doi.org/10.1038/435293a](https://doi.org/10.1038/435293a).
+
+Peperkoorn, Leonard S., Russell A. Hill, Robert A. Barton, and Thomas V. Pollet.
+2024. “Meta-analysis of the Red Advantage in Combat Sports.” *Scientific
+Reports* 14: 30822.
+[https://doi.org/10.1038/s41598-024-81373-3](https://doi.org/10.1038/s41598-024-81373-3).
+Data and code: [https://osf.io/fqkcw/](https://osf.io/fqkcw/).
+
+Schaffner, Brian, Marissa Shih, Stephen Ansolabehere, and Jeremy Pope. 2025.
+“Cooperative Election Study Common Content, 2024.” Harvard Dataverse, V9.
+[https://doi.org/10.7910/DVN/X11EP6](https://doi.org/10.7910/DVN/X11EP6).
