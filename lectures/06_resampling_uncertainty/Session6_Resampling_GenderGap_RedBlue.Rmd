@@ -107,7 +107,7 @@ identification number.
 ces_demo = ces_gender |>
   select(gender4, presvote) |>
   head(5) |>
-  mutate(case_id = 1:n(), .before = 1)
+  mutate(case_id = 1:n())
 
 ces_demo
 ```

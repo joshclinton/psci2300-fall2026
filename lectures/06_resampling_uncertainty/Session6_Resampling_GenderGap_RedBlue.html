@@ -1581,23 +1581,23 @@ CES respondents and add an identification number.</p>
 <pre class="r"><code>ces_demo = ces_gender |&gt;
   select(gender4, presvote) |&gt;
   head(5) |&gt;
-  mutate(case_id = 1:n(), .before = 1)
+  mutate(case_id = 1:n())
 
 ces_demo</code></pre>
-<pre><code>##   case_id gender4 presvote
-## 1       1       2   Harris
-## 2       2       1   Harris
-## 3       3       2   Harris
-## 4       4       2    Trump
-## 5       5       2   Harris</code></pre>
+<pre><code>##   gender4 presvote case_id
+## 1       2   Harris       1
+## 2       1   Harris       2
+## 3       2   Harris       3
+## 4       2    Trump       4
+## 5       2   Harris       5</code></pre>
 <p>The argument <code>n</code> tells <code>slice_sample()</code> how
 many rows to draw.</p>
 <pre class="r"><code>ces_demo |&gt;
   slice_sample(n = 3)</code></pre>
-<pre><code>##   case_id gender4 presvote
-## 1       5       2   Harris
-## 2       4       2    Trump
-## 3       3       2   Harris</code></pre>
+<pre><code>##   gender4 presvote case_id
+## 1       2   Harris       5
+## 2       1   Harris       2
+## 3       2    Trump       4</code></pre>
 <p>By default, the same row cannot be selected twice. Once a row is
 drawn, it is temporarily set aside. This is <strong>sampling without
 replacement</strong>.</p>
@@ -1607,20 +1607,20 @@ to draw. Here <code>.4</code> means 40 percent of the five rows, so the
 result contains two rows.</p>
 <pre class="r"><code>ces_demo |&gt;
   slice_sample(prop = .4)</code></pre>
-<pre><code>##   case_id gender4 presvote
-## 1       1       2   Harris
-## 2       4       2    Trump</code></pre>
+<pre><code>##   gender4 presvote case_id
+## 1       2   Harris       1
+## 2       2    Trump       4</code></pre>
 <p>Suppose we want an imaginary new poll with the same number of
 respondents as the observed poll. We might begin with
 <code>prop = 1</code>.</p>
 <pre class="r"><code>ces_demo |&gt;
   slice_sample(prop = 1)</code></pre>
-<pre><code>##   case_id gender4 presvote
-## 1       2       1   Harris
-## 2       3       2   Harris
-## 3       1       2   Harris
-## 4       4       2    Trump
-## 5       5       2   Harris</code></pre>
+<pre><code>##   gender4 presvote case_id
+## 1       2   Harris       3
+## 2       2   Harris       1
+## 3       2    Trump       4
+## 4       1   Harris       2
+## 5       2   Harris       5</code></pre>
 <p>The code runs, but look at <code>case_id</code>. We sampled all five
 rows without replacement, so R had no choice but to return every row
 exactly once. It only changed their order. Would rearranging the
@@ -1635,12 +1635,12 @@ can be drawn again.</p>
 
 ces_demo |&gt;
   slice_sample(prop = 1, replace = TRUE)</code></pre>
-<pre><code>##   case_id gender4 presvote
-## 1       1       2   Harris
-## 2       4       2    Trump
-## 3       1       2   Harris
-## 4       2       1   Harris
-## 5       5       2   Harris</code></pre>
+<pre><code>##   gender4 presvote case_id
+## 1       2   Harris       1
+## 2       2    Trump       4
+## 3       2   Harris       1
+## 4       1   Harris       2
+## 5       2   Harris       5</code></pre>
 <p>Look at <code>case_id</code>. Some respondents appear more than once
 and others do not appear at all. The bootstrap sample still contains
 five rows, but it is not identical to the original five rows.</p>
