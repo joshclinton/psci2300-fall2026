@@ -7,7 +7,7 @@ output:
   pdf_document: default
 ---
 
-# Midterm Forecaster? DUE SEPT 21ST BY NOON
+# Midterm Forecaster? DUE SEPT 23RD BY NOON
 
 In class we talked about what would happen if there was a uniform shift -- i.e., the vote moved by the same direction in every district.  We did this by adding a number to `dem_margin_2024map` and `dem_margin_2026map`.  While that worked, it was also super crude.
 
