@@ -24,6 +24,10 @@ ces_gender |>
     PctHarris = mean(HarrisVoter)
   )
 
+# NOTE: Always set a seed if you are sampling so you can replicate your results!
+
+set.seed(42)
+
 ces_demo = ces_gender |>
   select(gender4, presvote) |>
   head(5) |>
@@ -40,7 +44,7 @@ ces_demo |>
 ces_demo |>
   slice_sample(prop = 1)
 
-set.seed(1)
+set.seed(42)
 
 ces_demo |>
   slice_sample(prop = 1, replace = TRUE)
@@ -85,7 +89,7 @@ SampledHarrisSupport = bind_rows(
 SampledHarrisSupport
 
 SampledHarrisSupport = NULL
-set.seed(2300)
+set.seed(42)
 
 for (i in 1:5) {
 
@@ -108,7 +112,7 @@ SampledHarrisSupport
 # ---- 4. Bootstrap Harris support -------------------------------------------
 
 SampledHarrisSupport = NULL
-set.seed(2300)
+set.seed(42)
 
 for (i in 1:1000) {
 
@@ -142,35 +146,35 @@ ces_gender |>
     PctHarris = mean(HarrisVoter)
   )
 
-Women = ces_gender |>
+Female = ces_gender |>
   filter(female == 1) |>
   summarize(PctHarris = mean(HarrisVoter))
 
-Men = ces_gender |>
+Male = ces_gender |>
   filter(female == 0) |>
   summarize(PctHarris = mean(HarrisVoter))
 
-GenderGap = Women$PctHarris - Men$PctHarris
+GenderGap = Female$PctHarris - Male$PctHarris
 GenderGap
 
 SampledGenderGaps = NULL
-set.seed(2300)
+set.seed(42)
 
 for (i in 1:1000) {
 
   one_sample = ces_gender |>
     slice_sample(prop = 1, replace = TRUE)
 
-  one_women = one_sample |>
+  one_female = one_sample |>
     filter(female == 1) |>
     summarize(PctHarris = mean(HarrisVoter))
 
-  one_men = one_sample |>
+  one_male = one_sample |>
     filter(female == 0) |>
     summarize(PctHarris = mean(HarrisVoter))
 
   one_gap = tibble(
-    GenderGap = one_women$PctHarris - one_men$PctHarris
+    GenderGap = one_female$PctHarris - one_male$PctHarris
   )
 
   SampledGenderGaps = bind_rows(SampledGenderGaps, one_gap)
@@ -184,6 +188,20 @@ SampledGenderGaps |>
     Estimate = mean(GenderGap),
     Upper = quantile(GenderGap, .975)
   )
+
+
+# ASIDE: What if our survey was smaller?
+
+# The impact of uncertainty depends on how large our sample is.  To see this, lets repeat this with a smaller sample -- lets just take 1000 observations and pretend that was our actual survey
+
+ces_gender_small = ces_gender |>
+    slice_sample(n = 1000, replace = FALSE)
+
+# Now replicate the code from above using this smaller data.
+
+# INSERT CODE HERE
+
+# What do you observe?  Is it different?  How does the size of the interval compare?
 
 
 # ---- 6. Red versus blue in Athens ------------------------------------------
@@ -202,14 +220,15 @@ athens |>
   )
 
 SampledDifferences = NULL
-set.seed(2300)
+set.seed(42)
 
 for (i in 1:1000) {
 
   one_difference = athens |>
     slice_sample(prop = 1, replace = TRUE) |>
     summarize(
-      Difference = mean(red_win) - mean(blue_win)
+      Difference = mean(red_win) - mean(blue_win),
+      n = n()
     )
 
   SampledDifferences = bind_rows(
@@ -228,7 +247,7 @@ SampledDifferences |>
   )
 
 
-# ---- 7. Test against a fair-coin null --------------------------------------
+# ---- 7. POSSIBLE ASIDE: Testing the Difference Against Zero --------------------------------------
 
 ObservedDifference = athens |>
   summarize(Difference = mean(red_win) - mean(blue_win)) |>
@@ -280,7 +299,7 @@ olympics |>
   )
 
 AllYearsDifferences = NULL
-set.seed(2300)
+set.seed(42)
 
 for (i in 1:1000) {
 
@@ -302,3 +321,42 @@ AllYearsDifferences |>
     Estimate = mean(Difference),
     Upper = quantile(Difference, .975)
   )
+
+
+# ---- 9. What if we looked by sport? ----------------------------------------
+
+olympics |>
+  group_by(sport) |>
+  summarize(
+    RedWinRate = mean(red_win),
+    BlueWinRate = mean(blue_win),
+    Difference = RedWinRate - BlueWinRate
+  )
+
+# If we want to see if these differences were similar by sport, what would change?
+
+AllYearsBySportDifferences = NULL
+set.seed(42)
+
+for (i in 1:1000) {
+
+  one_difference = olympics |>
+    slice_sample(prop = 1, replace = TRUE) |>
+    summarize(
+      Difference = mean(red_win) - mean(blue_win)
+    )
+
+  AllYearsDifferences = bind_rows(
+    AllYearsDifferences,
+    one_difference
+  )
+}
+
+AllYearsDifferences |>
+  summarize(
+    Lower = quantile(Difference, .025),
+    Estimate = mean(Difference),
+    Upper = quantile(Difference, .975)
+  )
+
+# What does that suggest?

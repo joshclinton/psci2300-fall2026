@@ -11,7 +11,7 @@
 
 <meta name="author" content="Prof. Josh Clinton" />
 
-<meta name="date" content="2026-09-16" />
+<meta name="date" content="2026-09-21" />
 
 <title>Session 6. Uncertainty: Is the Difference Real?</title>
 
@@ -1483,7 +1483,7 @@ border-radius: 0px;
 Real?</h1>
 <h3 class="subtitle">Polling, the Gender Gap, and Red Versus Blue</h3>
 <h4 class="author">Prof. Josh Clinton</h4>
-<h4 class="date">2026-09-16</h4>
+<h4 class="date">2026-09-21</h4>
 
 </div>
 
@@ -1501,6 +1501,30 @@ means might vary.</p></li>
 <li><p>Use a bootstrap interval to ask whether a difference is
 distinguishable from zero.</p></li>
 </ul>
+<div id="uncertainty-in-univariate-statistics" class="section level2">
+<h2>Uncertainty in Univariate Statistics</h2>
+<p>When we calculate a summary statistic in univariate statistics, we’re
+making a statement that can be interpreted in terms of what we can
+expect to see in other similar situations. If I say that the average
+height of a cedar tree is 75 feet, for example, that provides an
+expectation – prediction – for what we might expect to find if we look
+at other cedar trees (assuming “similar” environmental conditions). The
+measure we propose to measure what is typical is almost naturally
+interpreted by humans in terms of a prediction for what we may expect of
+other similar units.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<p>However, there’s more information that we need to communicate beyond
+what is “typical.” We also care about our level of uncertainty around
+that measure. Sure, the average height might be 75 feet, but does that
+mean in every sample we ever collect we’re always going to see an
+average of 75 feet? How likely is it that we may expect a tree that is
+much larger or much smaller? There are many ways to get an average of 75
+- perhaps every single tree is exactly 75 feet. Or perhaps half of the
+trees are 149 feet tall and the other half are only 1 foot tall. Whether
+we are in case 1 or case 2 likely matters a lot!</p>
+<p>Today we will discuss how we can leverage the variation we observe in
+the data that we have to quantify how much confidence we should have in
+the precision/certainty/variation of our measures.</p>
+</div>
 </div>
 <div id="a-familiar-number-the-margin-of-error" class="section level1">
 <h1>A Familiar Number: The Margin of Error</h1>
@@ -1508,9 +1532,110 @@ distinguishable from zero.</p></li>
 or minus 3 percentage points. What does that margin of error mean? Why
 is there a margin of error if the poll has already counted every answer
 in its sample?</p>
-<p>The percentage is exact for the people who answered the poll. But
-those people are only one sample. A different sample would probably
-produce a somewhat different percentage.</p>
+<p>The tools that we are learning can be thought of in two ways. One way
+is that they are a means to analyze the data that we have and to reach
+conclusions about what we have observed. All we wish to do is to
+characterize the data we have collected. This is the task of
+<em>description</em>. We are not trying to use the data for anything
+beyond talking about the observed data. In the case of the Exit Polls we
+looked at, this would mean being content with studying only the opinions
+of those who were actually interviewed.</p>
+<p>But frequently we want to use the data to learn about the larger
+world. We want to talk about cases that have not been measured. In other
+words, we want to use the data to make an interpretation about what the
+variation in the data reveals about variation in cases that are not
+contained in our data. This is typically what we are trying to do – we
+are doing an Exit Poll not to talk about the people that were
+interviewed, but rather to talk about what voters in general are
+thinking and doing. This can involve the task of <em>description</em>
+(e.g., what fraction of the electorate has a post-graduate degree, is
+over the age of 65, etc) or it can involve the task of
+<em>prediction</em> (e.g., who is likely to win the state given the
+opinions revealed in the Exit Poll). We can also use data for the
+<em>evaluation</em> of claims about what is true in the world – i.e.,
+determine whether certain claims about the world are true (e.g, are
+athletes who wear the color Red in competitions more likely to beat
+athletes who wear the color Blue?)</p>
+<p>Whenever we want to use the data to learn about data that we have not
+collected, it becomes critically important to consider how the data is
+collected. We often want to jump right in and start analyzing, but
+thinking about where the data comes from is an essential first step if
+we wish to use the data to learn about cases outside of our data.</p>
+<p>To help, let’s define two terms: <em>Population</em> and
+<em>Sample</em>.</p>
+<p>An <em>observation</em> is simply a data point in our
+<em>sample</em>. It is what a row in our data represents. Each
+observation is associated with a bunch of characteristics
+(variables).</p>
+<p>A <em>Sample</em> is the data that you are able to analyze. It could
+be a few observations or hundreds of millions. Somewhat confusingly, it
+does not have to be gathered by intentionally sampling anything. If you
+were to write down the temperature each day for 100 days, that would be
+a sample of temperature data. If I were to write some public opinion
+questions and then ask them to the first ten people I met to record
+their responses that would also be a sample of public opinion data. Not
+a very good sample, but a sample nonetheless. Whatever data you are able
+to analyze is a sample – think about sample in this context as meaning
+simply the data you have available to analyze.</p>
+<p>The <em>Population</em> is the set of observations to which the
+sample belongs.what you want to learn about. This is where things get a
+bit tricky and confusing. In statistics, we can never observe population
+– it is a hypothetical construct about the observations of interest
+because it includes cases that have yet to happen. Seem weird? Let’s try
+to explain this. Suppose that you collected data on the national popular
+vote for every presidential election in the United States to the current
+day. Your sample therefore contains the results of every single
+presidential election contest. There are no ``secret” elections and you
+did not forget to include any. You have it all. Despite the fact that
+your sample contains every presidential election, we often want to make
+statements about what we expect the results to be based on the sample of
+data. Put differently, if you use the data to determine how much the
+winner defeats the loser in terms of percentage points then we are using
+the data to make a statement not only about what the margin has
+historically been on average, but also what we would expect the margin
+to be in the future (assuming the political context is relatively
+stable).1</p>
+<p>The important distinction is that sample refers to the
+<em>observations in the data you are analyzing</em> and population
+refers to the <em>observations that you are trying to learn</em> about
+using the sample. Note that if we survey the entire population – i.e.,
+our sample is the population – then we call this a
+<strong>Census</strong>.</p>
+<p>The field of statistics is all about how we can try to use samples to
+learn – that is to make inferences – about the population. Under what
+conditions are we able to say something? How likely is it that our
+estimates are correct? How certain should we that our estimates are
+close to the truth? And what do we mean by ``close to the truth”?</p>
+<p>We are going to focus on a particular approach to quantifying our
+ability to learn that uses the data. While useful for explaining the
+concepts because it uses the data and our programming skills to directly
+illustrate the underlying logic, it is not the most efficient way to do
+so – especially when working with large number of observations where
+this can be computationally infeasible. (This is where math comes in and
+the ability to use math to derive the results analytically instead of
+relying on computational power.</p>
+<p>Critical to this approach – and indeed most of what we do in
+statistics – is the assumption that <em>our sample is a random sample of
+the population</em>.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> If so, the sample of data that we collect
+can be used to summarize the population data that we are unable to
+collect! In other words, we can use the results of polling 1000 people
+to summarize the opinions of a much larger polity.</p>
+<p>So a <strong>sample</strong> is a subset of the
+<strong>population</strong> and, because of this, the estimate that we
+get from a sample will not usually be exactly equal to the population
+value. A <strong>statistic</strong> is what we call a function of the
+sample – hence the study of statistics is the study of how we use the
+analysis of a sample (by applying functions to sample data) to learn
+about what is true in the population. But because we observe only some
+of the population – a sample – we need to account for the fact that we
+have some uncertainty about how close the answer we compute using our
+sample is to the actual truth in the population. Put differently,
+sampling variability is the variation that results from using and
+analyzing one sample rather than another.</p>
+<p>Put differently, we can exactly calculate the results for people who
+answered the poll. But those people are only one sample out of many and
+a different sample would probably produce a somewhat different
+percentage.</p>
 <p>The margin of error describes this <strong>sampling
 uncertainty</strong>.</p>
 <p>We cannot repeatedly field the same survey. But we can use the sample
@@ -1528,9 +1653,13 @@ with one polling percentage, then return to the gender gap from Lecture
 </div>
 <div id="return-to-the-2024-ces" class="section level1">
 <h1>Return to the 2024 CES</h1>
-<p>In Lecture 3, we created an analysis-ready row-level tibble for the
-gender gap and saved it as an <code>.rds</code> file. We can read that R
-object back into memory without repeating the wrangling.</p>
+<p>Let us return to the data we were using in Session 3. We are going to
+load an analysis-ready dataset related to measuring the gender gap that
+was saved as an <code>.rds</code> file. (This is a file format that is
+unique to R rather than a generic file format like the
+comma-separated-values (csv) files that we have used previously. We can
+read this into memory using the <code>readRDS</code> function and then
+take a glimpse. without repeating the wrangling.</p>
 <pre class="r"><code>ces_gender = readRDS(&quot;CES2024_GenderGap.rds&quot;)
 
 glimpse(ces_gender)</code></pre>
@@ -1546,11 +1675,13 @@ glimpse(ces_gender)</code></pre>
 ## $ age              &lt;dbl&gt; 46, 56, 78, 69, 68, 27, 58, 56, 67, 80, 67, 34, 76, 8…
 ## $ HarrisVoter      &lt;dbl&gt; 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1,…
 ## $ female           &lt;dbl&gt; 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1,…</code></pre>
-<p><code>HarrisVoter</code> equals 1 for a respondent who reported
-voting for Harris and 0 for a respondent who reported voting for Trump.
-What does its mean represent?</p>
-<p>Because the variable contains only zeros and ones, its mean is the
-proportion who reported voting for Harris.</p>
+<p>As before, <code>HarrisVoter</code> equals 1 for a respondent who
+reported voting for Harris and 0 for a respondent who reported voting
+for Trump. Because this is a binary variable, what does its mean
+represent?</p>
+<p>Because the variable contains only zeros and ones - sometimes called
+an “Indicator” (or “Dummy”) variable, its mean is the proportion of
+respondents who reported voting for Harris. Let’s compute that.</p>
 <pre class="r"><code>ces_gender |&gt;
   summarize(
     N = n(),
@@ -1558,26 +1689,46 @@ proportion who reported voting for Harris.</p>
   )</code></pre>
 <pre><code>##       N PctHarris
 ## 1 41777 0.5579625</code></pre>
-<p>That is the exact percentage in this CES teaching sample. How much
-might it change if the CES had interviewed a different sample?</p>
+<p>This is the exact percentage that we observe in this specific sample
+of survey respondents. But much might it change if the CES had
+interviewed a different sample? If we treat respondents as a random
+sample of the population, the amount that the answers differs due to
+randomness alone is called the ``margin of error.”</p>
+<p>Note that this is not the same as survey error! The margin of error
+is how much a survey-estimate may change as a result of random sampling
+and the fact that some people were randomly selected to be interviewed
+while others were not.</p>
 </div>
 <div id="samples-populations-and-uncertainty" class="section level1">
 <h1>Samples, Populations, and Uncertainty</h1>
-<p>The <strong>sample</strong> is the data we have: the people
-interviewed for the CES. The <strong>population</strong> is the larger
-group we want to learn about: voters beyond the particular people who
-answered this survey.</p>
-<p>A sample estimate will usually not be exactly equal to the population
-value. Sampling uncertainty is the variation created by observing one
-sample rather than another.</p>
+<p>We’re going to start by building up a range of uncertainty from the
+data we already have. We’ll do this by sampling from the data
+itself.</p>
+<p>We are going to use the computer to construct random samples. Of
+course, the numbers are not really random because they are computers.
+The upside of this is that we can ensure replicability by choosing a
+particular seed value. To do so we are going to use the function
+<code>set.seed</code>.</p>
+<p>By setting a specific seed we are ensuring that anyone who sets the
+same seed value will get exactly the same set of random numbers. This is
+super useful for debugging and replicability as it allows us to remove
+the impact of the random number generation (which isn’t really truly
+random).</p>
+<p>For my seed value I am going to choose the answer to life, the
+universe, and everything. (Does anyone get this reference or am I
+officially too old?).</p>
+<p><em>NOTE: Always set a seed if you are sampling so you can replicate
+your results!</em></p>
+<pre class="r"><code>set.seed(42)</code></pre>
 <p>Resampling uses the variation in the observed data to approximate
 what we might have found in other samples.</p>
 </div>
 <div id="how-does-slice_sample-work" class="section level1">
 <h1>How Does <code>slice_sample()</code> Work?</h1>
 <p>We can use <code>slice_sample()</code> to randomly draw rows from a
-data frame. To make each part of the function visible, begin with five
-CES respondents and add an identification number.</p>
+data frame. To make each part of the function visible, begin with the
+first five CES respondents – which we extract using the
+<code>head</code> function – and add an identification number.</p>
 <pre class="r"><code>ces_demo = ces_gender |&gt;
   select(gender4, presvote) |&gt;
   head(5) |&gt;
@@ -1595,8 +1746,8 @@ many rows to draw.</p>
 <pre class="r"><code>ces_demo |&gt;
   slice_sample(n = 3)</code></pre>
 <pre><code>##   gender4 presvote case_id
-## 1       2   Harris       5
-## 2       1   Harris       2
+## 1       2   Harris       1
+## 2       2   Harris       5
 ## 3       2    Trump       4</code></pre>
 <p>By default, the same row cannot be selected twice. Once a row is
 drawn, it is temporarily set aside. This is <strong>sampling without
@@ -1609,42 +1760,48 @@ result contains two rows.</p>
   slice_sample(prop = .4)</code></pre>
 <pre><code>##   gender4 presvote case_id
 ## 1       2   Harris       1
-## 2       2    Trump       4</code></pre>
+## 2       1   Harris       2</code></pre>
 <p>Suppose we want an imaginary new poll with the same number of
 respondents as the observed poll. We might begin with
 <code>prop = 1</code>.</p>
 <pre class="r"><code>ces_demo |&gt;
   slice_sample(prop = 1)</code></pre>
 <pre><code>##   gender4 presvote case_id
-## 1       2   Harris       3
-## 2       2   Harris       1
-## 3       2    Trump       4
-## 4       1   Harris       2
-## 5       2   Harris       5</code></pre>
+## 1       2    Trump       4
+## 2       1   Harris       2
+## 3       2   Harris       5
+## 4       2   Harris       1
+## 5       2   Harris       3</code></pre>
 <p>The code runs, but look at <code>case_id</code>. We sampled all five
 rows without replacement, so R had no choice but to return every row
 exactly once. It only changed their order. Would rearranging the
 respondents change their mean?</p>
-<p>This is a useful error: the function is correct, but a critical
-argument is missing.</p>
+<p>What we have done is to <em>sample without replacement</em>. What
+this means is that once we sample/select an observation, we remove it
+and sample/select from the remaining observations. If we sample the same
+number of observations without replacement, the result is a random
+rearrangment of the original object. While this can be useful in some
+contexts, this is not what we want here.</p>
+<p>The function is correct, but a critical argument is missing. We need
+to specify that we want <em>sample with replacement</em>.</p>
 <p>For a bootstrap sample, we use <code>prop = 1</code> because the new
 sample should be the same size as the original data. We also use
-<code>replace = TRUE</code>. After a row is drawn, it is put back and
-can be drawn again.</p>
-<pre class="r"><code>set.seed(1)
+<code>replace = TRUE</code> – this means that after a row is drawn, it
+is put back and can be drawn again.</p>
+<pre class="r"><code>set.seed(42)
 
 ces_demo |&gt;
   slice_sample(prop = 1, replace = TRUE)</code></pre>
 <pre><code>##   gender4 presvote case_id
 ## 1       2   Harris       1
-## 2       2    Trump       4
+## 2       2   Harris       5
 ## 3       2   Harris       1
-## 4       1   Harris       2
-## 5       2   Harris       5</code></pre>
+## 4       2   Harris       1
+## 5       1   Harris       2</code></pre>
 <p>Look at <code>case_id</code>. Some respondents appear more than once
 and others do not appear at all. The bootstrap sample still contains
-five rows, but it is not identical to the original five rows.</p>
-<p>The complete instruction therefore means:</p>
+five rows, but it is no longer identical to the original five rows.</p>
+<p>The complete function therefore reads:</p>
 <ul>
 <li><code>prop = 1</code>: draw 100 percent as many rows as are in the
 original data;</li>
@@ -1655,7 +1812,8 @@ selected again.</li>
 <div id="one-imaginary-new-poll" class="section level1">
 <h1>One Imaginary New Poll</h1>
 <p>Now use those instructions with the entire CES dataset. Because we
-want our work to be reproducible, we set a seed before drawing.</p>
+want our work to be reproducible, we <code>set.seed</code> before
+drawing. If you do not do this you get different answers.</p>
 <pre class="r"><code>set.seed(42)
 
 ces_gender |&gt;
@@ -1663,17 +1821,16 @@ ces_gender |&gt;
   summarize(PctHarris = mean(HarrisVoter))</code></pre>
 <pre><code>##   PctHarris
 ## 1 0.5604519</code></pre>
-<p>Run the code several times without resetting the seed. The estimate
-changes because each resample contains a somewhat different collection
-of respondents.</p>
-<p>One resample shows what could happen once. It does not tell us how
-much the estimate usually changes. We need to repeat the same analysis
-many times.</p>
+<p>One resample shows what could happen once. But it does not tell us
+how much the estimate may change if we were to do this over and over
+again. To do this we need to repeat the same analysis many times.</p>
 </div>
 <div id="what-does-a-loop-do" class="section level1">
 <h1>What Does a Loop Do?</h1>
-<p>A loop tells R to repeat a block of code. Begin with a loop that does
-nothing except print the value of <code>i</code>.</p>
+<p>A loop tells R to repeat a block of code for as many times as we tell
+it – here <code>5</code>. Note the syntax and the braces. Code within
+the braces is what R will do each time – here nothing but print the
+value of <code>i</code>.</p>
 <pre class="r"><code>for (i in 1:5) {
   print(i)
 }</code></pre>
@@ -1684,10 +1841,12 @@ nothing except print the value of <code>i</code>.</p>
 ## [1] 5</code></pre>
 <p>Read the first line as: “For each value of <code>i</code> from 1
 through 5, run the code inside the braces.”</p>
-<p>The braces identify what is repeated. On the first pass,
-<code>i</code> equals 1. On the second pass, <code>i</code> equals 2.
-The loop stops after the fifth pass.</p>
-<p>Now replace <code>print(i)</code> with the work we want to
+<p>On the first pass, <code>i</code> equals 1. On the second pass,
+<code>i</code> equals 2. The loop stops after the fifth pass when
+<code>i==5</code>.</p>
+<p>Of course we would not want to do this for real (although printing
+<code>i</code> is sometimes good when debugging as it shows when the
+code breaks). Now replace <code>print(i)</code> with the work we want to
 repeat:</p>
 <ol style="list-style-type: decimal">
 <li>Draw a bootstrap sample.</li>
@@ -1697,7 +1856,8 @@ repeat:</p>
 </div>
 <div id="do-the-work-once-before-repeating-it" class="section level1">
 <h1>Do the Work Once Before Repeating It</h1>
-<p>Before writing the loop, do the work once.</p>
+<p>Before writing the loop, do the work once to make sure it works! Once
+we confirm that it works then we can build the loop.</p>
 <pre class="r"><code>one_estimate = ces_gender |&gt;
   slice_sample(prop = 1, replace = TRUE) |&gt;
   summarize(PctHarris = mean(HarrisVoter))
@@ -1706,15 +1866,26 @@ one_estimate</code></pre>
 <pre><code>##   PctHarris
 ## 1 0.5575077</code></pre>
 <p><code>one_estimate</code> is a one-row tibble. If we repeat this
-step, we need an object that can collect each one-row answer.</p>
+step, we need an object that can collect each one-row answer. Otherwise
+we will end up overwriting what we just did!</p>
+<p>Note also that we are not saving our resampled data - we are
+sampling, summarizing, and forgetting. The reason is that it we want to
+do lots of samples and/or we have a large number of observations being
+sampled then storing all of those random samples can impact computing
+performance by keeping large objects in memory. As a result, we
+generally try to draw a sample, perform the analysis that we need on the
+sample that was selected, and save only the most essential results of
+that analysis. (What would we change to save the resampled data?)</p>
 </div>
 <div id="what-does-bind_rows-do" class="section level1">
 <h1>What Does <code>bind_rows()</code> Do?</h1>
-<p>Begin with an empty object.</p>
+<p>Begin with an empty object - which we define to be <code>NULL</code>
+to start.</p>
 <pre class="r"><code>SampledHarrisSupport = NULL</code></pre>
-<p><code>bind_rows()</code> places the rows from one object underneath
-the rows in another object. Here the first object is empty, so the
-result contains the one row from <code>one_estimate</code>.</p>
+<p>The <code>bind_rows()</code> function places the rows from one object
+underneath the rows of another object. Because the first object here is
+empty, the result contains the one row from
+<code>one_estimate</code>.</p>
 <pre class="r"><code>SampledHarrisSupport = bind_rows(
   SampledHarrisSupport,
   one_estimate
@@ -1723,8 +1894,8 @@ result contains the one row from <code>one_estimate</code>.</p>
 SampledHarrisSupport</code></pre>
 <pre><code>##   PctHarris
 ## 1 0.5575077</code></pre>
-<p>Now make another estimate and bind it to the object that already
-contains the first estimate.</p>
+<p>Now let’s make another estimate and bind it to the object that
+already contains the first estimate.</p>
 <pre class="r"><code>another_estimate = ces_gender |&gt;
   slice_sample(prop = 1, replace = TRUE) |&gt;
   summarize(PctHarris = mean(HarrisVoter))
@@ -1739,13 +1910,16 @@ SampledHarrisSupport</code></pre>
 ## 1 0.5575077
 ## 2 0.5572923</code></pre>
 <p>Why are there now two rows? <code>bind_rows()</code> does not replace
-the first estimate. It adds the second estimate beneath it.</p>
+the first estimate; it adds the second estimate beneath it. This is
+looking promising!</p>
 </div>
 <div id="put-the-steps-inside-a-loop" class="section level1">
 <h1>Put the Steps Inside a Loop</h1>
-<p>Start with five iterations so we can inspect the result.</p>
+<p>Now let’s pull this all together. Having shown that the code we want
+works, lets put the code in a loop. Let’s start with five iterations so
+we can inspect the result.</p>
 <pre class="r"><code>SampledHarrisSupport = NULL
-set.seed(2300)
+set.seed(42)
 
 for (i in 1:5) {
 
@@ -1764,15 +1938,15 @@ for (i in 1:5) {
 
 SampledHarrisSupport</code></pre>
 <pre><code>##   Iteration PctHarris
-## 1         1 0.5578668
-## 2         2 0.5597099
-## 3         3 0.5561673
-## 4         4 0.5562151
-## 5         5 0.5584652</code></pre>
+## 1         1 0.5604519
+## 2         2 0.5575077
+## 3         3 0.5572923
+## 4         4 0.5589918
+## 5         5 0.5571965</code></pre>
 <p>The loop repeats the same commands five times.
 <code>bind_rows()</code> stores one answer on each pass. The value of
-<code>i</code> lets us see which pass produced each row.</p>
-<p>What should change if we replace <code>1:5</code> with
+<code>i</code> lets us see which iteration produced each estimate.</p>
+<p>Now think about what happens if we replace <code>1:5</code> with
 <code>1:1000</code>? What should remain the same?</p>
 </div>
 <div id="repeat-the-poll-1000-times" class="section level1">
@@ -1780,7 +1954,7 @@ SampledHarrisSupport</code></pre>
 <p>Once the five-iteration loop works, change only the number of
 repetitions.</p>
 <pre class="r"><code>SampledHarrisSupport = NULL
-set.seed(2300)
+set.seed(42)
 
 for (i in 1:1000) {
 
@@ -1796,12 +1970,12 @@ for (i in 1:1000) {
 <p>Each row now contains Harris support from one imaginary new poll.</p>
 <pre class="r"><code>summary(SampledHarrisSupport)</code></pre>
 <pre><code>##    PctHarris     
-##  Min.   :0.5504  
+##  Min.   :0.5516  
 ##  1st Qu.:0.5563  
-##  Median :0.5579  
-##  Mean   :0.5579  
-##  3rd Qu.:0.5596  
-##  Max.   :0.5662</code></pre>
+##  Median :0.5580  
+##  Mean   :0.5580  
+##  3rd Qu.:0.5598  
+##  Max.   :0.5659</code></pre>
 <p>The <code>summary()</code> output describes the <strong>bootstrap
 distribution</strong> numerically. Compare its median to Harris support
 in the original sample. The minimum, quartiles, and maximum show how
@@ -1819,19 +1993,24 @@ percent of our resampled estimates.</p>
     MarginOfError = (Upper - Lower) / 2
   )</code></pre>
 <pre><code>##       Lower  Estimate     Upper MarginOfError
-## 1 0.5528137 0.5579054 0.5626541   0.004920171</code></pre>
+## 1 0.5535097 0.5580029 0.5628222    0.00465627</code></pre>
 <p>This is a <strong>95 percent bootstrap interval</strong>. Its margin
 of error is half the width of the interval.</p>
 <p>Does a narrow interval mean the CES estimate must match the election
-result? No. The bootstrap cannot add people who were systematically
-missing from the survey or correct a sample that overrepresents some
-kinds of respondents. The margin of error describes sampling error, not
-every possible source of polling error.</p>
+result? No. </p>
+<p>The bootstrap cannot add people who were systematically missing from
+the survey or correct a sample that overrepresents some kinds of
+respondents. The margin of error describes the error that we can
+attribute to random sampling alone – not every possible source of
+polling error. The fact that the true answer is well-outside of the
+range that we find suggests that there the polling error is not just
+because we happened to draw a “bad sample” – instead, there is something
+more concerning going on.</p>
 </div>
 <div id="a-harder-question-is-the-gender-gap-real" class="section level1">
 <h1>A Harder Question: Is the Gender Gap “Real”?</h1>
-<p>In Lecture 3, we found different levels of Harris support among women
-and men. Calculate the two group means again.</p>
+<p>In Session 3, we found different levels of Harris support among women
+and men. Let’s calculate the two group means again.</p>
 <pre class="r"><code>ces_gender |&gt;
   group_by(female) |&gt;
   summarize(
@@ -1843,57 +2022,62 @@ and men. Calculate the two group means again.</p>
 ##    &lt;dbl&gt; &lt;int&gt;     &lt;dbl&gt;
 ## 1      0 20007     0.532
 ## 2      1 21770     0.582</code></pre>
-<p>The statistic is now a <strong>difference of means</strong>: Harris
-support among women minus Harris support among men.</p>
-<pre class="r"><code>Women = ces_gender |&gt;
+<p>The statistic used to measure the gender gap is just a
+<strong>difference of means</strong>: Harris support among females minus
+Harris support among males.</p>
+<p>Recall how we computed it.</p>
+<pre class="r"><code>Female = ces_gender |&gt;
   filter(female == 1) |&gt;
   summarize(PctHarris = mean(HarrisVoter))
 
-Men = ces_gender |&gt;
+Male = ces_gender |&gt;
   filter(female == 0) |&gt;
   summarize(PctHarris = mean(HarrisVoter))
 
-GenderGap = Women$PctHarris - Men$PctHarris
+GenderGap = Female$PctHarris - Male$PctHarris
 GenderGap</code></pre>
 <pre><code>## [1] 0.04931645</code></pre>
-<p>Women in this sample were about 4.9 percentage points more likely
-than men to report voting for Harris. That describes this sample. How
-much might the estimated gap change in a different sample?</p>
+<p>Females in this sample were about 4.9 percentage points more likely
+than males to report voting for Harris. But how confident can we be
+about that estimate? Might it be different in a different sample?</p>
 </div>
 <div id="bootstrap-the-gender-gap" class="section level1">
 <h1>Bootstrap the Gender Gap</h1>
-<p>The loop has the same three parts: sample, calculate, store. Only the
-statistic inside the loop changes.</p>
+<p>Let’s go! The loop has the same three parts as before: sample,
+calculate, store. The only thing we need to change is the code within
+the loop. That and using the function <code>tibble</code> to turn the
+calculation into an object we can add to
+<code>SampledGenderGaps</code>.</p>
 <pre class="r"><code>SampledGenderGaps = NULL
-set.seed(2300)
+set.seed(42)
 
 for (i in 1:1000) {
 
   one_sample = ces_gender |&gt;
     slice_sample(prop = 1, replace = TRUE)
 
-  one_women = one_sample |&gt;
+  one_female = one_sample |&gt;
     filter(female == 1) |&gt;
     summarize(PctHarris = mean(HarrisVoter))
 
-  one_men = one_sample |&gt;
+  one_male = one_sample |&gt;
     filter(female == 0) |&gt;
     summarize(PctHarris = mean(HarrisVoter))
 
   one_gap = tibble(
-    GenderGap = one_women$PctHarris - one_men$PctHarris
+    GenderGap = one_female$PctHarris - one_male$PctHarris
   )
 
   SampledGenderGaps = bind_rows(SampledGenderGaps, one_gap)
 }</code></pre>
 <pre class="r"><code>summary(SampledGenderGaps)</code></pre>
 <pre><code>##    GenderGap      
-##  Min.   :0.03175  
-##  1st Qu.:0.04598  
-##  Median :0.04952  
-##  Mean   :0.04931  
-##  3rd Qu.:0.05240  
-##  Max.   :0.06537</code></pre>
+##  Min.   :0.03258  
+##  1st Qu.:0.04631  
+##  Median :0.04927  
+##  Mean   :0.04936  
+##  3rd Qu.:0.05263  
+##  Max.   :0.06606</code></pre>
 <pre class="r"><code>SampledGenderGaps |&gt;
   summarize(
     Lower = quantile(GenderGap, .025),
@@ -1903,7 +2087,7 @@ for (i in 1:1000) {
 <pre><code>## # A tibble: 1 × 3
 ##    Lower Estimate  Upper
 ##    &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;
-## 1 0.0402   0.0493 0.0590</code></pre>
+## 1 0.0393   0.0494 0.0584</code></pre>
 <p>Does the interval include zero? Here the interval is above zero. The
 gender gap is distinguishable from zero as sampling error.</p>
 <p>Does that mean the gender gap is “real”? We need to be precise:</p>
@@ -1919,16 +2103,28 @@ its raw vote estimate does not match the election result.</li>
 <p>The margin of error describes <strong>sampling error</strong>. It
 does not describe every possible source of error in a poll.</p>
 </div>
+<div id="aside-what-if-our-survey-was-smaller" class="section level1">
+<h1>ASIDE: What if our survey was smaller?</h1>
+<p>The impact of uncertainty depends on how large our sample is. To see
+this, lets repeat this with a smaller sample – lets just take 1000
+observations and pretend that was our actual survey</p>
+<pre class="r"><code>ces_gender_small = ces_gender |&gt;
+    slice_sample(n = 1000, replace = FALSE)</code></pre>
+<p>Now replicate the code from above using this smaller data.</p>
+<pre class="r"><code># INSERT CODE HERE</code></pre>
+<p>What do you observe? Is it different? How does the size of the
+interval compare?</p>
+</div>
 <div id="same-method-new-question" class="section level1">
 <h1>Same Method, New Question</h1>
 <p>The bootstrap is useful because it is not limited to polling. We can
-use the same procedure for any statistic we can calculate in a
-sample.</p>
+use the same procedure for any statistic we can calculate in a sample!
+Even those that have nothing to do with a survey.</p>
 <p>At the 2004 Athens Olympics, competitors in boxing, taekwondo,
 Greco-Roman wrestling, and freestyle wrestling were assigned red or blue
 outfits. Hill and Barton reported that red won significantly more often
 than blue in the pooled data (<span class="math inline">\(p=.041\)</span>). They argued that wearing red
-might influence the outcome of a close contest.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+might influence the outcome of a close contest.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></p>
 <p>Before opening the data, what is the question?</p>
 <ul>
 <li>What is the unit being studied?</li>
@@ -1955,9 +2151,9 @@ bouts?</li>
     red_win = if_else(winner == &quot;Red&quot;, 1, 0),
     blue_win = if_else(winner == &quot;Blue&quot;, 1, 0)
 )</code></pre>
-<p>Each row is one bout. <code>red_win</code> equals 1 when red won and
-0 when red lost. <code>blue_win</code> does the reverse. Before running
-the next chunk, what should the two means add to? Why?</p>
+<p>Each row is one contest. <code>red_win</code> equals 1 when red won
+and 0 when red lost. <code>blue_win</code> does the reverse. Before
+running the next chunk, what should the two means add to? Why?</p>
 </div>
 <div id="the-red-blue-difference-of-means" class="section level1">
 <h1>The Red-Blue Difference of Means</h1>
@@ -1978,15 +2174,17 @@ often in these data. Now apply the procedure we just learned.</p>
 </div>
 <div id="bootstrap-the-red-blue-difference" class="section level1">
 <h1>Bootstrap the Red-Blue Difference</h1>
+<p>Now lets resample/bootstrap the analysis.</p>
 <pre class="r"><code>SampledDifferences = NULL
-set.seed(2300)
+set.seed(42)
 
 for (i in 1:1000) {
 
   one_difference = athens |&gt;
     slice_sample(prop = 1, replace = TRUE) |&gt;
     summarize(
-      Difference = mean(red_win) - mean(blue_win)
+      Difference = mean(red_win) - mean(blue_win),
+      n = n()
     )
 
   SampledDifferences = bind_rows(
@@ -1995,13 +2193,13 @@ for (i in 1:1000) {
   )
 }</code></pre>
 <pre class="r"><code>summary(SampledDifferences)</code></pre>
-<pre><code>##    Difference      
-##  Min.   :-0.06783  
-##  1st Qu.: 0.05470  
-##  Median : 0.08534  
-##  Mean   : 0.08550  
-##  3rd Qu.: 0.11597  
-##  Max.   : 0.23851</code></pre>
+<pre><code>##    Difference             n      
+##  Min.   :-0.04595   Min.   :457  
+##  1st Qu.: 0.05470   1st Qu.:457  
+##  Median : 0.08534   Median :457  
+##  Mean   : 0.08497   Mean   :457  
+##  3rd Qu.: 0.12035   3rd Qu.:457  
+##  Max.   : 0.27352   Max.   :457</code></pre>
 <p>Compare this summary to the CES bootstrap. Which set of estimates
 varies more from one resample to another?</p>
 <pre class="r"><code>SampledDifferences |&gt;
@@ -2011,25 +2209,26 @@ varies more from one resample to another?</p>
     Upper = quantile(Difference, .975)
   )</code></pre>
 <pre><code>## # A tibble: 1 × 3
-##      Lower Estimate Upper
-##      &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;
-## 1 -0.00219   0.0855 0.182</code></pre>
+##     Lower Estimate Upper
+##     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;
+## 1 -0.0109   0.0850 0.173</code></pre>
 <p>Does this interval include zero? Is the Olympic estimate more or less
 precise than the CES gender-gap estimate? Why?</p>
 <p>Hill and Barton reported a statistically significant pooled result
 (<span class="math inline">\(p=.041\)</span>). Our simple difference
-using every bout in their posted supplement is less certain: its
-interval includes zero. This does not by itself prove that the published
-result is wrong. It tells us that the answer depends on exactly which
-comparison and analysis are being used. Their paper also examines
-rounds, weight classes, and contests between athletes of similar
-ability.</p>
-<p>That creates another question: which analysis was specified because
-it follows from the argument, and which analyses became important after
-looking at the data? We cannot answer that from the p-value alone.</p>
+using every bout in their posted supplement is less certain and the
+interval includes zero. Although this does not prove that the published
+result is wrong, it does tell us that the answer depends on exactly
+which comparison and analysis are being used. (Note that their paper
+also examines rounds, weight classes, and contests between athletes of
+similar ability.)</p>
+<p>Not only does this once again highlight that doing data analysis
+requires making an argument, but it also raises another question: which
+analysis was specified because it follows from the argument, and which
+analyses became important after looking at the data?</p>
 </div>
-<div id="testing-the-difference-against-zero" class="section level1">
-<h1>Testing the Difference Against Zero</h1>
+<div id="possible-aside-testing-the-difference-against-zero" class="section level1">
+<h1>POSSIBLE ASIDE: Testing the Difference Against Zero</h1>
 <p>A confidence interval asks whether zero is a plausible value for the
 population difference. A hypothesis test asks a closely related
 question:</p>
@@ -2086,7 +2285,7 @@ that the null hypothesis is true.</p>
 </div>
 <div id="what-happens-when-we-add-more-data" class="section level1">
 <h1>What Happens When We Add More Data?</h1>
-<p>The Athens result comes from one Olympic Games. We now have
+<p>The Athens result comes from one Olympic Games. But we also have
 comparable results from Olympics held between 1996 and 2020.</p>
 <pre class="r"><code>olympics = read_csv(
   &quot;olympics.csv&quot;
@@ -2128,7 +2327,7 @@ more; in others, blue wins more.</p>
 <p>The apparent red advantage is much smaller when we include more data.
 Use the same bootstrap one more time.</p>
 <pre class="r"><code>AllYearsDifferences = NULL
-set.seed(2300)
+set.seed(42)
 
 for (i in 1:1000) {
 
@@ -2153,9 +2352,74 @@ AllYearsDifferences |&gt;
 <pre><code>## # A tibble: 1 × 3
 ##      Lower Estimate  Upper
 ##      &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;
-## 1 -0.00556   0.0278 0.0642</code></pre>
+## 1 -0.00897   0.0294 0.0656</code></pre>
 <p>Does this interval include zero? What has changed since we looked
 only at Athens in 2004?</p>
+<p>What if we looked by sport?</p>
+<pre class="r"><code>olympics |&gt;
+  group_by(sport) |&gt;
+  summarize(
+    RedWinRate = mean(red_win),
+    BlueWinRate = mean(blue_win),
+    Difference = RedWinRate - BlueWinRate
+  )</code></pre>
+<pre><code>## # A tibble: 5 × 4
+##   sport                RedWinRate BlueWinRate Difference
+##   &lt;chr&gt;                     &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt;
+## 1 Boxing                    0.492       0.508    -0.0163
+## 2 Boxing Men                0.536       0.464     0.0726
+## 3 FreeStyle Wrestling       0.509       0.491     0.0185
+## 4 GrecoRoman Wrestling      0.534       0.466     0.0687
+## 5 Taekwondo Men             0.532       0.468     0.0633</code></pre>
+<p>If we want to see if these differences were similar by sport, what
+would change?</p>
+<pre class="r"><code>AllYearsBySportDifferences = NULL
+set.seed(42)
+
+for (i in 1:1000) {
+
+  one_difference = olympics |&gt;
+    slice_sample(prop = 1, replace = TRUE) |&gt;
+    summarize(
+      Difference = mean(red_win) - mean(blue_win)
+    )
+
+  AllYearsDifferences = bind_rows(
+    AllYearsDifferences,
+    one_difference
+  )
+}
+
+AllYearsDifferences |&gt;
+  summarize(
+    Lower = quantile(Difference, .025),
+    Estimate = mean(Difference),
+    Upper = quantile(Difference, .975)
+  )</code></pre>
+<pre><code>## # A tibble: 1 × 3
+##      Lower Estimate  Upper
+##      &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;
+## 1 -0.00897   0.0294 0.0656</code></pre>
+<p>What does that suggest?</p>
+<div id="empirical-bootstrap" class="section level2">
+<h2>Empirical Bootstrap</h2>
+<p>What we have been doing is called the <a href="https://ocw.mit.edu/courses/mathematics/18-05-introduction-to-probability-and-statistics-spring-2014/readings/MIT18_05S14_Reading24.pdf">empirical
+bootstrap</a>. It’s massively useful, because it can be applied for any
+summary measure of the data: median, percentiles, and measures like
+regression coefficients. Here is the summary of steps for the empirical
+bootstrap:</p>
+<ul>
+<li>Decide on the summary measure to be used for the variable (it
+doesn’t have to be the mean)</li>
+<li>Calculate the summary measure on a small subsample (called the
+bootstrap sample) of the data</li>
+<li>Repeat step 2 many times (how many? Start with 1000, but more is
+better.) Compile the estimates.</li>
+<li>Calculate the percentiles of the bootstrap distribution from the
+previous step.</li>
+<li>Describe your uncertainty using those percentiles.</li>
+</ul>
+</div>
 </div>
 <div id="what-have-we-learned" class="section level1">
 <h1>What Have We Learned?</h1>
@@ -2208,18 +2472,14 @@ omitted.</p>
 <td>Returns values at specified percentiles.</td>
 </tr>
 <tr class="even">
-<td><code>pull()</code></td>
-<td>Extracts one variable from a data frame as a vector.</td>
-</tr>
-<tr class="odd">
 <td><code>abs()</code></td>
 <td>Returns the absolute distance from zero.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>nrow()</code></td>
 <td>Returns the number of rows in a data frame.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>for</code></td>
 <td>Repeats a block of code a specified number of times.</td>
 </tr>
@@ -2241,8 +2501,20 @@ Dataverse, V9. <a href="https://doi.org/10.7910/DVN/X11EP6">https://doi.org/10.7
 <div class="footnotes footnotes-end-of-document">
 <hr />
 <ol>
-<li id="fn1"><p>Russell A. Hill and Robert A. Barton. 2005. “<a href="https://www.nature.com/articles/435293a">Red Enhances Human
-Performance in Contests</a>.” <em>Nature</em> 435: 293.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn1"><p>As we shall see in this course, the word “similar” here
+is doing a lot of work! Critical to this notion of prediction is the
+idea that the data we are analyzing “looks like” the data we are trying
+to predict!<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>Technically speaking, a random sample means that every
+unit in the population has an equal chance of being included in the
+data. In the polling world, this means that every registered voter has
+the same opporuntity of being selected for a poll. (Reality is more
+complicated than this as we don’t actually need to have equal
+probabilities of selection so long as we know what the probability of
+selection is, but for this class let’s keeep the simpler definition and
+assumption!).<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>Russell A. Hill and Robert A. Barton. 2005. “<a href="https://www.nature.com/articles/435293a">Red Enhances Human
+Performance in Contests</a>.” <em>Nature</em> 435: 293.<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 
