@@ -11,7 +11,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
 # Learning Objectives
@@ -387,7 +387,7 @@ GenderGap = Female$PctHarris - Male$PctHarris
 GenderGap
 ```
 
-Females in this sample were about `r round(100 * GenderGap, 1)` percentage points more likely than males to report voting for Harris. 
+Females in this sample were about 4.9 percentage points more likely than males to report voting for Harris. 
 But how confident can we be about that estimate?  Might it be different in a different sample?
 
 # Bootstrap the Gender Gap
