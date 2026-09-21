@@ -44,12 +44,8 @@ ces_demo |>
 ces_demo |>
   slice_sample(prop = 1)
 
-set.seed(42)
-
 ces_demo |>
   slice_sample(prop = 1, replace = TRUE)
-
-set.seed(42)
 
 ces_gender |>
   slice_sample(prop = 1, replace = TRUE) |>
@@ -89,7 +85,6 @@ SampledHarrisSupport = bind_rows(
 SampledHarrisSupport
 
 SampledHarrisSupport = NULL
-set.seed(42)
 
 for (i in 1:5) {
 
@@ -112,7 +107,6 @@ SampledHarrisSupport
 # ---- 4. Bootstrap Harris support -------------------------------------------
 
 SampledHarrisSupport = NULL
-set.seed(42)
 
 for (i in 1:1000) {
 
@@ -158,7 +152,6 @@ GenderGap = Female$PctHarris - Male$PctHarris
 GenderGap
 
 SampledGenderGaps = NULL
-set.seed(42)
 
 for (i in 1:1000) {
 
@@ -220,7 +213,6 @@ athens |>
   )
 
 SampledDifferences = NULL
-set.seed(42)
 
 for (i in 1:1000) {
 
@@ -255,7 +247,6 @@ ObservedDifference = athens |>
 
 NullDifferences = NULL
 fair_coin = tibble(red_win = c(0, 1))
-set.seed(2300)
 
 for (i in 1:1000) {
 
@@ -299,7 +290,6 @@ olympics |>
   )
 
 AllYearsDifferences = NULL
-set.seed(42)
 
 for (i in 1:1000) {
 
@@ -336,7 +326,6 @@ olympics |>
 # If we want to see if these differences were similar by sport, what would change?
 
 AllYearsBySportDifferences = NULL
-set.seed(42)
 
 for (i in 1:1000) {
 
