@@ -269,7 +269,9 @@ NullDifferences |>
 
 # ---- 8. Add the 1996-2020 Olympic data -------------------------------------
 
-olympics = read_csv("olympics.csv") |>
+olympics = read_csv("olympics.csv") 
+
+olympics = olympics |>
   mutate(
     red_win = if_else(winner == "Red", 1, 0),
     blue_win = if_else(winner == "Blue", 1, 0)

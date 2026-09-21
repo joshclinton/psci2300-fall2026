@@ -175,8 +175,6 @@ The function is correct, but a critical argument is missing. We need to specify 
 For a bootstrap sample, we use `prop = 1` because the new sample should be the same size as the original data. We also use `replace = TRUE` -- this means that after a row is drawn, it is put back and can be drawn again.
 
 ```{r slice-sample-replacement}
-set.seed(42)
-
 ces_demo |>
   slice_sample(prop = 1, replace = TRUE)
 ```
@@ -193,8 +191,6 @@ The complete function therefore reads:
 Now use those instructions with the entire CES dataset. Because we want our work to be reproducible, we `set.seed` before drawing.  If you do not do this you get different answers.
 
 ```{r one-ces-resample}
-set.seed(42)
-
 ces_gender |>
   slice_sample(prop = 1, replace = TRUE) |>
   summarize(PctHarris = mean(HarrisVoter))
@@ -280,8 +276,6 @@ Now let's pull this all together.  Having shown that the code we want works, let
 
 ```{r five-harris-resamples}
 SampledHarrisSupport = NULL
-set.seed(42)
-
 for (i in 1:5) {
 
   one_estimate = ces_gender |>
@@ -310,7 +304,6 @@ Once the five-iteration loop works, change only the number of repetitions.
 
 ```{r harris-bootstrap-loop}
 SampledHarrisSupport = NULL
-set.seed(42)
 
 for (i in 1:1000) {
 
@@ -397,7 +390,6 @@ The only thing we need to change is the code within the loop.  That and using th
 
 ```{r gender-gap-bootstrap-loop}
 SampledGenderGaps = NULL
-set.seed(42)
 
 for (i in 1:1000) {
 
@@ -520,7 +512,6 @@ Now lets resample/bootstrap the analysis.
 
 ```{r red-blue-bootstrap}
 SampledDifferences = NULL
-set.seed(42)
 
 for (i in 1:1000) {
 
@@ -579,7 +570,6 @@ Simulate 1,000 imaginary Olympics in which color has no advantage.
 ```{r null-loop}
 NullDifferences = NULL
 fair_coin = tibble(red_win = c(0, 1))
-set.seed(2300)
 
 for (i in 1:1000) {
 
@@ -618,9 +608,9 @@ It is not the probability that the null hypothesis is true.
 The Athens result comes from one Olympic Games.  But we also have comparable results from Olympics held between 1996 and 2020.
 
 ```{r load-all-olympics}
-olympics = read_csv(
-  "olympics.csv"
-) |>
+olympics = read_csv("olympics.csv") 
+
+olympics = olympics |>
   mutate(
     red_win = if_else(winner == "Red", 1, 0),
     blue_win = if_else(winner == "Blue", 1, 0)
@@ -657,7 +647,6 @@ same bootstrap one more time.
 
 ```{r all-years-bootstrap}
 AllYearsDifferences = NULL
-set.seed(42)
 
 for (i in 1:1000) {
 
@@ -699,7 +688,6 @@ If we want to see if these differences were similar by sport, what would change?
 
 ```{r}
 AllYearsBySportDifferences = NULL
-set.seed(42)
 
 for (i in 1:1000) {
 

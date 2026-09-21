@@ -1755,9 +1755,7 @@ to specify that we want <em>sample with replacement</em>.</p>
 sample should be the same size as the original data. We also use
 <code>replace = TRUE</code> – this means that after a row is drawn, it
 is put back and can be drawn again.</p>
-<pre class="r"><code>set.seed(42)
-
-ces_demo |&gt;
+<pre class="r"><code>ces_demo |&gt;
   slice_sample(prop = 1, replace = TRUE)</code></pre>
 <p>Look at <code>case_id</code>. Some respondents appear more than once
 and others do not appear at all. The bootstrap sample still contains
@@ -1775,9 +1773,7 @@ selected again.</li>
 <p>Now use those instructions with the entire CES dataset. Because we
 want our work to be reproducible, we <code>set.seed</code> before
 drawing. If you do not do this you get different answers.</p>
-<pre class="r"><code>set.seed(42)
-
-ces_gender |&gt;
+<pre class="r"><code>ces_gender |&gt;
   slice_sample(prop = 1, replace = TRUE) |&gt;
   summarize(PctHarris = mean(HarrisVoter))</code></pre>
 <p>One resample shows what could happen once. But it does not tell us
@@ -1866,8 +1862,6 @@ looking promising!</p>
 works, lets put the code in a loop. Let’s start with five iterations so
 we can inspect the result.</p>
 <pre class="r"><code>SampledHarrisSupport = NULL
-set.seed(42)
-
 for (i in 1:5) {
 
   one_estimate = ces_gender |&gt;
@@ -1895,7 +1889,6 @@ SampledHarrisSupport</code></pre>
 <p>Once the five-iteration loop works, change only the number of
 repetitions.</p>
 <pre class="r"><code>SampledHarrisSupport = NULL
-set.seed(42)
 
 for (i in 1:1000) {
 
@@ -1975,7 +1968,6 @@ the loop. That and using the function <code>tibble</code> to turn the
 calculation into an object we can add to
 <code>SampledGenderGaps</code>.</p>
 <pre class="r"><code>SampledGenderGaps = NULL
-set.seed(42)
 
 for (i in 1:1000) {
 
@@ -2087,7 +2079,6 @@ often in these data. Now apply the procedure we just learned.</p>
 <h1>Bootstrap the Red-Blue Difference</h1>
 <p>Now lets resample/bootstrap the analysis.</p>
 <pre class="r"><code>SampledDifferences = NULL
-set.seed(42)
 
 for (i in 1:1000) {
 
@@ -2146,7 +2137,6 @@ percent chance.</p>
 advantage.</p>
 <pre class="r"><code>NullDifferences = NULL
 fair_coin = tibble(red_win = c(0, 1))
-set.seed(2300)
 
 for (i in 1:1000) {
 
@@ -2176,9 +2166,9 @@ that the null hypothesis is true.</p>
 <h1>What Happens When We Add More Data?</h1>
 <p>The Athens result comes from one Olympic Games. But we also have
 comparable results from Olympics held between 1996 and 2020.</p>
-<pre class="r"><code>olympics = read_csv(
-  &quot;olympics.csv&quot;
-) |&gt;
+<pre class="r"><code>olympics = read_csv(&quot;olympics.csv&quot;) 
+
+olympics = olympics |&gt;
   mutate(
     red_win = if_else(winner == &quot;Red&quot;, 1, 0),
     blue_win = if_else(winner == &quot;Blue&quot;, 1, 0)
@@ -2202,7 +2192,6 @@ more; in others, blue wins more.</p>
 <p>The apparent red advantage is much smaller when we include more data.
 Use the same bootstrap one more time.</p>
 <pre class="r"><code>AllYearsDifferences = NULL
-set.seed(42)
 
 for (i in 1:1000) {
 
@@ -2237,7 +2226,6 @@ only at Athens in 2004?</p>
 <p>If we want to see if these differences were similar by sport, what
 would change?</p>
 <pre class="r"><code>AllYearsBySportDifferences = NULL
-set.seed(42)
 
 for (i in 1:1000) {
 
