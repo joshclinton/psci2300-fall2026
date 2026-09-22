@@ -6,6 +6,7 @@ date: "`r Sys.Date()`"
 output:
   html_document:
     toc: true
+    toc_depth: 3
     toc_float: true
 ---
 
@@ -26,7 +27,7 @@ figcaption,
 knitr::opts_chunk$set(eval = FALSE)
 ```
 
-## Learning Objectives
+# Learning Objectives
 
 - Why do we use R to work with data rather than a spreadsheet?
 
@@ -42,7 +43,7 @@ knitr::opts_chunk$set(eval = FALSE)
 
 
 
-## Data Wrangling?
+# Data Wrangling?
 
 <div style="text-align:center">
 ![**We Need a Horse, Lasso**](figs/Wrangler.png){width=70%}
@@ -107,7 +108,7 @@ This includes inspecting your data and getting a sense of the type of data you h
 
 OK, enough cautionary tales. Let's get R ready and then put it to work.
 
-## Starting out
+# Starting out
 
 We are going to work with R via RStudio -- an Integrated Development Environment (IDE) that combines coding and evaluation in a single application.
 
@@ -233,6 +234,8 @@ Regardless, this also raises the question of how we measure turnout. Turnout is 
 
 Let's work through these issues together and find out.
 
+
+# Working with Turnout Data
 
 ## Loading Data
 
@@ -630,7 +633,7 @@ How could you use filter, select and the ability to create new datsets to do thi
 
 How could you use these tools to determine differences between midterm and presidential elections? Or over time? If you had to predict what turnout in 2026 would be, how would you do that?
 
-## New R Functions
+# New R Functions
 
 | Function | What it does |
 |---|---|
@@ -650,9 +653,9 @@ How could you use these tools to determine differences between midterm and presi
 | `median()` | Calculates the median of a variable. |
 | `|>` | Passes the result of one command to the next command: "and then." |
 
-## Works Cited
+# Works Cited
 
-### Data
+## Data
 
 American National Election Studies. “ANES Guide: Voter Turnout.”
 [https://electionstudies.org/data-tools/anes-guide/anes-guide.html?chart=turnout](https://electionstudies.org/data-tools/anes-guide/anes-guide.html?chart=turnout).
@@ -663,7 +666,7 @@ The course file `turnout.csv` combines turnout, voting-age population,
 voting-eligible population, and eligibility-component estimates from these
 sources; its 2024 administrative values remain provisional.
 
-### Writings and Documentation
+## Writings and Documentation
 
 Cassidy, John. 2013. “The Reinhart and Rogoff Controversy: A Summing Up.”
 *The New Yorker*, April 26.

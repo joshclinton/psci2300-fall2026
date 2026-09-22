@@ -1,0 +1,588 @@
+---
+title: "Wrangling with Authenticity"
+author: "Prof. Josh Clinton"
+institute: "Vanderbilt University"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+# Learning Objectives
+
+- Identify the paper's causal claim and how its treatment and outcome are
+  measured.
+- Determine what comparison would identify the claimed effect.
+- State the pattern we should observe before inspecting the data.
+- Use `count`, `mutate`, `filter`, `group_by`, and `summarize` to investigate
+  the posted data.
+- Explain how decisions about cleaning, recoding, and variable names affect an
+  analysis.
+
+Today we will investigate a published experimental finding. We will begin with
+what the authors claim, identify what pattern we should observe if that claim
+is correct, and then inspect the posted data.
+
+The main question for today is:
+
+> Do the posted data provide credible evidence that inauthenticity increases
+> the desire to clean?
+
+# The Claim
+
+Read “The Moral Virtue of Authenticity: How Inauthenticity Produces Feelings of
+Immorality and Impurity” by Business School professors at Harvard,
+Northwestern, and Columbia. (Not too shabby!)
+
+The paper makes a striking claim:
+
+> “Inauthenticity makes people feel morally tainted and leads to a greater
+> desire for cleanliness.” (p. 993)
+
+The authors describe the contribution this way:
+
+> “Our research provides the first empirical demonstration that there is indeed
+> a link between authenticity and morality.” (p. 994)
+
+What does that mean? Put the claim in your own words before looking at the
+data.
+
+YOUR ANSWER HERE:
+
+# Study 4: Inauthenticity Is Not Dissonance
+
+The paper reports five experiments. We will focus on Study 4.
+
+You can skim most of the article. I do not expect you to understand every part
+of the analysis. Focus on what the researchers did and what we should observe
+if their argument is right.
+
+For the full wording of the study protocol, consult the
+[Materials and Methods](readings/Materials_and_methods.docx). A focused summary
+of the Experiment 4 materials appears in the appendix.
+
+## Whose Opinions Are Being Studied?
+
+Who participated in Study 4? Is this a random sample of the United States?
+People approached at a shopping mall? People who opted into an online survey?
+Something else?
+
+YOUR ANSWER HERE:
+
+Does the sample matter for evaluating the claim? Why or why not?
+
+YOUR ANSWER HERE:
+
+## What Did the Researchers Ask People to Do?
+
+Participants first reported whether they supported including course-difficulty
+ratings in Harvard’s Q Guide. They were then assigned to one of three writing
+conditions.
+
+What were the three conditions? What did participants write in each one?
+
+YOUR ANSWER HERE:
+
+Do the authors have a group that did not write an essay at all? Why might that
+matter?
+
+YOUR ANSWER HERE:
+
+## What Is the Outcome?
+
+After writing the essay, participants rated the desirability of five cleaning
+products: Dove shower soap, Crest toothpaste, Windex cleaner, Tide detergent,
+and Lysol disinfectant.
+
+The variable `av_products_clean` is the average of those five ratings.
+
+Why might the authors use interest in cleaning products as an outcome? Do you
+find it convincing as a measure of a “desire for cleanliness”?
+
+YOUR ANSWER HERE:
+
+## What Pattern Should We Expect?
+
+Before looking at the data, state the expected pattern.
+
+Who should report the greatest interest in cleaning products if the paper’s
+argument is correct? Who should report the least?
+
+YOUR ANSWER HERE:
+
+This is important. If we do not say what pattern we expect before opening the
+data, it becomes very easy to tell a story about whatever pattern we happen to
+find.
+
+# Investigating the Data
+
+## Load the Library
+
+What library do we need?
+
+Reference:
+
+```r
+library(package_name)
+```
+
+Copy the pattern and replace `package_name` with the library we have used in
+the previous lectures.
+
+```{r load-library}
+# INSERT CODE HERE
+```
+
+## Load the Posted Data
+
+The teaching file is named
+`GKG_Study4_Class.csv`. It contains the authors’ posted
+Study 4 data. The only change from the preserved source CSV is removal of
+trailing white space from the open-ended `yearSchool` responses.
+
+What function should we use to read a CSV file? Load the file and save it to an
+object with a sensible name.
+
+Reference:
+
+```r
+example_data = read.csv("example_file.csv")
+```
+
+Copy the pattern. Change the object name and filename to match this study.
+
+```{r load-data}
+# INSERT CODE HERE
+```
+
+How many rows and columns does the data contain? What are the variable names?
+
+Reference:
+
+```r
+dim(example_data)
+names(example_data)
+```
+
+```{r inspect-data}
+# INSERT CODE HERE
+```
+
+## What Did Respondents Say?
+
+The survey asked:
+
+> Year in School: ________
+
+Count the responses to `yearSchool`.
+
+Reference:
+
+```r
+example_data |>
+  count(example_variable)
+```
+
+```{r count-year-school}
+# INSERT CODE HERE
+```
+
+Besides the fact that not all Harvard students can spell, notice anything
+weird?
+
+What makes the response “Harvard” different from “Freshman,” “Sophomore,”
+“Junior,” or “Senior”? Is “Harvard” an impossible answer, or the answer to
+the wrong question?
+
+YOUR ANSWER HERE:
+
+### Turning an Observation Into a Variable
+
+Create a variable equal to 1 for the responses `Harvard` or `harvard` and 0 for
+all other responses.
+
+What should we call it?
+
+- `HarvardResponse` describes what appears in the data.
+- `WrongAnswer` interprets the response as answering the wrong question.
+- `Weird` makes a broader judgment about the observation.
+- `Suspicious` makes an even stronger judgment.
+
+Variable names are not always neutral. A name can describe what we observed or
+embed our interpretation of what it means.
+
+For now, call the variable `Weird` so that it matches the question we are
+asking in this workshop. But be clear about the choice we are making.
+
+Reference:
+
+```r
+example_data = example_data |>
+  mutate(
+    NewVariable = if_else(
+      old_variable == "First value" | old_variable == "Second value",
+      1,
+      0
+    )
+  )
+```
+
+What needs to change? The data object, the new variable name, the old variable,
+and the two values we want to identify.
+
+```{r create-weird}
+# INSERT CODE HERE
+```
+
+Confirm that the variable worked. How many observations are coded as weird?
+
+Use the same `count()` pattern from above. What variable should replace
+`example_variable`?
+
+```{r check-weird}
+# INSERT CODE HERE
+```
+
+## Do the Weird Cases Look Different?
+
+What is the average value of `av_products_clean` among the weird cases?
+
+Reference:
+
+```r
+example_data |>
+  filter(group_variable == 1) |>
+  summarize(
+    N = n(),
+    AvgOutcome = mean(outcome_variable)
+  )
+```
+
+Copy and adjust the data, group variable, and outcome variable.
+
+```{r weird-mean}
+# INSERT CODE HERE
+```
+
+Now calculate the same mean for the non-weird cases.
+
+Return to the code you just ran. Only one value needs to change.
+
+```{r nonweird-mean-first-try}
+# INSERT CODE HERE
+```
+
+What happened?
+
+If R returned `NA`, do not immediately add code until the result disappears.
+First determine why the answer is missing.
+
+Reference:
+
+```r
+example_data |>
+  filter(is.na(outcome_variable)) |>
+  select(variable_one, variable_two, outcome_variable)
+```
+
+Which variables would help us understand the missing observation?
+
+```{r inspect-missing-outcome}
+# INSERT CODE HERE
+```
+
+How many values of `av_products_clean` are missing? Is the missing observation
+weird or non-weird? Which condition is it in?
+
+YOUR ANSWER HERE:
+
+Now calculate the non-weird mean using `na.rm = TRUE`.
+
+Reference:
+
+```r
+example_data |>
+  filter(group_variable == 0) |>
+  summarize(
+    N = n(),
+    Missing = sum(is.na(outcome_variable)),
+    AvgOutcome = mean(outcome_variable, na.rm = TRUE)
+  )
+```
+
+```{r nonweird-mean-corrected}
+# INSERT CODE HERE
+```
+
+What exactly did `na.rm = TRUE` do? Why is it reasonable here? When might
+silently removing missing values be dangerous?
+
+YOUR ANSWER HERE:
+
+# Return to the Paper’s Argument
+
+The comparison above ignores the writing condition. But the paper’s argument
+is about what happens when people write something contrary to their stated
+beliefs.
+
+Count the values of `condition` and return to the three conditions described in
+the paper.
+
+Use the `count()` reference from the year-in-school question. Change the
+variable being counted.
+
+```{r count-condition}
+# INSERT CODE HERE
+```
+
+The two counterattitudinal conditions ask participants to argue against their
+stated position. The proattitudinal condition asks them to argue for it.
+
+Create a variable equal to 1 for the two counterattitudinal conditions and 0
+for the proattitudinal condition.
+
+The original workshop called this variable `Dissonance`. Is that only a label,
+or does it interpret what participants experienced? Would
+`CounterAttitudinal` make a different claim?
+
+We will retain `Dissonance` to examine the paper on its own terms. Remember
+that the name contains an interpretation.
+
+Reference:
+
+```r
+example_data = example_data |>
+  mutate(
+    NewVariable = if_else(old_variable != "Comparison value", 1, 0)
+  )
+```
+
+Here `!=` means "not equal to." Which condition is the comparison value?
+
+```{r create-dissonance}
+# INSERT CODE HERE
+```
+
+## Was the Weird Pattern Concentrated in One Condition?
+
+First count weird and non-weird observations by `Dissonance`.
+
+Reference:
+
+```r
+example_data |>
+  count(first_group, second_group)
+```
+
+```{r count-weird-dissonance}
+# INSERT CODE HERE
+```
+
+Were the weird observations all assigned to the same condition? Does the count
+by itself explain the pattern?
+
+YOUR ANSWER HERE:
+
+### What Should We Compare?
+
+We now have two variables:
+
+- `Weird`: whether the year-in-school response was Harvard.
+- `Dissonance`: whether the assigned essay was counterattitudinal.
+
+We want to compare the average cleaning-product rating for all four
+combinations.
+
+Before running the code, write down the pattern the paper predicts. Then ask a
+more specific question: what pattern among the weird observations would make
+you concerned?
+
+YOUR ANSWER HERE:
+
+Use `group_by()` and `summarize()` to report the number of observations, the
+number of missing outcomes, and the mean cleaning-product rating for each
+combination.
+
+Reference:
+
+```r
+example_data |>
+  group_by(first_group, second_group) |>
+  summarize(
+    N = n(),
+    Missing = sum(is.na(outcome_variable)),
+    AvgOutcome = mean(outcome_variable, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
+
+Now do it!
+
+```{r four-cell-comparison}
+# INSERT CODE HERE
+```
+
+### What Do You Observe?
+
+Do not move on yet. Read the four rows carefully.
+
+- What is the mean among weird respondents in the dissonance condition?
+- What is the mean among weird respondents outside the dissonance condition?
+- How do those means compare with the possible range of 1 through 7?
+- How many observations produce this pattern?
+- Is the same pattern present among the non-weird observations?
+
+YOUR ANSWER HERE:
+
+## Does the Pattern Support the Paper Too Well?
+
+The suspicious observations do not merely support the paper’s argument. They
+produce an almost perfect version of it.
+
+What would a respondent have to enter on the five cleaning-product questions
+to receive an average of exactly 7? What would an average near 2.4 require?
+
+Could this pattern have occurred by chance? Yes. But is chance a convincing
+explanation for what we see?
+
+YOUR ANSWER HERE:
+
+## What Happens Without the Weird Cases?
+
+Remove the weird observations and compare the two essay conditions again.
+Report the number of observations, missing outcomes, and average cleaning score.
+
+Return to the four-cell comparison. Add a `filter()` before `group_by()` and
+then group only by `Dissonance`.
+
+Reference for the order of the steps:
+
+```r
+example_data |>
+  filter(variable_to_keep == value_to_keep) |>
+  group_by(group_variable) |>
+  summarize(...)
+```
+
+```{r comparison-without-weird}
+# INSERT CODE HERE
+```
+
+Does a difference remain? How does it compare with the pattern created by the
+weird cases? What can we conclude from a comparison of means alone at this
+point in the course?
+
+YOUR ANSWER HERE:
+
+# What Did We Discover?
+
+Only now should we compare our investigation with the work done by Data Colada.
+
+Uri Simonsohn, Joseph Simmons, and Leif Nelson identified the same twenty
+“Harvard” observations. Those observations line up extraordinarily well with
+the paper’s predicted result. The article has since been retracted.
+
+Return to the claim at the beginning of the workshop. Do the posted data
+provide credible evidence that inauthenticity increases the desire to clean?
+
+YOUR ANSWER HERE:
+
+## What Did the Code Help Us Do?
+
+- `count()` exposed unusual raw responses.
+- `mutate()` and `if_else()` turned judgments into variables that could be
+  examined.
+- Variable names forced us to confront the difference between description and
+  interpretation.
+- A missing value produced `NA` and forced us to inspect rather than guess.
+- `group_by()` and `summarize()` made the decisive four-way comparison visible.
+- The code provides a reproducible record of every choice we made.
+
+The point was not simply to obtain the final four means. The path to those
+means showed us why the finding cannot be taken at face value.
+
+# New R Functions Introduced in Lecture 4
+
+This workshop primarily uses the cumulative toolkit from Lectures 2 and 3.
+
+| Function | What it does |
+|---|---|
+| `is.na()` | Identifies values that are missing. |
+| `group_by()` | Defines the groups used by a following summary. |
+| `n()` | Counts observations within `summarize()`. |
+| `sum()` | Adds values; here it counts values for which `is.na()` is true. |
+
+# Appendix: Experiment 4 Materials
+
+The authors' complete posted protocol contains materials for all five
+experiments. The portions relevant to our analysis are summarized below. See
+the [Materials and Methods](readings/Materials_and_methods.docx) for the full
+wording.
+
+## Participants and Initial Questions
+
+Participants had to report that they were Harvard undergraduates. Before the
+writing task, they reported:
+
+- whether they supported including course-difficulty ratings in Harvard's Q
+  Guide;
+- how strongly they held that opinion;
+- their age and gender; and
+- their year in school.
+
+## Writing Conditions
+
+Participants were assigned to one of three conditions:
+
+1. **Low-choice counterattitudinal:** Participants were assigned to argue
+   against their stated position.
+2. **High-choice counterattitudinal:** Participants were asked to argue against
+   their stated position while the instructions emphasized that doing so was
+   voluntary.
+3. **High-choice proattitudinal:** Participants were asked to argue in favor of
+   their stated position while the instructions emphasized that doing so was
+   voluntary.
+
+All participants were told to make the essay persuasive and convincing.
+
+## Cleaning-Product Outcome
+
+After writing the essay, participants rated ten products from 1, “Completely
+undesirable,” to 7, “Completely desirable.” Five were cleaning products—Dove
+shower soap, Crest toothpaste, Windex cleaner, Tide detergent, and Lysol
+disinfectant—and five were filler products. The variable
+`av_products_clean` averages the five cleaning-product ratings.
+
+## Post-Treatment Questions
+
+Participants then rated whether the writing task made them feel out of touch
+with their “real” selves and how much choice they believed they had in writing
+the essay.
+
+# Works Cited
+
+## Data and Study Materials
+
+Gino, Francesca, Maryam Kouchaki, and Adam D. Galinsky. 2015. “The Moral Virtue
+of Authenticity: How Inauthenticity Produces Feelings of Immorality and
+Impurity.” *Psychological Science* 26: 983–996. Retracted.
+[https://doi.org/10.1177/0956797615575277](https://doi.org/10.1177/0956797615575277).
+
+Gino, Francesca, Maryam Kouchaki, and Adam D. Galinsky. “Materials, Methods, and
+Posted Data for ‘The Moral Virtue of Authenticity.’” Open Science Framework.
+[https://osf.io/sd76g/](https://osf.io/sd76g/). The course file
+`GKG_Study4_Class.csv` is a teaching copy of the posted
+Study 4 CSV. The only transformation is removal of trailing white space from
+`yearSchool`; the preserved source is `GKG_Study4.csv`.
+
+## Writing
+
+Simonsohn, Uri, Joseph P. Simmons, and Leif D. Nelson. 2023. “Data Falsificada
+(Part 2): ‘My Class Year Is Harvard.’” *Data Colada* 110, June 20.
+[https://datacolada.org/110](https://datacolada.org/110).

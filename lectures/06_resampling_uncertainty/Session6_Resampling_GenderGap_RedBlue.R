@@ -9,10 +9,13 @@
 # Keep this script, CES2024_GenderGap.rds, athens.csv, and olympics.csv in the
 # same folder. Then choose Session > Set Working Directory > To Source File Location.
 
+# ---- Uncertainty in Univariate Statistics ----
+
+# -- A Familiar Number: The Margin of Error --
+
 library(tidyverse)
 
-
-# ---- 2. Harris support and resampling ---------------------------------------
+# ---- Return to the 2024 CES ----
 
 ces_gender = readRDS("CES2024_GenderGap.rds")
 
@@ -24,9 +27,11 @@ ces_gender |>
     PctHarris = mean(HarrisVoter)
   )
 
-# NOTE: Always set a seed if you are sampling so you can replicate your results!
+# -- Samples, Populations, and Uncertainty --
 
 set.seed(42)
+
+# -- How Does slice_sample() Work? --
 
 ces_demo = ces_gender |>
   select(gender4, presvote) |>
@@ -47,22 +52,27 @@ ces_demo |>
 ces_demo |>
   slice_sample(prop = 1, replace = TRUE)
 
+# -- One Imaginary New Poll --
+
 ces_gender |>
   slice_sample(prop = 1, replace = TRUE) |>
   summarize(PctHarris = mean(HarrisVoter))
 
-
-# ---- 3. Build the bootstrap loop -------------------------------------------
+# -- What Does a Loop Do? --
 
 for (i in 1:5) {
   print(i)
 }
+
+# -- Do the Work Once Before Repeating It --
 
 one_estimate = ces_gender |>
   slice_sample(prop = 1, replace = TRUE) |>
   summarize(PctHarris = mean(HarrisVoter))
 
 one_estimate
+
+# -- What Does bind_rows() Do? --
 
 SampledHarrisSupport = NULL
 
@@ -84,8 +94,9 @@ SampledHarrisSupport = bind_rows(
 
 SampledHarrisSupport
 
-SampledHarrisSupport = NULL
+# -- Put the Steps Inside a Loop --
 
+SampledHarrisSupport = NULL
 for (i in 1:5) {
 
   one_estimate = ces_gender |>
@@ -103,8 +114,7 @@ for (i in 1:5) {
 
 SampledHarrisSupport
 
-
-# ---- 4. Bootstrap Harris support -------------------------------------------
+# -- Repeat the Poll 1,000 Times --
 
 SampledHarrisSupport = NULL
 
@@ -122,16 +132,29 @@ for (i in 1:1000) {
 
 summary(SampledHarrisSupport)
 
+# -- From a Margin of Error to an Interval --
+
+newvar = seq(0:1000)
+
+median(newvar)
+quantile(newvar, p = .5)
+
+quantile(newvar, p = .25)
+quantile(newvar, p = .75)
+
+quantile(newvar, p = c(.25,.75))
+
+quantile(newvar, p = c(.025,.975))
+
 SampledHarrisSupport |>
   summarize(
-    Lower = quantile(PctHarris, .025),
+    Lower = quantile(PctHarris, p = .025),
     Estimate = mean(PctHarris),
-    Upper = quantile(PctHarris, .975),
+    Upper = quantile(PctHarris, p = .975),
     MarginOfError = (Upper - Lower) / 2
   )
 
-
-# ---- 5. Bootstrap the gender gap -------------------------------------------
+# ---- A Harder Question: Is the Gender Gap "Real"? ----
 
 ces_gender |>
   group_by(female) |>
@@ -150,6 +173,8 @@ Male = ces_gender |>
 
 GenderGap = Female$PctHarris - Male$PctHarris
 GenderGap
+
+# -- Bootstrap the Gender Gap --
 
 SampledGenderGaps = NULL
 
@@ -177,15 +202,12 @@ summary(SampledGenderGaps)
 
 SampledGenderGaps |>
   summarize(
-    Lower = quantile(GenderGap, .025),
+    Lower = quantile(GenderGap, p = .025),
     Estimate = mean(GenderGap),
-    Upper = quantile(GenderGap, .975)
+    Upper = quantile(GenderGap, p = .975)
   )
 
-
-# ASIDE: What if our survey was smaller?
-
-# The impact of uncertainty depends on how large our sample is.  To see this, lets repeat this with a smaller sample -- lets just take 1000 observations and pretend that was our actual survey
+# -- ASIDE: What if our survey was smaller? --
 
 ces_gender_small = ces_gender |>
     slice_sample(n = 1000, replace = FALSE)
@@ -194,16 +216,15 @@ ces_gender_small = ces_gender |>
 
 # INSERT CODE HERE
 
-# What do you observe?  Is it different?  How does the size of the interval compare?
-
-
-# ---- 6. Red versus blue in Athens ------------------------------------------
+# ---- Same Method, New Question ----
 
 athens = read_csv("athens.csv") |>
   mutate(
     red_win = if_else(winner == "Red", 1, 0),
     blue_win = if_else(winner == "Blue", 1, 0)
-  )
+)
+
+# -- The Red-Blue Difference of Means --
 
 athens |>
   summarize(
@@ -211,6 +232,8 @@ athens |>
     BlueWinRate = mean(blue_win),
     Difference = RedWinRate - BlueWinRate
   )
+
+# -- Bootstrap the Red-Blue Difference --
 
 SampledDifferences = NULL
 
@@ -233,13 +256,12 @@ summary(SampledDifferences)
 
 SampledDifferences |>
   summarize(
-    Lower = quantile(Difference, .025),
+    Lower = quantile(Difference, p = .025),
     Estimate = mean(Difference),
-    Upper = quantile(Difference, .975)
+    Upper = quantile(Difference, p = .975)
   )
 
-
-# ---- 7. POSSIBLE ASIDE: Testing the Difference Against Zero --------------------------------------
+# -- POSSIBLE ASIDE: Testing the Difference Against Zero --
 
 ObservedDifference = athens |>
   summarize(Difference = mean(red_win) - mean(blue_win)) |>
@@ -266,8 +288,7 @@ NullDifferences |>
     p_value = mean(abs(Difference) >= abs(ObservedDifference))
   )
 
-
-# ---- 8. Add the 1996-2020 Olympic data -------------------------------------
+# -- What Happens When We Add More Data? --
 
 olympics = read_csv("olympics.csv") 
 
@@ -309,13 +330,12 @@ for (i in 1:1000) {
 
 AllYearsDifferences |>
   summarize(
-    Lower = quantile(Difference, .025),
+    Lower = quantile(Difference, p = .025),
     Estimate = mean(Difference),
-    Upper = quantile(Difference, .975)
+    Upper = quantile(Difference, p = .975)
   )
 
-
-# ---- 9. What if we looked by sport? ----------------------------------------
+# -- What if we looked by sport? --
 
 olympics |>
   group_by(sport) |>
@@ -325,7 +345,8 @@ olympics |>
     Difference = RedWinRate - BlueWinRate
   )
 
-# If we want to see if these differences were similar by sport, what would change?
+# EXERCISE: Adapt the following code to compare differences by sport.
+# THE CODE THAT FOLLOWS NEEDS TO BE CHANGED.
 
 AllYearsBySportDifferences = NULL
 
@@ -345,9 +366,7 @@ for (i in 1:1000) {
 
 AllYearsDifferences |>
   summarize(
-    Lower = quantile(Difference, .025),
+    Lower = quantile(Difference, p = .025),
     Estimate = mean(Difference),
-    Upper = quantile(Difference, .975)
+    Upper = quantile(Difference, p = .975)
   )
-
-# What does that suggest?

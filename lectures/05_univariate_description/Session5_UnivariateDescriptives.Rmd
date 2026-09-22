@@ -6,6 +6,7 @@ date: "`r Sys.Date()` "
 output:
   html_document:
     toc: true
+    toc_depth: 3
     toc_float: true
 ---
 
@@ -211,7 +212,7 @@ BOTTOM LINE: A real, peer-reviewed claim, summarized with a mean, looked convinc
 
 NOTE: Our work is *not* a reproduction of the published paper. Jung et al. deliberately set Katrina and Audrey aside as outliers and fit a statistical model using how feminine each name was (using tools we will learn later). Even so, we *have* shown that the headline depends on a couple of storms. If interested, the paper drew a formal published critique and a reply from the authors, both linked below.
 
-## A Second Motivating Question: Redistricting and the 2026 midterms
+# A Second Motivating Question: Redistricting and the 2026 midterms
 
 Today we'll be working with the 2024 presidential election results for each of the 435 congressional districts and see what that implies about the 2026 midterms.  As you may know, several states redrew their congressional district lines after 2024 and we may be interested in how that affects expectations about what may happen.
 
@@ -231,7 +232,7 @@ glimpse(cd)
 
 This dataset contains the following variables. Variables ending in `_2024map` use the district lines from the 2024 election; variables ending in `_2026map` use the district lines for the 2026 election.  Both measure the *same* 2024 presidential vote so any difference is a result of a redistricting.
 
-# Codebook
+## Codebook
 
 | Name               |                          Definition |
 |--------------------|------------------------------------:|
@@ -278,7 +279,7 @@ What do you observe about them?  Where are they?
 # INSERT CODE HERE
 ```
 
-## Measures for Continuous Variables
+### Measures for Continuous Variables
 
 The mean is used most of the time for continuous variables, but as we have just seen, it can be VERY sensitive to outliers and lead misleading characterizations. The median (50th percentile) is usually better for describing what is ``typical," but the downside is that it can be difficult to explain to general audiences. 
 
@@ -484,7 +485,7 @@ Now California, where the tools were used in the other direction: the safest Dem
 
 So which measure reveals the effects of redistricting?  The mean? The median?
 
-# Differences in Percentages or Percent Difference?
+## Differences in Percentages or Percent Difference?
 
 Under the 2024 lines there were 44 toss-up districts; under the 2026 lines there are 37.  As a share of the 435 districts that is 10.1\% and 8.5\%.  So how much less competitive did the House become?
 
@@ -516,7 +517,7 @@ Note how differently those numbers seem, even though they describe the same chan
 
 While it is very easy to feel overwhelmed by the coding and the sea of numbers, so much of what we do actually involves critical thinking and being mindful of exactly what we are measuring!  Both of the answers are "correct" in terms of using code to extract numbers.
 
-# A Counterfactual: Turning Vote Shifts into Seats
+## A Counterfactual: Turning Vote Shifts into Seats
 
 The 2024 map and the 2026 map hold the same votes, so the comparison so far only tells us what the lines did to the *2024* result.  But elections change.  What if the 2026 electorate shifts 4 points toward Democrats relative to 2024 -- a typical midterm swing against the president's party?
 

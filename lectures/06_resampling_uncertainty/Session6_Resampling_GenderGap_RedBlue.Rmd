@@ -7,6 +7,7 @@ date: "`r Sys.Date()`"
 output:
   html_document:
     toc: true
+    toc_depth: 3
     toc_float: true
 ---
 
@@ -28,7 +29,7 @@ knitr::opts_chunk$set(eval = FALSE, echo = TRUE, message = FALSE, warning = FALS
 
 - Use a bootstrap interval to ask whether a difference is distinguishable from zero.
 
-## Uncertainty in Univariate Statistics
+# Uncertainty in Univariate Statistics
 
 When we calculate a summary statistic in univariate statistics, we're making a statement that can be interpreted in terms of what we can expect to see in other similar situations. If I say that the average height of a cedar tree is 75 feet, for example, that provides an expectation -- prediction -- for what we might expect to find if we look at other cedar trees (assuming "similar" environmental conditions). The measure we propose to measure what is typical is almost naturally interpreted by humans in terms of a prediction for what we may expect of other similar units.^[As we shall see in this course, the word "similar" here is doing a lot of work! Critical to this notion of prediction is the idea that the data we are analyzing "looks like" the data we are trying to predict!]
 
@@ -36,7 +37,7 @@ However, there's more information that we need to communicate beyond what is "ty
 
 Today we will discuss how we can leverage the variation we observe in the data that we have to quantify how much confidence we should have in the precision/certainty/variation of our measures. 
 
-# A Familiar Number: The Margin of Error
+## A Familiar Number: The Margin of Error
 
 A poll might report 52 percent support with a margin of error of plus or minus 3 percentage points. What does that margin of error mean? Why is there a margin of error if the poll has already counted every answer in its sample?
 
@@ -111,7 +112,7 @@ This is the exact percentage that we observe in this specific sample of survey r
 
 Note that this is not the same as survey error!  The margin of error is how much a survey-estimate may change as a result of random sampling and the fact that some people were randomly selected to be interviewed while others were not.
 
-# Samples, Populations, and Uncertainty
+## Samples, Populations, and Uncertainty
 
 We're going to start by building up a range of uncertainty from the data we already have. We'll do this by sampling from the data itself. 
 
@@ -130,7 +131,7 @@ set.seed(42)
 
 Resampling uses the variation in the observed data to approximate what we might have found in other samples.
 
-# How Does `slice_sample()` Work?
+## How Does `slice_sample()` Work?
 
 We can use `slice_sample()` to randomly draw rows from a data frame. To make each part of the function visible, begin with the first five CES respondents -- which we extract using the `head` function -- and add an identification number.
 
@@ -186,7 +187,7 @@ The complete function therefore reads:
 - `prop = 1`: draw 100 percent as many rows as are in the original data;
 - `replace = TRUE`: put each selected row back so it can be selected again.
 
-# One Imaginary New Poll
+### One Imaginary New Poll
 
 Now use those instructions with the entire CES dataset. Because we want our work to be reproducible, we `set.seed` before drawing.  If you do not do this you get different answers.
 
@@ -198,7 +199,7 @@ ces_gender |>
 
 One resample shows what could happen once. But it does not tell us how much the estimate may change if we were to do this over and over again. To do this we need to repeat the same analysis many times.
 
-# What Does a Loop Do?
+## What Does a Loop Do?
 
 A loop tells R to repeat a block of code for as many times as we tell it -- here `5`. Note the syntax and the braces. Code within the braces is what R will do each time -- here nothing but print the value of `i`.
 
@@ -218,7 +219,7 @@ Of course we would not want to do this for real (although printing `i` is someti
 2. Calculate Harris support.
 3. Store the answer.
 
-# Do the Work Once Before Repeating It
+### Do the Work Once Before Repeating It
 
 Before writing the loop, do the work once to make sure it works!  Once we confirm that it works then we can build the loop.
 
@@ -234,7 +235,7 @@ one_estimate
 
 Note also that we are not saving our resampled data - we are sampling, summarizing, and forgetting.  The reason is that it we want to do lots of samples and/or we have a large number of observations being sampled then storing all of those random samples can impact computing performance by keeping large objects in memory. As a result, we generally try to draw a sample, perform the analysis that we need on the sample that was selected, and save only the most essential results of that analysis.  (What would we change to save the resampled data?)
 
-# What Does `bind_rows()` Do?
+### What Does `bind_rows()` Do?
 
 Begin with an empty object - which we define to be `NULL` to start.
 
@@ -270,7 +271,7 @@ SampledHarrisSupport
 
 Why are there now two rows? `bind_rows()` does not replace the first estimate; it adds the second estimate beneath it.  This is looking promising!
 
-# Put the Steps Inside a Loop
+### Put the Steps Inside a Loop
 
 Now let's pull this all together.  Having shown that the code we want works, lets put the code in a loop. Let's start with five iterations so we can inspect the result.
 
@@ -298,7 +299,7 @@ The loop repeats the same commands five times. `bind_rows()` stores one answer o
 
 Now think about what happens if we replace `1:5` with `1:1000`? What should remain the same?
 
-# Repeat the Poll 1,000 Times
+### Repeat the Poll 1,000 Times
 
 Once the five-iteration loop works, change only the number of repetitions.
 
@@ -328,16 +329,53 @@ The `summary()` output describes the **bootstrap distribution** numerically.
 Compare its median to Harris support in the original sample. The minimum,
 quartiles, and maximum show how much the estimate changes across resamples.
 
-# From a Margin of Error to an Interval
+## From a Margin of Error to an Interval
+
+The `quantile` function is a handy function that allows us to identify which values of our dataset occupy various percentiles of the data. That is, if we arrange the values of a variable from lowest to highest, what is the value that occupies the x-th percentile.  Recall from last time that the value of the 50th percentile is what we call the `median` -- i.e., the value where 50\% of our data is above that value and 50\% of our data is below that value.  But we can find whatever percentiles we want.  
+
+To see this let's create a simple variable that ranges from 0 to 1000. (Note that `:` ust indicates to R to create sequence (`seq`) from `1` to `1000`).
+
+```{r}
+newvar = seq(0:1000)
+```
+
+Now let's compute the median two ways: using the median and using the `quantile` function.
+
+```{r}
+median(newvar)
+quantile(newvar, p = .5)
+```
+
+Perfect.  But the real value is the ability to extact different percentiles.  Suppose we wanted to know the range between which 50\% of our data were located. This is sometimes called the `inter-quartile range.`. The range of values containing 50\% of our data (around the median) is defined by values between the 25th and 75th percentiles. 
+
+Given that we have 1001 values ranging from 0 to 1000, we should find the 25th percentile to be assoicated with the value 251 and the 75\% percentile associated with 751.  Let's check!
+
+```{r}
+quantile(newvar, p = .25)
+quantile(newvar, p = .75)
+```
+Perfect.  Note that we can also do both at the same time by combining/concatenating the percentiles being requested as follows.
+
+```{r}
+quantile(newvar, p = c(.25,.75))
+```
+
+In statistics, we typically care about the 95\% interval when doing statistical tests for whether something is distinguishable from zero (i.e., if we were to do the experiment 100 times would we find an effect that is different from zero in at least 95 of them?). But we can use the quantile function to find the values that define the 2.5th percentile and the 97.5th percentile (so that 5\% is either higher or lower) with a simple change:
+
+```{r}
+quantile(newvar, p = c(.025,.975))
+```
+
+This is a toy example that is useful because we know what the values should be, so let's get back to our real data.
 
 We can use the 2.5th and 97.5th percentiles to identify the middle 95 percent of our resampled estimates.
 
 ```{r ces-bootstrap-interval}
 SampledHarrisSupport |>
   summarize(
-    Lower = quantile(PctHarris, .025),
+    Lower = quantile(PctHarris, p = .025),
     Estimate = mean(PctHarris),
-    Upper = quantile(PctHarris, .975),
+    Upper = quantile(PctHarris, p = .975),
     MarginOfError = (Upper - Lower) / 2
   )
 ```
@@ -352,7 +390,7 @@ The fact that the true answer is well-outside of the range that we find suggests
 
 # A Harder Question: Is the Gender Gap "Real"?
 
-In Session 3, we found different levels of Harris support among women and men. Let's calculate the two group means again.
+In Session 3, we found different levels of Harris support among women and men. Let's calculate the two group means again.  Here the `n()` is a function that simply gives the total count of the observations in our data.
 
 ```{r gender-group-means}
 ces_gender |>
@@ -383,7 +421,7 @@ GenderGap
 Females in this sample were about 4.9 percentage points more likely than males to report voting for Harris. 
 But how confident can we be about that estimate?  Might it be different in a different sample?
 
-# Bootstrap the Gender Gap
+## Bootstrap the Gender Gap
 
 Let's go!  The loop has the same three parts as before: sample, calculate, store. 
 The only thing we need to change is the code within the loop.  That and using the function `tibble` to turn the calculation into an object we can add to `SampledGenderGaps`.
@@ -419,9 +457,9 @@ summary(SampledGenderGaps)
 ```{r gender-gap-bootstrap-interval}
 SampledGenderGaps |>
   summarize(
-    Lower = quantile(GenderGap, .025),
+    Lower = quantile(GenderGap, p = .025),
     Estimate = mean(GenderGap),
-    Upper = quantile(GenderGap, .975)
+    Upper = quantile(GenderGap, p = .975)
   )
 ```
 
@@ -439,7 +477,7 @@ Does that mean the gender gap is "real"? We need to be precise:
 The margin of error describes **sampling error**. It does not describe every possible source of error in a poll.
 
 
-# ASIDE: What if our survey was smaller?  
+## ASIDE: What if our survey was smaller?
 
 The impact of uncertainty depends on how large our sample is.  To see this, lets repeat this with a smaller sample -- lets just take 1000 observations and pretend that was our actual survey
 
@@ -491,7 +529,7 @@ Each row is one contest. `red_win` equals 1 when red won and 0 when red lost.
 `blue_win` does the reverse. Before running the next chunk, what should the two
 means add to? Why?
 
-# The Red-Blue Difference of Means
+## The Red-Blue Difference of Means
 
 The mean of each indicator is the win rate for that color.  Calculate the two means and subtract.
 
@@ -506,7 +544,7 @@ athens |>
 
 The estimated difference is about 8.5 percentage points. Red won more often in these data. Now apply the procedure we just learned.
 
-# Bootstrap the Red-Blue Difference
+## Bootstrap the Red-Blue Difference
 
 Now lets resample/bootstrap the analysis.
 
@@ -538,9 +576,9 @@ Compare this summary to the CES bootstrap. Which set of estimates varies more fr
 ```{r red-blue-interval}
 SampledDifferences |>
   summarize(
-    Lower = quantile(Difference, .025),
+    Lower = quantile(Difference, p = .025),
     Estimate = mean(Difference),
-    Upper = quantile(Difference, .975)
+    Upper = quantile(Difference, p = .975)
   )
 ```
 
@@ -551,9 +589,9 @@ the published result is wrong, it does tell us that the answer depends on exactl
 
 Not only does this once again highlight that doing data analysis requires making an argument, but it also raises another question: which analysis was specified because it follows from the argument, and which analyses became important after looking at the data? 
 
-# POSSIBLE ASIDE: Testing the Difference Against Zero
+## POSSIBLE ASIDE: Testing the Difference Against Zero
 
-A confidence interval asks whether zero is a plausible value for the population difference. A hypothesis test asks a closely related question:
+This is not covered, but included in case you are interested. A confidence interval asks whether zero is a plausible value for the population difference. A hypothesis test asks a closely related question:
 
 > If red and blue were equally likely to win, how often would chance produce a difference at least as large as the one we observed?
 
@@ -603,7 +641,7 @@ This simulated **p-value** is the fraction of fair-coin results at least as extr
 A small p-value is evidence against the no-difference hypothesis. 
 It is not the probability that the null hypothesis is true.
 
-# What Happens When We Add More Data?
+## What Happens When We Add More Data?
 
 The Athens result comes from one Olympic Games.  But we also have comparable results from Olympics held between 1996 and 2020.
 
@@ -664,15 +702,15 @@ for (i in 1:1000) {
 
 AllYearsDifferences |>
   summarize(
-    Lower = quantile(Difference, .025),
+    Lower = quantile(Difference, p = .025),
     Estimate = mean(Difference),
-    Upper = quantile(Difference, .975)
+    Upper = quantile(Difference, p = .975)
   )
 ```
 
 Does this interval include zero? What has changed since we looked only at Athens in 2004?
 
-What if we looked by sport?
+### What if we looked by sport?
 
 ```{r}
 olympics |>
@@ -684,7 +722,7 @@ olympics |>
   )
 ```
 
-If we want to see if these differences were similar by sport, what would change?
+If we want to see if these differences were similar by sport, what would change?  THE CODE THAT FOLLOWS NEEDS TO BE CHANGED.
 
 ```{r}
 AllYearsBySportDifferences = NULL
@@ -705,15 +743,18 @@ for (i in 1:1000) {
 
 AllYearsDifferences |>
   summarize(
-    Lower = quantile(Difference, .025),
+    Lower = quantile(Difference, p = .025),
     Estimate = mean(Difference),
-    Upper = quantile(Difference, .975)
+    Upper = quantile(Difference, p = .975)
   )
 ```
 
 What does that suggest?
 
-## Empirical Bootstrap
+Notice how contingent our results can be based on how we decide to analyze and organize the data.  Data science requires arguments!  Why is what you are doing defensible?  Does the answer change if you do something else? If so, why is that not the correct thing to do?
+
+
+# Empirical Bootstrap
 
 What we have been doing is called the [empirical bootstrap](https://ocw.mit.edu/courses/mathematics/18-05-introduction-to-probability-and-statistics-spring-2014/readings/MIT18_05S14_Reading24.pdf). It's massively useful, because it can be applied for any summary measure of the data: median, percentiles, and measures like regression coefficients. Here is the summary of steps for the empirical bootstrap:
 
@@ -748,7 +789,6 @@ Functions introduced in earlier lectures are intentionally omitted.
 | `bind_rows()` | Adds rows to the bottom of a data frame. |
 | `quantile()` | Returns values at specified percentiles. |
 | `abs()` | Returns the absolute distance from zero. |
-| `nrow()` | Returns the number of rows in a data frame. |
 | `for` | Repeats a block of code a specified number of times. |
 
 # Works Cited

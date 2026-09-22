@@ -11,7 +11,7 @@
 
 <meta name="author" content="Prof. Josh Clinton" />
 
-<meta name="date" content="2026-09-13" />
+<meta name="date" content="2026-09-22" />
 
 <title>Univariate Description: The Cases of Himmicanes and Congressional Redistricting</title>
 
@@ -1482,7 +1482,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Univariate Description: The Cases of
 Himmicanes and Congressional Redistricting</h1>
 <h4 class="author">Prof. Josh Clinton</h4>
-<h4 class="date">2026-09-13</h4>
+<h4 class="date">2026-09-22</h4>
 
 </div>
 
@@ -1780,9 +1780,10 @@ will learn later). Even so, we <em>have</em> shown that the headline
 depends on a couple of storms. If interested, the paper drew a formal
 published critique and a reply from the authors, both linked below.</p>
 </div>
-<div id="a-second-motivating-question-redistricting-and-the-2026-midterms" class="section level2">
-<h2>A Second Motivating Question: Redistricting and the 2026
-midterms</h2>
+</div>
+<div id="a-second-motivating-question-redistricting-and-the-2026-midterms" class="section level1">
+<h1>A Second Motivating Question: Redistricting and the 2026
+midterms</h1>
 <p>Today we’ll be working with the 2024 presidential election results
 for each of the 435 congressional districts and see what that implies
 about the 2026 midterms. As you may know, several states redrew their
@@ -1801,10 +1802,8 @@ what the first observations look like for each variable.</p>
 variables ending in <code>_2026map</code> use the district lines for the
 2026 election. Both measure the <em>same</em> 2024 presidential vote so
 any difference is a result of a redistricting.</p>
-</div>
-</div>
-<div id="codebook" class="section level1">
-<h1>Codebook</h1>
+<div id="codebook" class="section level2">
+<h2>Codebook</h2>
 <table>
 <colgroup>
 <col width="35%" />
@@ -1884,6 +1883,7 @@ margin?</p>
 to 49.95 %. The overall popular vote margin would be very small – 0.1% –
 but one party would have won every district! (Keep this possibility in
 mind as it is exactly the logic that redistricting exploits.)</p>
+</div>
 <div id="continuous" class="section level2">
 <h2>Continuous</h2>
 <p>Let’s start by taking a look at <code>dem_margin_2024map</code> –
@@ -1901,9 +1901,8 @@ ways to do this – this is just a fancy way.)</p>
 <p><em>Quick Exercise</em> Do the same thing for the 10 most Republican
 districts. How do they compare to the 10 most Democratic districts?</p>
 <pre class="r"><code># INSERT CODE HERE</code></pre>
-</div>
-<div id="measures-for-continuous-variables" class="section level2">
-<h2>Measures for Continuous Variables</h2>
+<div id="measures-for-continuous-variables" class="section level3">
+<h3>Measures for Continuous Variables</h3>
 <p>The mean is used most of the time for continuous variables, but as we
 have just seen, it can be VERY sensitive to outliers and lead misleading
 characterizations. The median (50th percentile) is usually better for
@@ -1952,6 +1951,7 @@ mean and median district? This requires tweaking the code to add a
 <p>BOTTOM LINE: With a continuous variable either the <code>mean</code>
 or <code>median</code> make the most sense. The <code>mean</code> is
 easier to explain to others, but it is sensitive to outliers.</p>
+</div>
 </div>
 <div id="categorical-ordered" class="section level2">
 <h2>Categorical: ordered</h2>
@@ -2137,9 +2137,8 @@ maps.</p>
 <p>So which measure reveals the effects of redistricting? The mean? The
 median?</p>
 </div>
-</div>
-<div id="differences-in-percentages-or-percent-difference" class="section level1">
-<h1>Differences in Percentages or Percent Difference?</h1>
+<div id="differences-in-percentages-or-percent-difference" class="section level2">
+<h2>Differences in Percentages or Percent Difference?</h2>
 <p>Under the 2024 lines there were 44 toss-up districts; under the 2026
 lines there are 37. As a share of the 435 districts that is 10.1% and
 8.5%. So how much less competitive did the House become?</p>
@@ -2170,8 +2169,8 @@ of numbers, so much of what we do actually involves critical thinking
 and being mindful of exactly what we are measuring! Both of the answers
 are “correct” in terms of using code to extract numbers.</p>
 </div>
-<div id="a-counterfactual-turning-vote-shifts-into-seats" class="section level1">
-<h1>A Counterfactual: Turning Vote Shifts into Seats</h1>
+<div id="a-counterfactual-turning-vote-shifts-into-seats" class="section level2">
+<h2>A Counterfactual: Turning Vote Shifts into Seats</h2>
 <p>The 2024 map and the 2026 map hold the same votes, so the comparison
 so far only tells us what the lines did to the <em>2024</em> result. But
 elections change. What if the 2026 electorate shifts 4 points toward
@@ -2242,6 +2241,7 @@ swing is needed to reach 218 under the new lines?</p>
 <p>One caution: a uniform swing is an assumption, not a fact. Real
 swings vary across districts, and we will build tools to think about
 that kind of uncertainty next session.</p>
+</div>
 </div>
 <div id="new-r-functions-introduced-in-lecture-5" class="section level1">
 <h1>New R Functions Introduced in Lecture 5</h1>

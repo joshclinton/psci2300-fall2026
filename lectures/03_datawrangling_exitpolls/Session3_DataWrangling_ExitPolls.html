@@ -11,7 +11,7 @@
 
 <meta name="author" content="Prof. Josh Clinton" />
 
-<meta name="date" content="2026-09-07" />
+<meta name="date" content="2026-09-22" />
 
 <title>Data Wrangling: Surveying the Gap</title>
 
@@ -1481,7 +1481,7 @@ border-radius: 0px;
 
 <h1 class="title toc-ignore">Data Wrangling: Surveying the Gap</h1>
 <h4 class="author">Prof. Josh Clinton</h4>
-<h4 class="date">2026-09-07</h4>
+<h4 class="date">2026-09-22</h4>
 
 </div>
 
@@ -1565,9 +1565,8 @@ are sometimes recorded as a <code>1</code>, <code>3</code>, or
 <code>4</code>. Interpreting those numbers requires comparing them to
 the question and response categories in the codebook. This is why we
 must always look before analyzing.</p>
-</div>
-<div id="what-kind-of-question-are-we-asking" class="section level1">
-<h1>What Kind of Question Are We Asking?</h1>
+<div id="what-kind-of-question-are-we-asking" class="section level2">
+<h2>What Kind of Question Are We Asking?</h2>
 <p>There are several different ways we might use these data.</p>
 <p><em>Predictive:</em> Use the data to predict an outcome of
 interest.</p>
@@ -1601,6 +1600,7 @@ estimating the causal effect of gender.</p>
 <p>A difference between groups can be politically important without
 being causal. But it is important that our words accurately describe
 what we have learned.</p>
+</div>
 </div>
 <div id="load-and-look-at-the-data" class="section level1">
 <h1>Load and Look at the Data</h1>
@@ -1640,9 +1640,8 @@ voter file.</p>
 <p>R does not know that. R will happily average the value
 <code>-99</code> as if it were a meaningful number. The computer will do
 exactly what we ask, even if what we ask makes no sense.</p>
-</div>
-<div id="renaming-variables-using-rename" class="section level1">
-<h1>Renaming variables using <code>rename</code></h1>
+<div id="renaming-variables-using-rename" class="section level2">
+<h2>Renaming variables using <code>rename</code></h2>
 <p>It is always good practice to have variables that have meaningful
 names so that you can determine what it contains without referring to
 some additional document. The <code>rename</code> function allow us to
@@ -1666,8 +1665,8 @@ first loading in a dataset. And in this class you will likely never have
 to <code>rename</code> as we usually – but not always – give you clean
 data that is sensibly named.</p>
 </div>
-<div id="creating-new-variables-using-mutate" class="section level1">
-<h1>Creating new variables using <code>mutate</code></h1>
+<div id="creating-new-variables-using-mutate" class="section level2">
+<h2>Creating new variables using <code>mutate</code></h2>
 <p>We do not have an age variable here. That is going to be a problem.
 But we do have birth year (<code>birthyr</code>) that we can use to
 calculate age.</p>
@@ -1675,8 +1674,8 @@ calculate age.</p>
   mutate(age = 2024 - birthyr)</code></pre>
 <p>Check to see if it was created in the Global Environment window!</p>
 </div>
-<div id="basic-summaries-using-count" class="section level1">
-<h1>Basic Summaries Using <code>count</code></h1>
+<div id="basic-summaries-using-count" class="section level2">
+<h2>Basic Summaries Using <code>count</code></h2>
 <p>For variables that take on a small number of discrete values, it is
 helpful to see how frequently each value occurs. We can use
 <code>count</code> to do so.</p>
@@ -1731,8 +1730,8 @@ possible values of <code>pid3</code>. Are the values stored as numbers
 or as character labels?</p>
 <pre class="r"><code># INSERT CODE HERE</code></pre>
 </div>
-<div id="missing-data-that-look-like-numbers-a-return-to-turnout" class="section level1">
-<h1>Missing Data That Look Like Numbers: A Return to Turnout</h1>
+<div id="missing-data-that-look-like-numbers-a-return-to-turnout" class="section level2">
+<h2>Missing Data That Look Like Numbers: A Return to Turnout</h2>
 <p>Let’s inspect the voter-file variable before calculating
 anything.</p>
 <pre class="r"><code>ces |&gt;
@@ -1769,9 +1768,8 @@ matched:</p>
 <p>Now the estimate is about 92 percent. Huge difference! So which
 should we use? Recall from last time that the VAP was 59.2% and the VEP
 was 64.3%.</p>
-</div>
-<div id="moving-on" class="section level1">
-<h1>Moving on…</h1>
+<div id="moving-on" class="section level3">
+<h3>Moving on…</h3>
 <p>For our analysis, we will treat unmatched respondents as missing
 rather than declaring them to be nonvoters. We will use
 <code>rename</code> to give the variable a more meaningful name and
@@ -1813,6 +1811,8 @@ variables relate to one another. (We will return to this when we learn
 about <code>group_by</code> function.)</p>
 <pre class="r"><code>ces |&gt;
   count(validated_voted,selfreport_voted) </code></pre>
+</div>
+</div>
 </div>
 <div id="constructing-the-comparison-we-want-gender-gap" class="section level1">
 <h1>Constructing the Comparison We Want: Gender Gap</h1>
@@ -1859,9 +1859,8 @@ two-party Harris share using <code>summarize</code> and
 by a substantial margin. She did not. In the actual election, Trump
 received 49.8 percent and Harris received 48.3 percent of all votes
 cast. We will return to this puzzle after looking at the gender gap.</p>
-</div>
-<div id="the-gender-gap-in-the-2024-election" class="section level1">
-<h1>The Gender Gap in the 2024 Election</h1>
+<div id="the-gender-gap-in-the-2024-election" class="section level2">
+<h2>The Gender Gap in the 2024 Election</h2>
 <p>Political differences based on gender have a length history in the
 United States, but the focus on differences in polling data has been
 noted by some as starting around1980. See, for example, TIME’s <a href="https://time.com/5903399/gender-gap-politics/">history of the
@@ -1935,8 +1934,8 @@ percentage points more likely than men to report voting for Harris.</p>
 <strong>not</strong> say that being a woman caused Harris support to
 increase by 4.9 percentage points.</p>
 </div>
-<div id="does-the-gender-gap-differ-by-age" class="section level1">
-<h1>Does the Gender Gap Differ by Age?</h1>
+<div id="does-the-gender-gap-differ-by-age" class="section level2">
+<h2>Does the Gender Gap Differ by Age?</h2>
 <p>The overall gender gap combines respondents of many different ages.
 Is the gap the same among younger and older voters?</p>
 <p>We will compare respondents ages 18–24 with respondents ages 65 and
@@ -1992,8 +1991,8 @@ still does not establish that gender caused vote choice. Nor does it
 establish that age caused the gender gap to change. These remain
 descriptive comparisons.</p>
 </div>
-<div id="why-this-is-not-a-causal-effect" class="section level1">
-<h1>Why This Is Not a Causal Effect</h1>
+<div id="why-this-is-not-a-causal-effect" class="section level2">
+<h2>Why This Is Not a Causal Effect</h2>
 <p>The relationship is a <strong>correlation</strong>. It is not
 necessarily a causal relationship, and it certainly does not reveal what
 it is about gender that may be related to differences in vote
@@ -2024,6 +2023,7 @@ descriptive. “Being a woman increased support for Harris” is causal.</p>
 gender gap vary by age, race, education, religion, or other experiences?
 Those are interesting descriptive questions. Finding that the gap varies
 does not, on its own, turn the analysis into a causal one.</p>
+</div>
 </div>
 <div id="also-can-we-trust-the-surveys-account-of-the-election" class="section level1">
 <h1>Also, Can We Trust the Survey’s Account of the Election?</h1>
@@ -2200,8 +2200,8 @@ proportion.</td>
 </div>
 <div id="works-cited" class="section level1">
 <h1>Works Cited</h1>
-<div id="data" class="section level3">
-<h3>Data</h3>
+<div id="data" class="section level2">
+<h2>Data</h2>
 <p>Schaffner, Brian, Marissa Shih, Stephen Ansolabehere, and Jeremy
 Pope. 2025. “Cooperative Election Study Common Content, 2024.” Harvard
 Dataverse, V9. <a href="https://doi.org/10.7910/DVN/X11EP6">https://doi.org/10.7910/DVN/X11EP6</a>.
@@ -2210,8 +2210,8 @@ extract from this dataset.</p>
 <p>Federal Election Commission. 2025. “Official 2024 Presidential
 General Election Results.” Compiled from state election offices. <a href="https://www.fec.gov/documents/5644/2024presgeresults.pdf">https://www.fec.gov/documents/5644/2024presgeresults.pdf</a>.</p>
 </div>
-<div id="writings-and-context" class="section level3">
-<h3>Writings and Context</h3>
+<div id="writings-and-context" class="section level2">
+<h2>Writings and Context</h2>
 <p>American Enterprise Institute. 2022. “The Exit Polls: A History and
 Trends over Time, 1972–2020.” <a href="https://www.aei.org/research-products/report/the-exit-polls-a-history-and-trends-over-time-1972-2020/">https://www.aei.org/research-products/report/the-exit-polls-a-history-and-trends-over-time-1972-2020/</a>.</p>
 <p>Hill, Faith. 2026. “The Great Gen Z Dividing Line.” <em>The

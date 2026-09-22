@@ -6,6 +6,7 @@ date: "`r Sys.Date()`"
 output:
   html_document:
     toc: true
+    toc_depth: 3
     toc_float: true
 ---
 
@@ -55,7 +56,7 @@ The data we will analyze come from the Cooperative Election Study (CES), a surve
 
 The survey contains specific questions and responses, but responses are sometimes recorded as a `1`, `3`, or `4`. Interpreting those numbers requires comparing them to the question and response categories in the codebook. This is why we must always look before analyzing.
 
-# What Kind of Question Are We Asking?
+## What Kind of Question Are We Asking?
 
 There are several different ways we might use these data.
 
@@ -118,7 +119,7 @@ This reveals a potential problem. `TS_g2024` has a value of `-99`, even though t
 
 R does not know that. R will happily average the value `-99` as if it were a meaningful number. The computer will do exactly what we ask, even if what we ask makes no sense.
 
-# Renaming variables using `rename`
+## Renaming variables using `rename`
 
 It is always good practice to have variables that have meaningful names so that you can determine what it contains without referring to some additional document.  The `rename` function allow us to do this. Several of our variables have very bad names. It is always good practice to label your variables so they are easily understood! 
 
@@ -140,7 +141,7 @@ ces = ces |>
 
 Usually we need to `rename` a variable only when we are first loading in a dataset.  And in this class you will likely never have to `rename` as we usually -- but not always -- give you clean data that is sensibly named.
 
-# Creating new variables using `mutate`
+## Creating new variables using `mutate`
 
 We do not have an age variable here.  That is going to be a problem.  But we do have birth year (`birthyr`) that we can use to calculate age.  
 
@@ -151,7 +152,7 @@ ces = ces |>
 
 Check to see if it was created in the Global Environment window!
 
-# Basic Summaries Using `count`
+## Basic Summaries Using `count`
 
 For variables that take on a small number of discrete values, it is helpful to see how frequently each value occurs. We can use `count` to do so.
 
@@ -214,7 +215,7 @@ table(ces$gender2)
 # INSERT CODE HERE
 ```
 
-# Missing Data That Look Like Numbers: A Return to Turnout
+## Missing Data That Look Like Numbers: A Return to Turnout
 
 Let's inspect the voter-file variable before calculating anything.
 
@@ -256,7 +257,7 @@ ces |>
 
 Now the estimate is about 92 percent. Huge difference! So which should we use? Recall from last time that the VAP was 59.2\% and the VEP was 64.3\%.
 
-# Moving on...
+### Moving on...
 
 For our analysis, we will treat unmatched respondents as missing rather than declaring them to be nonvoters. We will use `rename` to give the variable a more meaningful name and `mutate` to recode `-99` as missing data.
 
@@ -362,7 +363,7 @@ ces_2cand |>
 
 The raw, unweighted CES data imply that Harris won the two-party vote by a substantial margin. She did not. In the actual election, Trump received 49.8 percent and Harris received 48.3 percent of all votes cast. We will return to this puzzle after looking at the gender gap.
 
-# The Gender Gap in the 2024 Election
+## The Gender Gap in the 2024 Election
 
 Political differences based on gender have a length history in the United States, but the focus on differences in polling data has been noted by some as starting around1980. See, for example, TIME's [history of the electoral gender gap](https://time.com/5903399/gender-gap-politics/). More recently, we have seen coverage of this related to the 2024 election. See, for example, a recent piece in The Atlantic about demographic differences in voting:  [“The Great Gen Z Dividing Line”](https://www.theatlantic.com/family/2026/05/little-gen-z-midterm-election-trump/687190/). 
 
@@ -447,7 +448,7 @@ How should we describe this result?
 
 That sentence describes the people in this sample. It does **not** say that being a woman caused Harris support to increase by 4.9 percentage points.
 
-# Does the Gender Gap Differ by Age?
+## Does the Gender Gap Differ by Age?
 
 The overall gender gap combines respondents of many different ages. Is the gap the same among younger and older voters?
 
@@ -513,7 +514,7 @@ This reveals something hidden by the overall average: there is not one gender ga
 
 But be careful. Finding that the gender gap differs across age groups still does not establish that gender caused vote choice. Nor does it establish that age caused the gender gap to change. These remain descriptive comparisons.
 
-# Why This Is Not a Causal Effect
+## Why This Is Not a Causal Effect
 
 The relationship is a **correlation**. It is not necessarily a causal relationship, and it certainly does not reveal what it is about gender that may be related to differences in vote choice.
 
@@ -647,7 +648,7 @@ Functions already introduced in Lecture 2 are intentionally omitted.
 
 # Works Cited
 
-### Data
+## Data
 
 Schaffner, Brian, Marissa Shih, Stephen Ansolabehere, and Jeremy Pope. 2025.
 “Cooperative Election Study Common Content, 2024.” Harvard Dataverse, V9.
@@ -659,7 +660,7 @@ Federal Election Commission. 2025. “Official 2024 Presidential General
 Election Results.” Compiled from state election offices.
 [https://www.fec.gov/documents/5644/2024presgeresults.pdf](https://www.fec.gov/documents/5644/2024presgeresults.pdf).
 
-### Writings and Context
+## Writings and Context
 
 American Enterprise Institute. 2022. “The Exit Polls: A History and Trends over
 Time, 1972–2020.”
