@@ -1,0 +1,191 @@
+---
+title: 'PSCI 2300 Problem Set 2'
+author: "YOUR NAME HERE"
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+# Midterm Forecaster? DUE SEPT 23RD BY NOON
+
+In class we talked about what would happen if there was a uniform shift -- i.e., the vote moved by the same direction in every district.  We did this by adding a number to `dem_margin_2024map` and `dem_margin_2026map`.  While that worked, it was also super crude.
+
+Recall that problem sets are graded by completion.  This is because I want to incentivize you to do it on your own.  There is no failing and if you make a good faith effort you will get full credit. Do try to figure things out on your own - or with friends. Or get in touch with me or Alex. AI can do this in 3 seconds, but I want you to get some capacity to get a sense of what is being done.
+
+HINT: Nothing on this Problem Set is intentionally tricky. Copy and Paste is your friend for avoiding silly syntax errors. But always understand what you are copy and pasting. As a test, you should be able to explain -- briefly -- what each chunk is doing.
+
+To submit on Brightspace, you have two options.
+
+1) [Preferred] You can fill in the answers in the spots below. (To do this you want to test things out by using the `Run Current Chunk` and then, when everything works, do thje `Knit` from above.). Make sure you save the name of this file to contain your VUNET ID!
+
+2) [Acceptable] You can also just use an R-Script. Go: File -> New File -> R Script.  Include your code.  Note that R will try to read text as code unless you flag it as a comment so use a `#` to denote text (see class scripts!).
+
+The questions below are in *italics*.  Place your text responses after each question and before each code chunk.
+
+1. *To start load in the data `cd2026_by_presvote.csv`. In class we computed a measure of competitiveness based on the 2024 map.  Do the same using the 2026 map.  How did it change our characterization of how competitive the 2026 midterm is likely to be? Is it more or less competitive?*
+
+The number of toss-up districts (margins of less than 5 percentage points) falls from **44 under the 2024 map to 37 under the 2026 map**. Including lean districts, the number within 10 points falls from **91 to 78**. By these measures, the new map is less competitive: fewer districts are close enough that a small shift could change the winner. This does not mean every district becomes safer. The number of safe districts also falls, from 255 to 244, while the likely category grows from 89 to 113. The cross-tabulation shows how districts move between categories; row totals describe the old map and column totals describe the new map.
+
+```{r}
+library(tidyverse)
+cd = read.csv("cd2026_by_presvote.csv")
+
+cd = cd |>
+  mutate(competitive_2024map = case_when(
+    abs(dem_margin_2024map) < 5 ~ "Toss-up (<5)",
+    abs(dem_margin_2024map) < 10 ~ "Lean (5-10)",
+    abs(dem_margin_2024map) < 20 ~ "Likely (10-20)",
+    abs(dem_margin_2024map) >= 20 ~ "Safe (20+)"))
+
+cd = cd |>
+  mutate(competitive_2026map = case_when(
+    abs(dem_margin_2026map) < 5 ~ "Toss-up (<5)",
+    abs(dem_margin_2026map) < 10 ~ "Lean (5-10)",
+    abs(dem_margin_2026map) < 20 ~ "Likely (10-20)",
+    abs(dem_margin_2026map) >= 20 ~ "Safe (20+)"))
+
+cd |> count(competitive_2024map,competitive_2026map)
+```
+
+2. *If we look only at California, what can you say about how redistricting changed the amount of competition?*
+
+California has **8 toss-up districts under the 2024 map, but only 4 under the 2026 map**. Redistricting therefore reduces the number of closely contested California districts overall, although some individual districts become more competitive. 
+
+```{r}
+cd |> 
+  filter(state == "CA") |>
+  count(competitive_2024map,competitive_2026map)
+```
+
+3.  *Now let's look by party. How does the number of competitive districts vary between seats held by Democrats and Republicans under the new map?  Which party has more competitive seats to defend?*
+
+Under the 2026 map, Democrats hold **22 toss-up seats**, compared with **15 for Republicans**. Democrats also hold 30 lean seats, compared with 11 for Republicans. Counting toss-up and lean seats together, Democrats have **52 competitive seats to defend**, while Republicans have **26**. Democrats therefore have to defend more seats.
+
+```{r}
+cd |> 
+  group_by(party) |>
+  count(competitive_2026map)
+```
+
+4. *Create a new variable called `shift` that takes on the value of the vote shift.  Make sure to save this inside of the `cd` object.  To start, set `shift` to be 3.*  
+
+
+```{r}
+cd = cd |> 
+  mutate(shift = 3)
+```
+
+5. *Using that new variable, compare the number of seats under the 2024 map and 2026 map. HINT: we did something similar in class! Who wins a majority?  What is the effect of redistricting?*
+
+With the uniform +3 shift, Democrats win **216 seats under the 2024 map and 212 under the 2026 map**. Republicans win the remaining **219 and 223 seats**, respectively, so Republicans have a majority under both maps (218 seats are needed). The difference between the old and new map reveals that redistricting costs Democrats 4 seats and gives Republicans 4 seats. 
+
+```{r}
+cd = cd |>
+  mutate(harris_won_2024map = if_else(dem_margin_2024map > 0, 1, 0),
+         harris_won_2026map = if_else(dem_margin_2026map > 0, 1, 0))
+
+cd |>
+  mutate(harris_won_old_shift = if_else(dem_margin_2024map + shift > 0, 1, 0),
+         harris_won_new_shift = if_else(dem_margin_2026map + shift > 0, 1, 0)) |>
+  summarize(seats_old = sum(harris_won_2024map),
+            seats_old_shift = sum(harris_won_old_shift),
+            seats_new = sum(harris_won_2026map),
+            seats_new_shift = sum(harris_won_new_shift))
+```
+
+6. *What if the shift is anti-incumbent and Democrats gain 3 percentage points and Republicans lose 3? How does the code for `shift` change? Think first!*
+
+This is what we just did!  The phrase "Democrats gain 3 percentage points and Republicans lose 3" describes a uniform pro-Democratic change given how we defined teh `dem_margin` variables.
+
+7. *What if the election shift only happens in toss-up districts? Create a new version of shift that is 5 in 2026 Toss-up districts and zero otherwise.  Do the results change?  Why or why not?*
+
+Giving Democrats a +5 margin shift only in 2026 toss-up districts raises their predicted total from **201 to 219 seats**; Republicans win **216**. Democrats now have a narrow majority. Every toss-up has a margin strictly between -5 and +5, so adding 5 makes the Democratic margin positive in all of them. Districts outside this category receive no shift and keep their original predicted winner. 
+
+```{r}
+cd = cd |>
+  mutate(shift= if_else(competitive_2026map == "Toss-up (<5)", 5, 0))
+
+cd |>
+  mutate(harris_won_new_shift = if_else(dem_margin_2026map + shift > 0, 1, 0)) |>
+  summarize(seats_new = sum(harris_won_2026map),
+            seats_new_shift = sum(harris_won_new_shift))
+```
+
+
+8. *What if the election shift is larger in more Democratic districts? Create a new version of `shift` called `HarrisShift` that is $10 \times$ Harris's vote share in the 2026 map. What is the average and median value of `HarrisShift`? MAKE SURE TO LOOK AT THE VARIABLES TO SEE IF YOU NEED TO CHANGE THEM.*
+
+`harris_pct_2026map` is stored as a percentage, so we divide by 100 to convert it to a proportion before multiplying by 10. A district with 60% Harris support receives a shift of 6, not 600. Across all 435 districts, the **mean `HarrisShift` is about 4.89 percentage points and the median is 4.70**. The mean is the average shift; the median is the middle district's shift after sorting districts by their shift. More Democratic districts receive larger positive shifts by construction.
+
+```{r}
+cd = cd |>
+  mutate(HarrisShift= 10*harris_pct_2026map/100)
+
+summary(cd$HarrisShift)
+```
+
+9. *How does the average and median value of `HarrisShift` differ by whether the district is currently represented by a Democrat (`D`) or a Republican (`R`)?*
+
+In Democratic-held districts, the **mean shift is about 6.05 points and the median is 5.96**. In Republican-held districts, the **mean is about 3.76 points and the median is 3.82**. Both measures are larger in Democratic-held districts because those districts generally gave Harris a higher vote share, and `HarrisShift` increases with that share. The mean shift differs by about 2.29 points between the two groups.
+
+```{r}
+cd |>
+  group_by(party) |>
+  summarize(medianshift = median(HarrisShift),
+            meanshift = mean(HarrisShift))
+```
+
+10. *How does this affect the amount of seats we predict each party to win*
+
+Adding `HarrisShift` to the Democratic margin on the 2026 map produces **218 Democratic seats and 217 Republican seats**, compared with **201 Democratic seats and 234 Republican seats** without a shift. Democrats gain 17 seats and reach the 218 seats needed for a majority -- but just barely! 
+
+```{r}
+cd |>
+  mutate(harris_won_new_shift = if_else(dem_margin_2026map + HarrisShift > 0, 1, 0)) |>
+  summarize(seats_new = sum(harris_won_2026map),
+            seats_new_shift = sum(harris_won_new_shift))
+```
+
+
+11. *Who spoke in class on Sept 16?*
+
+```{r}
+# INSERT ANSWER 
+```
+
+12.  *Your parent finds a piece of code in your bedroom and they are worried about what kind of stuff you have gotten yourself involved in. In language that most people would understand, explain what each part of the following code does and why it is important. No coding required. (That will be next PS).*
+
+This code repeatedly draws a new sample from the people already in our dataset and records Harris support in each sample. This is called **bootstrapping**. It helps us see how much an estimate can vary when the mix of sampled people changes.
+
+- `SampledHarrisSupport <- NULL` starts an empty container for the results.
+- `set.seed(2300)` makes the random draws reproducible: running the same code with the same data and settings gives the same results. The number 2300 is a chosen starting value, not a sample size.
+- `for (i in 1:100)` repeats the instructions inside the braces 100 times. `i` keeps track of which repetition we are on.
+- `ces_gender %>%` starts with the survey dataset and passes it to the next step. Each `%>%` means, roughly, "and then".
+- `slice_sample(prop = 1, replace = TRUE)` randomly draws as many rows as the original dataset contains. Sampling **with replacement** means a person can be selected more than once, while others may not be selected at all. That changes the mix of people even though the sample size stays the same.
+- `summarize(Iteration = i, PctHarris = mean(HarrisVoter))` reduces that sample to one row containing the repetition number and the average of `HarrisVoter`. If `HarrisVoter` is coded 1 for a Harris voter and 0 otherwise, its mean is the proportion supporting Harris. Despite the name `PctHarris`, a result of 0.52 means 52%; the code does not multiply by 100. This calculation assumes the indicator has no missing values.
+- `one_estimate <-` saves that one-row summary for the current repetition.
+- `bind_rows(SampledHarrisSupport, one_estimate)` adds the newest summary below the earlier summaries. Assigning it back to `SampledHarrisSupport` keeps the accumulated results instead of replacing them with only the latest estimate.
+- The closing brace ends the repeated instructions. The final `SampledHarrisSupport` displays the completed table: **100 rows, one per repetition**, with the columns `Iteration` and `PctHarris`.
+
+
+```{r, eval = FALSE}
+SampledHarrisSupport <- NULL
+set.seed(2300)
+
+for (i in 1:100) {
+
+  one_estimate <- ces_gender %>%
+    slice_sample(prop = 1, replace = TRUE) %>%
+    summarize(
+      Iteration = i,
+      PctHarris = mean(HarrisVoter)
+    )
+
+  SampledHarrisSupport <- bind_rows(
+    SampledHarrisSupport,
+    one_estimate
+  )
+}
+
+SampledHarrisSupport
+```
