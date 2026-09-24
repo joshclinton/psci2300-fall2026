@@ -30,7 +30,10 @@ knitr::opts_chunk$set(eval = FALSE)
 
 The main question for today is:
 
-> What can the 2024 Cooperative Election Study tell us about the gender gap in presidential voting, and what can it **not** tell us?
+<div class="alert alert-info">
+**MOTIVATION QUESTION**
+What can the 2024 Cooperative Election Study tell us about the gender gap in presidential voting, and what can it **not** tell us?
+</div>
 
 # Polls \& Exit Polls in US Elections
 
@@ -121,7 +124,7 @@ R does not know that. R will happily average the value `-99` as if it were a mea
 
 ## Renaming variables using `rename`
 
-It is always good practice to have variables that have meaningful names so that you can determine what it contains without referring to some additional document.  The `rename` function allow us to do this. Several of our variables have very bad names. It is always good practice to label your variables so they are easily understood! 
+It is always good practice to have variables that have meaningful names so that you can determine what it contains without referring to some additional document.  The `rename` function allows us to do this. Several of our variables have very bad names. It is always good practice to label your variables so they are easily understood! 
 
 Bad names lead to errors -- especially when you are juggling several projects and/or need to pass the project off to someone else. Get in the habit now.
 
@@ -183,7 +186,7 @@ ces |>
 
 Notice how much data are behind each category. Comparisons involving small groups will be more uncertain. This does not make those groups unimportant; it means the survey gives us less information about them.
 
-We can recode these to more informative labels if we want.  Suppose for example, that we want to focus attention on the categories with the largest number of responses. The `case_when` function lets use create a new variable -- via `mutate` -- to define the new values based on the old variable. So this code creates a new variable called `gender2` that is defined to be `Man` when `gender4` takes on the value of 1, `gender2` is assigned the value of `Woman` when `gender4` takes on the value of 2, and it is defined to be missing (`NA`) when `gender4` is either `3` or `4`. 
+We can recode these to more informative labels if we want.  Suppose, for example, that we want to focus attention on the categories with the largest number of responses. The `case_when` function lets us create a new variable -- via `mutate` -- to define the new values based on the old variable. So this code creates a new variable called `gender2` that is defined to be `Man` when `gender4` takes on the value of 1, `gender2` is assigned the value of `Woman` when `gender4` takes on the value of 2, and it is defined to be missing (`NA`) when `gender4` is either `3` or `4`. 
 
 ```{r}
 ces = ces |>
@@ -209,9 +212,9 @@ table(ces$gender4)
 table(ces$gender2)
 ```
 
-*Quick Exercise:* Use `count` to inspect the possible values of `pid3`. Are the values stored as numbers or as character labels?
+*Quick Exercise* Use `count` to inspect the possible values of `pid3`. Are the values stored as numbers or as character labels?
 
-```{r, eval=FALSE}
+```{r}
 # INSERT CODE HERE
 ```
 
@@ -293,7 +296,7 @@ ces |>
   count(selfreport_voted)
 ```
 
-Ugh.  What does that even mean? Let's clean it up with a `mutation` to calculate percentages for each response:
+Ugh.  What does that even mean? Let's clean it up with a `mutate` to calculate percentages for each response:
 
 ```{r}
 ces |>
@@ -305,7 +308,7 @@ So 73\% said they voted.  And the validated turnout is nearly twenty percentage 
 
 QUESTION: What is going on? 
 
-Note that we can also do multiple counts to see how the values of variables relate to one another. (We will return to this when we learn about `group_by` function.)
+Note that we can also do multiple counts to see how the values of variables relate to one another. (We will return to this when we learn about the `group_by` function.)
 
 ```{r,eval = FALSE}
 ces |>
@@ -323,7 +326,7 @@ ces |>
   filter(presvote == Harris)
 ```
 
-NOTE: if you masked `select` with `stats` library use: `dplyr::filter()`.
+NOTE: if you masked `filter` with `stats` library use: `dplyr::filter()`.
 
 ```{r}
 ces_2cand = ces |>
@@ -365,7 +368,7 @@ The raw, unweighted CES data imply that Harris won the two-party vote by a subst
 
 ## The Gender Gap in the 2024 Election
 
-Political differences based on gender have a length history in the United States, but the focus on differences in polling data has been noted by some as starting around1980. See, for example, TIME's [history of the electoral gender gap](https://time.com/5903399/gender-gap-politics/). More recently, we have seen coverage of this related to the 2024 election. See, for example, a recent piece in The Atlantic about demographic differences in voting:  [“The Great Gen Z Dividing Line”](https://www.theatlantic.com/family/2026/05/little-gen-z-midterm-election-trump/687190/). 
+Political differences based on gender have a lengthy history in the United States, but the focus on differences in polling data has been noted by some as starting around 1980. See, for example, TIME's [history of the electoral gender gap](https://time.com/5903399/gender-gap-politics/). More recently, we have seen coverage of this related to the 2024 election. See, for example, a recent piece in The Atlantic about demographic differences in voting:  [“The Great Gen Z Dividing Line”](https://www.theatlantic.com/family/2026/05/little-gen-z-midterm-election-trump/687190/). 
 
 When doing data science, you always want to be question driven. There is a large amount of discretion in data science, and well-defined questions help prevent you from pursuing spurious relationships.
 
@@ -389,7 +392,7 @@ ces_gender = ces_2cand |>
 ```
 
 This row-level tibble contains the variables we will need when we return to the
-gender gap in Lecture 6. Save the entire R object—not just the two group
+gender gap in Session 6. Save the entire R object—not just the two group
 averages—so we can resample its respondents later.
 
 ```{r save-gender-data}
@@ -398,7 +401,7 @@ saveRDS(ces_gender, "CES2024_GenderGap.rds")
 
 Unlike a CSV file, an `.rds` file preserves the variable types and other R
 information in the object. The course will also provide an official copy so
-Lecture 6 does not depend on this local file surviving.
+Session 6 does not depend on this local file surviving.
 
 How many respondents are behind each comparison?
 
@@ -538,7 +541,7 @@ There may also be important intersectional comparisons. Does the gender gap vary
 
 The CES contains 60,000 respondents. That sounds like an enormous amount of data. But a large amount of data cannot guarantee that the people in the data represent the population we want to describe.
 
-We already showed that the survey is much more likely to contain voters than non-voters.  But that is not necessarily a problem (so long as we are not interested in estimating turnout!).  In fact, if voters are more likely to take the survey than non-voters maybe that is a good thing as it means that more of our data consists of voters with opinions that are more relevant for understanding the electorate. If 
+We already showed that the survey is much more likely to contain voters than non-voters.  But that is not necessarily a problem (so long as we are not interested in estimating turnout!).  In fact, if voters are more likely to take the survey than non-voters maybe that is a good thing as it means that more of our data consists of voters with opinions that are more relevant for understanding the electorate.  
 
 The raw CES sample says Harris won the two-party vote. The actual election says Trump won. Perhaps the problem is that some respondents said they voted even though they did not. We can examine respondents who both reported a major-party presidential vote and were matched to a validated record of voting.
 
@@ -607,7 +610,7 @@ ces_educ |>
 The `case_when` function evaluates each condition and assigns the corresponding value when the condition is true. It is especially useful when a variable has more than two categories.
 
 
-The following examples extend today's analysis. They are useful practice and starting points for later lectures; we do not need to complete all of them in class.
+The following examples extend today's analysis. They are useful practice and starting points for later sessions; we do not need to complete all of them in class.
 
 We can define college graduates as respondents with a four-year or post-graduate degree.
 
@@ -624,22 +627,26 @@ ces_gender |>
   summarize(PctHarris = mean(HarrisVoter))
 ```
 
-*Quick Exercise:* Repeat the analysis among respondents without a four-year degree. What is the descriptive education gap?
+*Quick Exercise* Repeat the analysis among respondents without a four-year degree. What is the descriptive education gap?
+
+```{r}
+# INSERT CODE HERE
+```
 
 
-# New R Functions Introduced in Lecture 3
+# New R Functions Introduced in Session 3
 
-Functions already introduced in Lecture 2 are intentionally omitted.
+Functions already introduced in Session 2 are intentionally omitted.
 
 | Function or symbol | What it does |
 |---|---|
 | `dim()` | Reports the number of rows and columns. |
-| `nrow()` | Reports the number of rows. |
-| `ncol()` | Reports the number of columns. |
 | `summary()` | Summarizes values and missing data. |
+| `table()` | Counts observations for each value of a variable (base R). |
 | `count()` | Counts observations associated with each value or combination of values. |
 | `rename()` | Changes the name of a variable. |
 | `mutate()` | Creates or changes variables. |
+| `!=` | Tests whether two values are not equal. |
 | `if_else()` | Assigns one value when a condition is true and another when it is false. |
 | `case_when()` | Assigns values using multiple conditions. |
 | `round()` | Rounds a number. |

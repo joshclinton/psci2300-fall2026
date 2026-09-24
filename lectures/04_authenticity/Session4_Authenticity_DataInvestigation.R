@@ -1,5 +1,5 @@
 # PSC 2300: Data and Politics I
-# Lecture 4: Should We Believe the Claim?
+# Session 4: Should We Believe the Claim?
 # Prof. Josh Clinton
 # Vanderbilt University
 
@@ -15,7 +15,7 @@
 
 
 # Load the tidyverse package.
-# Replace package_name with the library used in Lectures 2 and 3.
+# Replace package_name with the library used in Sessions 2 and 3.
 
 # library(package_name)
 

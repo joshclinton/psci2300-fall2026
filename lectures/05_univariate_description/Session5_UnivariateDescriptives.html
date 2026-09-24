@@ -11,7 +11,7 @@
 
 <meta name="author" content="Prof. Josh Clinton" />
 
-<meta name="date" content="2026-09-22" />
+<meta name="date" content="2026-09-24" />
 
 <title>Univariate Description: The Cases of Himmicanes and Congressional Redistricting</title>
 
@@ -1482,7 +1482,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Univariate Description: The Cases of
 Himmicanes and Congressional Redistricting</h1>
 <h4 class="author">Prof. Josh Clinton</h4>
-<h4 class="date">2026-09-22</h4>
+<h4 class="date">2026-09-24</h4>
 
 </div>
 
@@ -1595,7 +1595,7 @@ in a district?</li>
 <li>How many districts typically support Democrats running for
 president?</li>
 </ul>
-<p>Here is where things get tricky – we often use the word ``average”
+<p>Here is where things get tricky – we often use the word “average”
 when referring to a “typical” or “normal” value, but the mathematical
 definition of an average may not be what we actually mean! The word
 “average” is often used when people actually mean “typical” and your
@@ -1615,8 +1615,8 @@ is the order of the values.</p></li>
 themselves.</p></li>
 </ul>
 <p>The formula for calculating the sample mean (<span class="math inline">\(\bar{x}\)</span>) is given by:</p>
-<p><span class="math display">\[ \bar{x} = \frac{1}{n} \sum_{i=1}^{n}
-x_i \]</span></p>
+<p><span class="math display">\[\bar{x} = \frac{1}{n} \sum_{i=1}^{n}
+x_i\]</span></p>
 <p>Where:</p>
 <ul>
 <li><p><span class="math inline">\(\bar{x}\)</span> represents the
@@ -1717,9 +1717,8 @@ ability to reference variables within a datafame using
 <code>$</code></p>
 <pre class="r"><code>summary(hurr$BaseDam2014)</code></pre>
 <p>So, how deadly is the “typical” hurricane? Well, it depends on what
-we mean by
-<code>typical&#39;. We have a continuous variatible (</code>deaths’) so we
-can compute the median or mean.</p>
+we mean by “typical”. We have a continuous variatible
+(<code>deaths</code>) so we can compute the median or mean.</p>
 <pre class="r"><code>hurr |&gt;
   summarize(mean_deaths   = mean(deaths, na.rm = TRUE),
             median_deaths = median(deaths, na.rm = TRUE))</code></pre>
@@ -1747,7 +1746,7 @@ per group rather than a single number. We will use it a lot more later
 today.</p>
 <pre class="r"><code>hurr |&gt;
   group_by(mf) |&gt;
-  summarize(n = n(),
+  summarize(N = n(),
             mean_deaths   = mean(deaths),
             median_deaths = median(deaths))</code></pre>
 <p>Taken at face value, the means support the claim. But look at the
@@ -1762,7 +1761,7 @@ of names were used — i.e., from 1979 onward — using
 <pre class="r"><code>hurr |&gt;
   filter(Year &gt;= 1979) |&gt;
   group_by(mf) |&gt;
-  summarize(n = n(),
+  summarize(N = n(),
             mean_deaths   = mean(deaths),
             median_deaths = median(deaths))</code></pre>
 <p>If anything, the effect only increases!</p>
@@ -1874,7 +1873,7 @@ requires making an argument about how to measure, analyze and interpret
 the patterns we find in available data. When we use data to answer a
 question, our answer is only as good as the arguments we can make to
 justify the consequential choices we are making.</p>
-<p>For example, what does it mean to ``be competitive”? Does that mean
+<p>For example, what does it mean to “be competitive”? Does that mean
 the margin in vote share between candidates is close to being tied?
 Within two percentage points? Five? Ten? Or does competition mean the
 fraction of districts won by each candidate – regardless of the
@@ -1889,7 +1888,7 @@ mind as it is exactly the logic that redistricting exploits.)</p>
 <p>Let’s start by taking a look at <code>dem_margin_2024map</code> –
 Harris’s percent minus Trump’s percent in each district. This is a
 continuous variable. Let’s take a look at the 10 most Democratic
-districts in the United States by using the `<code>arrange</code>
+districts in the United States by using the <code>arrange</code>
 function that we are going to look at in <code>desc</code>ending order,
 and then print the top 10 using <code>head</code>. (There are lots of
 ways to do this – this is just a fancy way.)</p>
@@ -1906,7 +1905,7 @@ districts. How do they compare to the 10 most Democratic districts?</p>
 <p>The mean is used most of the time for continuous variables, but as we
 have just seen, it can be VERY sensitive to outliers and lead misleading
 characterizations. The median (50th percentile) is usually better for
-describing what is ``typical,” but the downside is that it can be
+describing what is “typical,” but the downside is that it can be
 difficult to explain to general audiences.</p>
 <pre class="r"><code>cd |&gt;
   summarize(mean_margin = mean(dem_margin_2024map),
@@ -1988,13 +1987,12 @@ order, but the scale of those numeric differences is not at all
 meaningful. (Technically speaking, they are ordinal rather than cardinal
 values.)</p>
 <p>BOTTOM LINE: Tricky! If you have an ordered categorical variable,
-either the <code>mode</code> or the<code>median</code> almost always
+either the <code>mode</code> or the <code>median</code> almost always
 makes sense. However, sometimes the <code>mean</code> is also often used
-– e.g., in our exit poll analysis we took the average opinion about the
-importance of racism in the country despite the variable being an
-ordered categorical variable. This highlights the importance of always
-thinking about what you are trying to measure and making an argument
-about why the measure is appropriate!</p>
+– e.g., the average ideology using a 7-point question despite the
+variable being an ordered categorical variable. This highlights the
+importance of always thinking about what you are trying to measure and
+making an argument about why the measure is appropriate!</p>
 </div>
 <div id="categorical-unordered" class="section level2">
 <h2>Categorical: unordered</h2>
@@ -2127,7 +2125,7 @@ Florida. Which districts were cracked? Which were packed?</p>
 <pre class="r"><code># INSERT CODE HERE</code></pre>
 <p><em>Quick Exercise</em> Redo the competitiveness categories using
 <code>dem_margin_2026map</code> to create a new variable called
-<code>competitive_2024map</code>. Did redistricting make districts more
+<code>competitive_2026map</code>. Did redistricting make districts more
 or less competitive?</p>
 <pre class="r"><code># INSERT CODE HERE</code></pre>
 <p><em>Quick Exercise</em> Can you compare the two measures of
@@ -2146,8 +2144,8 @@ lines there are 37. As a share of the 435 districts that is 10.1% and
 the <em>percentage point difference</em>:</p>
 <pre class="r"><code>8.5 - 10.1</code></pre>
 <p>…so a 1.6 percentage point decline.</p>
-<p><span class="math display">\[ \mbox{Percentage Point Change:} X_{new}
-\% - X_{old} \% \]</span></p>
+<p><span class="math display">\[\text{Percentage Point Change: }
+X_{new}\% - X_{old}\%\]</span></p>
 <p>But we could also discuss this in terms of <em>percent change</em> –
 that is how much the value differs from a baseline value. Instead of
 subtracting percentages, this involves division to compare the size of
@@ -2155,8 +2153,8 @@ the value relative to a baseline – here the number of toss-ups under the
 old lines.</p>
 <pre class="r"><code>100*(37 - 44)/44</code></pre>
 <p>So the number of toss-up districts declined by about 16%.</p>
-<p><span class="math display">\[ \mbox{Percent Change:} 100 \times
-\frac{X_{new} - X_{old}}{X_{old}} \% \]</span></p>
+<p><span class="math display">\[\text{Percent Change: } 100 \times
+\frac{X_{new} - X_{old}}{X_{old}}\%\]</span></p>
 <p>Note how differently those numbers seem, even though they describe
 the same change – a 1.6 percentage point decline seems small, but a 16%
 decline seems large. This is where understanding how humans comprehend
@@ -2243,13 +2241,13 @@ swings vary across districts, and we will build tools to think about
 that kind of uncertainty next session.</p>
 </div>
 </div>
-<div id="new-r-functions-introduced-in-lecture-5" class="section level1">
-<h1>New R Functions Introduced in Lecture 5</h1>
-<p>Functions introduced in Lectures 2–4 are intentionally omitted.</p>
+<div id="new-r-functions-introduced-in-session-5" class="section level1">
+<h1>New R Functions Introduced in Session 5</h1>
+<p>Functions introduced in Sessions 2–4 are intentionally omitted.</p>
 <table>
 <thead>
 <tr class="header">
-<th>Function</th>
+<th>Function or symbol</th>
 <th>What it does</th>
 </tr>
 </thead>
@@ -2264,16 +2262,12 @@ that kind of uncertainty next session.</p>
 <code>arrange()</code>.</td>
 </tr>
 <tr class="odd">
-<td><code>seq()</code></td>
-<td>Creates a sequence of equally spaced values.</td>
-</tr>
-<tr class="even">
-<td><code>length()</code></td>
-<td>Counts the number of values in a vector.</td>
-</tr>
-<tr class="odd">
 <td><code>abs()</code></td>
 <td>Returns the absolute value of a number.</td>
+</tr>
+<tr class="even">
+<td><code>median()</code></td>
+<td>Calculates the median, the middle value after sorting.</td>
 </tr>
 </tbody>
 </table>

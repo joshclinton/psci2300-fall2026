@@ -1,5 +1,5 @@
 # PSC 2300: Data and Politics I
-# Lecture 3: Data Wrangling: Surveying the Gap
+# Session 3: Data Wrangling: Surveying the Gap
 # Prof. Josh Clinton
 # Vanderbilt University
 

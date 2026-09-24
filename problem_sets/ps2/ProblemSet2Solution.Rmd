@@ -94,7 +94,7 @@ cd |>
             seats_new_shift = sum(harris_won_new_shift))
 ```
 
-6. *What if the shift is anti-incumbent and Democrats gain 3 percentage points and Republicans lose 3? How does the code for `shift` change? Think first!*
+6. *What if Democrats everywhere gain 3 percentage points (because Republicans everywhere lose 3 percentage points)? How does the code for `shift` change? Think first!*
 
 This is what we just did!  The phrase "Democrats gain 3 percentage points and Republicans lose 3" describes a uniform pro-Democratic change given how we defined teh `dem_margin` variables.
 
@@ -157,31 +157,31 @@ cd |>
 
 This code repeatedly draws a new sample from the people already in our dataset and records Harris support in each sample. This is called **bootstrapping**. It helps us see how much an estimate can vary when the mix of sampled people changes.
 
-- `SampledHarrisSupport <- NULL` starts an empty container for the results.
+- `SampledHarrisSupport = NULL` starts an empty container for the results.
 - `set.seed(2300)` makes the random draws reproducible: running the same code with the same data and settings gives the same results. The number 2300 is a chosen starting value, not a sample size.
 - `for (i in 1:100)` repeats the instructions inside the braces 100 times. `i` keeps track of which repetition we are on.
-- `ces_gender %>%` starts with the survey dataset and passes it to the next step. Each `%>%` means, roughly, "and then".
+- `ces_gender |>` starts with the survey dataset and passes it to the next step. Each `|>` means, roughly, "and then".
 - `slice_sample(prop = 1, replace = TRUE)` randomly draws as many rows as the original dataset contains. Sampling **with replacement** means a person can be selected more than once, while others may not be selected at all. That changes the mix of people even though the sample size stays the same.
 - `summarize(Iteration = i, PctHarris = mean(HarrisVoter))` reduces that sample to one row containing the repetition number and the average of `HarrisVoter`. If `HarrisVoter` is coded 1 for a Harris voter and 0 otherwise, its mean is the proportion supporting Harris. Despite the name `PctHarris`, a result of 0.52 means 52%; the code does not multiply by 100. This calculation assumes the indicator has no missing values.
-- `one_estimate <-` saves that one-row summary for the current repetition.
+- `one_estimate =` saves that one-row summary for the current repetition.
 - `bind_rows(SampledHarrisSupport, one_estimate)` adds the newest summary below the earlier summaries. Assigning it back to `SampledHarrisSupport` keeps the accumulated results instead of replacing them with only the latest estimate.
 - The closing brace ends the repeated instructions. The final `SampledHarrisSupport` displays the completed table: **100 rows, one per repetition**, with the columns `Iteration` and `PctHarris`.
 
 
 ```{r, eval = FALSE}
-SampledHarrisSupport <- NULL
+SampledHarrisSupport = NULL
 set.seed(2300)
 
 for (i in 1:100) {
 
-  one_estimate <- ces_gender %>%
-    slice_sample(prop = 1, replace = TRUE) %>%
+  one_estimate = ces_gender |>
+    slice_sample(prop = 1, replace = TRUE) |>
     summarize(
       Iteration = i,
       PctHarris = mean(HarrisVoter)
     )
 
-  SampledHarrisSupport <- bind_rows(
+  SampledHarrisSupport = bind_rows(
     SampledHarrisSupport,
     one_estimate
   )

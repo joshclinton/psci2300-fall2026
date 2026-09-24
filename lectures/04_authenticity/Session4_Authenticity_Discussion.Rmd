@@ -29,6 +29,11 @@ Today we will investigate a published experimental finding. We will begin with
 what the authors claim, identify what pattern we should observe if that claim
 is correct, and then inspect the posted data.
 
+<div class="alert alert-info">
+**MOTIVATION QUESTION**
+Do the posted data provide credible evidence that inauthenticity increases the desire to clean?
+</div>
+
 # The Paper and Its Claim
 
 Read “The Moral Virtue of Authenticity: How Inauthenticity Produces Feelings of

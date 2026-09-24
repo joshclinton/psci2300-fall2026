@@ -76,7 +76,7 @@ What variables did you rename, what transformations did you do, how did you reco
 Similar concerns arise when we use AI -- how can we check what was done to replicate that in the future?  
 We will discuss the implications for how we structure workflows using AI when we get there.
 
-Mistakes from analysis done using Excel for analysis have been identified as being (partially) responsible for what is widely believed to be a [failed global economic policy](https://www.washingtonpost.com/news/wonk/wp/2013/04/16/is-the-best-evidence-for-austerity-based-on-an-excel-spreadsheet-error/). See, for example, a story about the impact in [Ireland](https://www.nytimes.com/2010/06/29/business/global/29austerity.html), including a quote by one of the Harvard economists responsible for the study with the error noting that ``the Ireland experience points to the profound challenges that the current strategy [which was based on this erroneous research] implies." (See also the _New Yorker_ article on "The Reinhart and Rogoff Controversy: A Summing Up" by John Cassidy in the Lecture Folder -- or linked [here](https://www.newyorker.com/news/john-cassidy/the-reinhart-and-rogoff-controversy-a-summing-up) --for more overview and links to this controversy.)   
+Mistakes from analysis done using Excel for analysis have been identified as being (partially) responsible for what is widely believed to be a [failed global economic policy](https://www.washingtonpost.com/news/wonk/wp/2013/04/16/is-the-best-evidence-for-austerity-based-on-an-excel-spreadsheet-error/). See, for example, a story about the impact in [Ireland](https://www.nytimes.com/2010/06/29/business/global/29austerity.html), including a quote by one of the Harvard economists responsible for the study with the error noting that "the Ireland experience points to the profound challenges that the current strategy [which was based on this erroneous research] implies." (See also the _New Yorker_ article on "The Reinhart and Rogoff Controversy: A Summing Up" by John Cassidy in the Lecture Folder -- or linked [here](https://www.newyorker.com/news/john-cassidy/the-reinhart-and-rogoff-controversy-a-summing-up) --for more overview and links to this controversy.)   
 
 <div style="text-align:center">
 ![**Source of many, many errors: World Economy**](figs/WashPoRR.png){width=70%}
@@ -97,7 +97,7 @@ And using Excel for data entry has contributed to many well-documented errors in
 </div>
 
 In fact, the person who publicized the issue -- Dr. Jennifer Byrne - was named a Top 10 Person in Science in 2017 because of her data sleuthing  [2017](https://www.nature.com/immersive/d41586-017-07763-y/index.html) and she developed an entire program to find and correct errors produced by data entry in Excel! Link [here](https://www.eurekalert.org/news-releases/810347). 
-Discouragingly, note that the estimate that 30\% of published papers analyzing genetic sequences were incorrect due to the sequences being ``auto-corrected" by Excel was mentioned in a story that was written 5 years after Dr. Byrne received the award and after the creation of a program specifically designed to prevent this!
+Discouragingly, note that the estimate that 30\% of published papers analyzing genetic sequences were incorrect due to the sequences being "auto-corrected" by Excel was mentioned in a story that was written 5 years after Dr. Byrne received the award and after the creation of a program specifically designed to prevent this!
 
 <div style="text-align:center">
 ![**Dr. Byrne, Cancer Researcher, Data Detective**](figs/Byrne.png){width=70%}
@@ -132,7 +132,7 @@ If you are working on a larger project across several sessions it sometimes make
 
 When starting out it can be easy to forget that R needs to be told where to look to find things!
 
-1. For **every** assignment/lecture create a new folder on your computer (e.g., "Topic 3").  
+1. For **every** assignment/session create a new folder on your computer (e.g., "Topic 3").  
 2. Download the code and data into this folder. (Or move them from the Download folder to that folder).  Or create a new RMarkdown file and  _save_ the code to this folder.  
 
 Now we need to make sure that R knows where it is and can find the data we want to load.  
@@ -213,6 +213,7 @@ Because we want to document what dataset we are using, for replicability we want
 A second way to access data is to use some functions directly in R.  
 This is what the GUI is actually doing behind the scenes.  
 We are going to focus on three functions in this class:
+
 - `load`
 - `read_rds`
 - `url`
@@ -285,7 +286,6 @@ What R "sees" when working in the Console window (or using an R Script) is diffe
 You can `Knit` a RMarkdown document to conduct analysis without any object ever appearing in the Global Environment.
 Knitting RMarkdown (*.Rmd) files does _not_ create tibbles/objects in the Global Environment!
 
-
 *Quick Exercise*  Clear out the Global Environment -- which should only contain `df` -- and `Knit` this document.  Confirm that the code will run and nothing will be created in the Global Environment.
 
 While this makes sense once the code/project is completed, it can make coding more difficult because we often want to be able to manipulate the code and objects while working.  
@@ -295,7 +295,7 @@ Once we are finished, we can knit the entire document to keep a clean record.
 
 OK, back to business!  
 
-In the code chunk below ``Run All Code Chunks Above" to get us back to where we were.
+In the code chunk below "Run All Code Chunks Above" to get us back to where we were.
 
 Now let's take a quick look at the object `df`:
 
@@ -417,9 +417,9 @@ copy.df = df
 In exploring data, many times we want to look at smaller parts of the dataset. 
 There are two commands we'll introduce today and review again next time to help with this.
 
-\-`filter` selects only those cases or rows that meet some logical criteria.
+- `filter` selects only those cases or rows that meet some logical criteria.
 
-\-`select` selects only those variables or columns that meet some criteria
+- `select` selects only those variables or columns that meet some criteria
 
 For more on these, please see this [vignette](https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html).
 
@@ -615,7 +615,7 @@ df |>
 *Quick Exercise* How does that compare with the turnout estimate using the ANES? 
 
 ```{r}
-
+# INSERT CODE HERE
 ```
 
 THINK! Is that a fair comparison?  What is going on given what we saw in the data itself?
@@ -633,9 +633,9 @@ How could you use filter, select and the ability to create new datsets to do thi
 
 How could you use these tools to determine differences between midterm and presidential elections? Or over time? If you had to predict what turnout in 2026 would be, how would you do that?
 
-# New R Functions
+# New R Functions Introduced in Session 2
 
-| Function | What it does |
+| Function or symbol | What it does |
 |---|---|
 | `library()` | Loads an installed R package for the current session. |
 | `getwd()` | Shows the working directory where R is currently looking for files. |
@@ -645,12 +645,13 @@ How could you use these tools to determine differences between midterm and presi
 | `view()` | Opens the entire dataset in RStudio's data viewer. |
 | `glimpse()` | Provides a compact look at the variables and observations in a dataset. |
 | `head()` | Shows the first few rows of a dataset. |
-| `c()` | Combines values into a collection. |
 | `filter()` | Selects rows that meet specified conditions. |
 | `select()` | Selects variables, or columns, from a dataset. |
 | `summarize()` | Calculates a summary of a dataset or variable. |
 | `mean()` | Calculates the average of a variable. |
-| `median()` | Calculates the median of a variable. |
+| `$` | Refers to one variable in a dataset, as in `df$VEP`. |
+| `==`, `>`, `<`, `>=`, `<=` | Compare values: equal to, greater than, less than, and so on. |
+| `&`, `|` | Combine logical conditions: AND, OR. |
 | `|>` | Passes the result of one command to the next command: "and then." |
 
 # Works Cited

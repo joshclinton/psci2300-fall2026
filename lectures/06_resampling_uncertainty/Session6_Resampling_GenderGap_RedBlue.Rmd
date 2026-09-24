@@ -29,6 +29,11 @@ knitr::opts_chunk$set(eval = FALSE, echo = TRUE, message = FALSE, warning = FALS
 
 - Use a bootstrap interval to ask whether a difference is distinguishable from zero.
 
+<div class="alert alert-info">
+**MOTIVATION QUESTION**
+Is the difference real?
+</div>
+
 # Uncertainty in Univariate Statistics
 
 When we calculate a summary statistic in univariate statistics, we're making a statement that can be interpreted in terms of what we can expect to see in other similar situations. If I say that the average height of a cedar tree is 75 feet, for example, that provides an expectation -- prediction -- for what we might expect to find if we look at other cedar trees (assuming "similar" environmental conditions). The measure we propose to measure what is typical is almost naturally interpreted by humans in terms of a prediction for what we may expect of other similar units.^[As we shall see in this course, the word "similar" here is doing a lot of work! Critical to this notion of prediction is the idea that the data we are analyzing "looks like" the data we are trying to predict!]
@@ -53,11 +58,11 @@ An *observation* is simply a data point in our *sample*. It is what a row in our
 
 A *Sample* is the data that you are able to analyze. It could be a few observations or hundreds of millions. Somewhat confusingly, it does not have to be gathered by intentionally sampling anything. If you were to write down the temperature each day for 100 days, that would be a sample of temperature data. If I were to write some public opinion questions and then ask them to the first ten people I met to record their responses that would also be a sample of public opinion data. Not a very good sample, but a sample nonetheless. Whatever data you are able to analyze is a sample – think about sample in this context as meaning simply the data you have available to analyze.
 
-The *Population* is the set of observations to which the sample belongs.what you want to learn about. This is where things get a bit tricky and confusing. In statistics, we can never observe population – it is a hypothetical construct about the observations of interest because it includes cases that have yet to happen. Seem weird? Let’s try to explain this. Suppose that you collected data on the national popular vote for every presidential election in the United States to the current day. Your sample therefore contains the results of every single presidential election contest. There are no ``secret" elections and you did not forget to include any. You have it all. Despite the fact that your sample contains every presidential election, we often want to make statements about what we expect the results to be based on the sample of data. Put differently, if you use the data to determine how much the winner defeats the loser in terms of percentage points then we are using the data to make a statement not only about what the margin has historically been on average, but also what we would expect the margin to be in the future (assuming the political context is relatively stable).1
+The *Population* is the set of observations to which the sample belongs.what you want to learn about. This is where things get a bit tricky and confusing. In statistics, we can never observe population – it is a hypothetical construct about the observations of interest because it includes cases that have yet to happen. Seem weird? Let’s try to explain this. Suppose that you collected data on the national popular vote for every presidential election in the United States to the current day. Your sample therefore contains the results of every single presidential election contest. There are no "secret" elections and you did not forget to include any. You have it all. Despite the fact that your sample contains every presidential election, we often want to make statements about what we expect the results to be based on the sample of data. Put differently, if you use the data to determine how much the winner defeats the loser in terms of percentage points then we are using the data to make a statement not only about what the margin has historically been on average, but also what we would expect the margin to be in the future (assuming the political context is relatively stable).
 
 The important distinction is that sample refers to the _observations in the data you are analyzing_ and population refers to the _observations that you are trying to learn_ about using the sample. Note that if we survey the entire population -- i.e., our sample is the population -- then we call this a **Census**.
 
-The field of statistics is all about how we can try to use samples to learn – that is to make inferences – about the population. Under what conditions are we able to say something? How likely is it that our estimates are correct? How certain should we that our estimates are close to the truth? And what do we mean by ``close to the truth"?
+The field of statistics is all about how we can try to use samples to learn – that is to make inferences – about the population. Under what conditions are we able to say something? How likely is it that our estimates are correct? How certain should we that our estimates are close to the truth? And what do we mean by "close to the truth"?
 
 We are going to focus on a particular approach to quantifying our ability to learn that uses the data. While useful for explaining the concepts because it uses the data and our programming skills to directly illustrate the underlying logic, it is not the most efficient way to do so – especially when working with large number of observations where this can be computationally infeasible. (This is where math comes in and the ability to use math to derive the results analytically instead of relying on computational power.
 
@@ -79,7 +84,7 @@ to imitate that thought experiment:
 4. Examine how much the estimates vary.
 
 That procedure is called **resampling**. We will begin with one polling
-percentage, then return to the gender gap from Lecture 3.
+percentage, then return to the gender gap from Session 3.
 
 ```{r libraries}
 library(tidyverse)
@@ -87,8 +92,7 @@ library(tidyverse)
 
 # Return to the 2024 CES
 
-Let us return to the data we were using in Session 3. We are going to load an analysis-ready dataset related to measuring the gender gap that was saved as an `.rds` file. (This is a file format that is unique to R rather than a generic file format like the comma-separated-values (csv) files that we have used previously.  We can read this into memory using the `readRDS` function and then take a glimpse.
-without repeating the wrangling.
+Let us return to the data we were using in Session 3. We are going to load an analysis-ready dataset related to measuring the gender gap that was saved as an `.rds` file. (This is a file format that is unique to R rather than a generic file format like the comma-separated-values (csv) files that we have used previously.)  We can read this into memory using the `readRDS` function and then take a glimpse without repeating the wrangling.
 
 ```{r load-ces}
 ces_gender = readRDS("CES2024_GenderGap.rds")
@@ -108,7 +112,7 @@ ces_gender |>
   )
 ```
 
-This is the exact percentage that we observe in this specific sample of survey respondents. But much might it change if the CES had interviewed a different sample?  If we treat respondents as a random sample of the population, the amount that the answers differs due to randomness alone is called the ``margin of error."  
+This is the exact percentage that we observe in this specific sample of survey respondents. But much might it change if the CES had interviewed a different sample?  If we treat respondents as a random sample of the population, the amount that the answers differs due to randomness alone is called the "margin of error."  
 
 Note that this is not the same as survey error!  The margin of error is how much a survey-estimate may change as a result of random sampling and the fact that some people were randomly selected to be interviewed while others were not.
 
@@ -122,7 +126,7 @@ By setting a specific seed we are ensuring that anyone who sets the same seed va
 
 For my seed value I am going to choose the answer to life, the universe, and everything. (Does anyone get this reference or am I officially too old?). 
 
-*NOTE: Always set a seed if you are sampling so you can replicate your results!*
+NOTE: Always set a seed if you are sampling so you can replicate your results!
 
 ```{r}
 set.seed(42)
@@ -333,10 +337,10 @@ quartiles, and maximum show how much the estimate changes across resamples.
 
 The `quantile` function is a handy function that allows us to identify which values of our dataset occupy various percentiles of the data. That is, if we arrange the values of a variable from lowest to highest, what is the value that occupies the x-th percentile.  Recall from last time that the value of the 50th percentile is what we call the `median` -- i.e., the value where 50\% of our data is above that value and 50\% of our data is below that value.  But we can find whatever percentiles we want.  
 
-To see this let's create a simple variable that ranges from 0 to 1000. (Note that `:` ust indicates to R to create sequence (`seq`) from `1` to `1000`).
+To see this let's create a simple variable that ranges from 0 to 1000. (Note that `seq(0, 1000)` tells R to create a sequence from `0` to `1000`.)
 
 ```{r}
-newvar = seq(0:1000)
+newvar = seq(0, 1000)
 ```
 
 Now let's compute the median two ways: using the median and using the `quantile` function.
@@ -348,7 +352,7 @@ quantile(newvar, p = .5)
 
 Perfect.  But the real value is the ability to extact different percentiles.  Suppose we wanted to know the range between which 50\% of our data were located. This is sometimes called the `inter-quartile range.`. The range of values containing 50\% of our data (around the median) is defined by values between the 25th and 75th percentiles. 
 
-Given that we have 1001 values ranging from 0 to 1000, we should find the 25th percentile to be assoicated with the value 251 and the 75\% percentile associated with 751.  Let's check!
+Given that we have 1001 values ranging from 0 to 1000, we should find the 25th percentile to be assoicated with the value 250 and the 75\% percentile associated with 750.  Let's check!
 
 ```{r}
 quantile(newvar, p = .25)
@@ -394,31 +398,31 @@ In Session 3, we found different levels of Harris support among women and men. L
 
 ```{r gender-group-means}
 ces_gender |>
-  group_by(female) |>
+  group_by(woman) |>
   summarize(
     N = n(),
     PctHarris = mean(HarrisVoter)
   )
 ```
 
-The statistic used to measure the gender gap is just a **difference of means**: Harris support among females minus Harris support among males.
+The statistic used to measure the gender gap is just a **difference of means**: Harris support among women minus Harris support among men.
 
 Recall how we computed it.
 
 ```{r observed-gender-gap}
-Female = ces_gender |>
-  filter(female == 1) |>
+Women = ces_gender |>
+  filter(woman == 1) |>
   summarize(PctHarris = mean(HarrisVoter))
 
-Male = ces_gender |>
-  filter(female == 0) |>
+Men = ces_gender |>
+  filter(woman == 0) |>
   summarize(PctHarris = mean(HarrisVoter))
 
-GenderGap = Female$PctHarris - Male$PctHarris
+GenderGap = Women$PctHarris - Men$PctHarris
 GenderGap
 ```
 
-Females in this sample were about 4.9 percentage points more likely than males to report voting for Harris. 
+Women in this sample were about 4.9 percentage points more likely than men to report voting for Harris. 
 But how confident can we be about that estimate?  Might it be different in a different sample?
 
 ## Bootstrap the Gender Gap
@@ -434,16 +438,16 @@ for (i in 1:1000) {
   one_sample = ces_gender |>
     slice_sample(prop = 1, replace = TRUE)
 
-  one_female = one_sample |>
-    filter(female == 1) |>
+  one_women = one_sample |>
+    filter(woman == 1) |>
     summarize(PctHarris = mean(HarrisVoter))
 
-  one_male = one_sample |>
-    filter(female == 0) |>
+  one_men = one_sample |>
+    filter(woman == 0) |>
     summarize(PctHarris = mean(HarrisVoter))
 
   one_gap = tibble(
-    GenderGap = one_female$PctHarris - one_male$PctHarris
+    GenderGap = one_women$PctHarris - one_men$PctHarris
   )
 
   SampledGenderGaps = bind_rows(SampledGenderGaps, one_gap)
@@ -518,7 +522,7 @@ The questions are now familiar:
 - Is the difference distinguishable from zero?
 
 ```{r load-athens}
-athens = read_csv("athens.csv") |>
+athens = read.csv("athens.csv") |>
   mutate(
     red_win = if_else(winner == "Red", 1, 0),
     blue_win = if_else(winner == "Blue", 1, 0)
@@ -557,7 +561,7 @@ for (i in 1:1000) {
     slice_sample(prop = 1, replace = TRUE) |>
     summarize(
       Difference = mean(red_win) - mean(blue_win),
-      n = n()
+      N = n()
     )
 
   SampledDifferences = bind_rows(
@@ -646,7 +650,7 @@ It is not the probability that the null hypothesis is true.
 The Athens result comes from one Olympic Games.  But we also have comparable results from Olympics held between 1996 and 2020.
 
 ```{r load-all-olympics}
-olympics = read_csv("olympics.csv") 
+olympics = read.csv("olympics.csv") 
 
 olympics = olympics |>
   mutate(
@@ -759,7 +763,7 @@ Notice how contingent our results can be based on how we decide to analyze and o
 What we have been doing is called the [empirical bootstrap](https://ocw.mit.edu/courses/mathematics/18-05-introduction-to-probability-and-statistics-spring-2014/readings/MIT18_05S14_Reading24.pdf). It's massively useful, because it can be applied for any summary measure of the data: median, percentiles, and measures like regression coefficients. Here is the summary of steps for the empirical bootstrap:
 
 - Decide on the summary measure to be used for the variable (it doesn't have to be the mean)
-- Calculate the summary measure on a small subsample (called the bootstrap sample) of the data
+- Calculate the summary measure on a resample of the data that is the same size as the data and drawn with replacement (called the bootstrap sample)
 - Repeat step 2 many times (how many? Start with 1000, but more is better.) Compile the estimates. 
 - Calculate the percentiles of the bootstrap distribution from the previous step. 
 - Describe your uncertainty using those percentiles.
@@ -777,18 +781,24 @@ What we have been doing is called the [empirical bootstrap](https://ocw.mit.edu/
   a sample that poorly represents the population.
 - A finding from one dataset can weaken when more evidence becomes available.
 
-# New R Functions Introduced in Lecture 6
+# New R Functions Introduced in Session 6
 
-Functions introduced in earlier lectures are intentionally omitted.
+Functions introduced in earlier sessions are intentionally omitted.
 
-| Function | What it does |
+| Function or symbol | What it does |
 |---|---|
+| `readRDS()` | Reads one R object saved in an `.rds` file. |
 | `slice_sample()` | Randomly draws rows from a data frame. |
 | `set.seed()` | Makes random results reproducible. |
 | `tibble()` | Creates a data frame in tidyverse format. |
 | `bind_rows()` | Adds rows to the bottom of a data frame. |
 | `quantile()` | Returns values at specified percentiles. |
-| `abs()` | Returns the absolute distance from zero. |
+| `c()` | Combines values into a vector, for example `c(.025, .975)` or `c(0, 1)`. |
+| `seq()` | Generates a sequence of values. |
+| `:` | Creates a sequence of integers, as in `1:1000`. |
+| `print()` | Prints an object; used here inside a loop. |
+| `nrow()` | Reports the number of rows. |
+| `pull()` | Extracts one column as a vector. |
 | `for` | Repeats a block of code a specified number of times. |
 
 # Works Cited

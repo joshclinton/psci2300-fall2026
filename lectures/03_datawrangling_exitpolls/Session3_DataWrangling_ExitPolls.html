@@ -11,7 +11,7 @@
 
 <meta name="author" content="Prof. Josh Clinton" />
 
-<meta name="date" content="2026-09-22" />
+<meta name="date" content="2026-09-24" />
 
 <title>Data Wrangling: Surveying the Gap</title>
 
@@ -1481,7 +1481,7 @@ border-radius: 0px;
 
 <h1 class="title toc-ignore">Data Wrangling: Surveying the Gap</h1>
 <h4 class="author">Prof. Josh Clinton</h4>
-<h4 class="date">2026-09-22</h4>
+<h4 class="date">2026-09-24</h4>
 
 </div>
 
@@ -1504,11 +1504,11 @@ choice.</p></li>
 conclusions are only as good as the data you have!</p></li>
 </ul>
 <p>The main question for today is:</p>
-<blockquote>
-<p>What can the 2024 Cooperative Election Study tell us about the gender
-gap in presidential voting, and what can it <strong>not</strong> tell
-us?</p>
-</blockquote>
+<div class="alert alert-info">
+<p><strong>MOTIVATION QUESTION</strong> What can the 2024 Cooperative
+Election Study tell us about the gender gap in presidential voting, and
+what can it <strong>not</strong> tell us?</p>
+</div>
 </div>
 <div id="polls-exit-polls-in-us-elections" class="section level1">
 <h1>Polls &amp; Exit Polls in US Elections</h1>
@@ -1644,7 +1644,7 @@ exactly what we ask, even if what we ask makes no sense.</p>
 <h2>Renaming variables using <code>rename</code></h2>
 <p>It is always good practice to have variables that have meaningful
 names so that you can determine what it contains without referring to
-some additional document. The <code>rename</code> function allow us to
+some additional document. The <code>rename</code> function allows us to
 do this. Several of our variables have very bad names. It is always good
 practice to label your variables so they are easily understood!</p>
 <p>Bad names lead to errors – especially when you are juggling several
@@ -1701,10 +1701,10 @@ Non-binary, and <code>4</code> is Other.</p>
 small groups will be more uncertain. This does not make those groups
 unimportant; it means the survey gives us less information about
 them.</p>
-<p>We can recode these to more informative labels if we want. Suppose
+<p>We can recode these to more informative labels if we want. Suppose,
 for example, that we want to focus attention on the categories with the
-largest number of responses. The <code>case_when</code> function lets
-use create a new variable – via <code>mutate</code> – to define the new
+largest number of responses. The <code>case_when</code> function lets us
+create a new variable – via <code>mutate</code> – to define the new
 values based on the old variable. So this code creates a new variable
 called <code>gender2</code> that is defined to be <code>Man</code> when
 <code>gender4</code> takes on the value of 1, <code>gender2</code> is
@@ -1725,7 +1725,7 @@ when <code>gender4</code> is either <code>3</code> or
 <p>Note that we can use the <code>table</code> command:</p>
 <pre class="r"><code>table(ces$gender4)
 table(ces$gender2)</code></pre>
-<p><em>Quick Exercise:</em> Use <code>count</code> to inspect the
+<p><em>Quick Exercise</em> Use <code>count</code> to inspect the
 possible values of <code>pid3</code>. Are the values stored as numbers
 or as character labels?</p>
 <pre class="r"><code># INSERT CODE HERE</code></pre>
@@ -1798,7 +1798,7 @@ because who wants to admit to being a bad citizen?</p>
 <pre class="r"><code>ces |&gt;
   count(selfreport_voted)</code></pre>
 <p>Ugh. What does that even mean? Let’s clean it up with a
-<code>mutation</code> to calculate percentages for each response:</p>
+<code>mutate</code> to calculate percentages for each response:</p>
 <pre class="r"><code>ces |&gt;
   count(selfreport_voted) |&gt;
   mutate(Pct = n/sum(n))</code></pre>
@@ -1808,7 +1808,7 @@ well above the actual VAP of 59.2% and the VEP of 64.3%.</p>
 <p>QUESTION: What is going on?</p>
 <p>Note that we can also do multiple counts to see how the values of
 variables relate to one another. (We will return to this when we learn
-about <code>group_by</code> function.)</p>
+about the <code>group_by</code> function.)</p>
 <pre class="r"><code>ces |&gt;
   count(validated_voted,selfreport_voted) </code></pre>
 </div>
@@ -1825,7 +1825,7 @@ useful illustration.</p>
 <p>NOTE: Character values require quotation marks</p>
 <pre class="r"><code>ces |&gt;
   filter(presvote == Harris)</code></pre>
-<p>NOTE: if you masked <code>select</code> with <code>stats</code>
+<p>NOTE: if you masked <code>filter</code> with <code>stats</code>
 library use: <code>dplyr::filter()</code>.</p>
 <pre class="r"><code>ces_2cand = ces |&gt;
   filter(presvote == &quot;Harris&quot; | presvote == &quot;Trump&quot;)</code></pre>
@@ -1861,9 +1861,9 @@ received 49.8 percent and Harris received 48.3 percent of all votes
 cast. We will return to this puzzle after looking at the gender gap.</p>
 <div id="the-gender-gap-in-the-2024-election" class="section level2">
 <h2>The Gender Gap in the 2024 Election</h2>
-<p>Political differences based on gender have a length history in the
+<p>Political differences based on gender have a lengthy history in the
 United States, but the focus on differences in polling data has been
-noted by some as starting around1980. See, for example, TIME’s <a href="https://time.com/5903399/gender-gap-politics/">history of the
+noted by some as starting around 1980. See, for example, TIME’s <a href="https://time.com/5903399/gender-gap-politics/">history of the
 electoral gender gap</a>. More recently, we have seen coverage of this
 related to the 2024 election. See, for example, a recent piece in The
 Atlantic about demographic differences in voting: <a href="https://www.theatlantic.com/family/2026/05/little-gen-z-midterm-election-trump/687190/">“The
@@ -1897,12 +1897,12 @@ this specific comparison.</p>
   filter(gender4 == 1 | gender4 == 2) |&gt;
   mutate(woman = if_else(gender4 == 2, 1, 0)) </code></pre>
 <p>This row-level tibble contains the variables we will need when we
-return to the gender gap in Lecture 6. Save the entire R object—not just
+return to the gender gap in Session 6. Save the entire R object—not just
 the two group averages—so we can resample its respondents later.</p>
 <pre class="r"><code>saveRDS(ces_gender, &quot;CES2024_GenderGap.rds&quot;)</code></pre>
 <p>Unlike a CSV file, an <code>.rds</code> file preserves the variable
 types and other R information in the object. The course will also
-provide an official copy so Lecture 6 does not depend on this local file
+provide an official copy so Session 6 does not depend on this local file
 surviving.</p>
 <p>How many respondents are behind each comparison?</p>
 <pre class="r"><code>ces_gender |&gt;
@@ -2035,7 +2035,7 @@ voters than non-voters. But that is not necessarily a problem (so long
 as we are not interested in estimating turnout!). In fact, if voters are
 more likely to take the survey than non-voters maybe that is a good
 thing as it means that more of our data consists of voters with opinions
-that are more relevant for understanding the electorate. If</p>
+that are more relevant for understanding the electorate.</p>
 <p>The raw CES sample says Harris won the two-party vote. The actual
 election says Trump won. Perhaps the problem is that some respondents
 said they voted even though they did not. We can examine respondents who
@@ -2114,7 +2114,7 @@ ces_educ |&gt;
 assigns the corresponding value when the condition is true. It is
 especially useful when a variable has more than two categories.</p>
 <p>The following examples extend today’s analysis. They are useful
-practice and starting points for later lectures; we do not need to
+practice and starting points for later sessions; we do not need to
 complete all of them in class.</p>
 <p>We can define college graduates as respondents with a four-year or
 post-graduate degree.</p>
@@ -2124,12 +2124,13 @@ post-graduate degree.</p>
 <pre class="r"><code>ces_gender |&gt;
   filter(collegegrad == 1) |&gt;
   summarize(PctHarris = mean(HarrisVoter))</code></pre>
-<p><em>Quick Exercise:</em> Repeat the analysis among respondents
-without a four-year degree. What is the descriptive education gap?</p>
+<p><em>Quick Exercise</em> Repeat the analysis among respondents without
+a four-year degree. What is the descriptive education gap?</p>
+<pre class="r"><code># INSERT CODE HERE</code></pre>
 </div>
-<div id="new-r-functions-introduced-in-lecture-3" class="section level1">
-<h1>New R Functions Introduced in Lecture 3</h1>
-<p>Functions already introduced in Lecture 2 are intentionally
+<div id="new-r-functions-introduced-in-session-3" class="section level1">
+<h1>New R Functions Introduced in Session 3</h1>
+<p>Functions already introduced in Session 2 are intentionally
 omitted.</p>
 <table>
 <colgroup>
@@ -2148,29 +2149,29 @@ omitted.</p>
 <td>Reports the number of rows and columns.</td>
 </tr>
 <tr class="even">
-<td><code>nrow()</code></td>
-<td>Reports the number of rows.</td>
-</tr>
-<tr class="odd">
-<td><code>ncol()</code></td>
-<td>Reports the number of columns.</td>
-</tr>
-<tr class="even">
 <td><code>summary()</code></td>
 <td>Summarizes values and missing data.</td>
 </tr>
 <tr class="odd">
+<td><code>table()</code></td>
+<td>Counts observations for each value of a variable (base R).</td>
+</tr>
+<tr class="even">
 <td><code>count()</code></td>
 <td>Counts observations associated with each value or combination of
 values.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>rename()</code></td>
 <td>Changes the name of a variable.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>mutate()</code></td>
 <td>Creates or changes variables.</td>
+</tr>
+<tr class="odd">
+<td><code>!=</code></td>
+<td>Tests whether two values are not equal.</td>
 </tr>
 <tr class="even">
 <td><code>if_else()</code></td>

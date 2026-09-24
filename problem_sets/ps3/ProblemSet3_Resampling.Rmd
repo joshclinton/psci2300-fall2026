@@ -114,7 +114,7 @@ Then adapt the summary we used from Session 6 here. You should compute  `Lower`,
 
 6. *Use the small `covid` file to calculate the mean of `grocery` separately for Democrats and Republicans. Then calculate **Democrat minus Republican** and save that number as `GroceryGap`. Which group reported more grocery trips?*
 
-HINT: In Session 6, we created two one-row summaries and subtracted `Female$PctHarris - Male$PctHarris`. Use that same approach. Note that we are comparing the percentage who reported a grocery trip, not the number of trips each person took.
+HINT: In Session 6, we created two one-row summaries and subtracted `Women$PctHarris - Men$PctHarris`. Use that same approach. Note that we are comparing the percentage who reported a grocery trip, not the number of trips each person took.
 
 ```{r q6}
 # INSERT ANSWER
@@ -175,7 +175,7 @@ HINT: You need four means. Follow the same `filter()` and `summarize()` pattern 
 # INSERT ANSWER
 ```
 
-**B.** *How certain are we about those changes? Adapt the loop below to store both `DemChange` and `RepChange` in each row of `SampledChanges`. Use 1,000 repetitions, then calculate a 95% bootstrap interval for each party's change. Does either interval include zero? What would zero mean here?*
+**B.** *How certain are we about those changes? Adapt the gender-gap loop from Session 6 to store both `DemChange` and `RepChange` in each row of `SampledChanges`. Use 1,000 repetitions, then calculate a 95% bootstrap interval for each party's change. Does either interval include zero? What would zero mean here?*
 
 There is one extra step: we resample **each month's file separately** before calculating the change. Use the same April resample for both April party means, and the same September resample for both September means. Do not match the first April row to the first September row; those row positions do not identify the same person.
 
@@ -184,7 +184,7 @@ There is one extra step: we resample **each month's file separately** before cal
 # INSERT ANSWER
 ```
 
-**C.** *Did the parties change by different amounts? Add one more column to `one_change`: `ChangeDifference = DemChange - RepChange`. Rerun your loop, then use `quantile()` to calculate an interval for `ChangeDifference`. Does it include zero? Explain what its sign means and what you can conclude about who changed more.*
+**C.** *Did the parties change by different amounts? Add one more column to the one-row result your loop stores: `ChangeDifference = DemChange - RepChange`. Rerun your loop, then use `quantile()` to calculate an interval for `ChangeDifference`. Does it include zero? Explain what its sign means and what you can conclude about who changed more.*
 
 This is still the same resampling method. We are just saving one more subtraction in each repetition. Do not decide that the changes differ merely because one party's interval includes zero and the other's does not. Check the interval for the **difference between their changes**.
 

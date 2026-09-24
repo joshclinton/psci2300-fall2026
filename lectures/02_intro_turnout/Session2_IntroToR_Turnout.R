@@ -1,5 +1,5 @@
 # PSC 2300: Data and Politics I
-# Lecture 2: Introduction to R and voter turnout
+# Session 2: Introduction to R and voter turnout
 # Prof. Josh Clinton
 # Vanderbilt University
 

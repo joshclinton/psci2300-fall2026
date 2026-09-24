@@ -2,7 +2,7 @@
 title: "Univariate Description: The Cases of Himmicanes and Congressional Redistricting"
 author: "Prof. Josh Clinton"
 institute: "Vanderbilt University"
-date: "`r Sys.Date()` "
+date: "`r Sys.Date()`"
 output:
   html_document:
     toc: true
@@ -83,7 +83,7 @@ A question that you will almost surely be asked to answer in whatever you do as 
 - What percentage of votes is a Republican candidate likely to receive in a district?
 - How many districts typically support Democrats running for president?
 
-Here is where things get tricky -- we often use the word ``average" when referring to a "typical" or "normal" value, but the mathematical definition of an average may not be what we actually mean! The word "average" is often used when people actually mean "typical" and your task as a data scientist is to figure out how best to determine what it means to be "typical!"
+Here is where things get tricky -- we often use the word "average" when referring to a "typical" or "normal" value, but the mathematical definition of an average may not be what we actually mean! The word "average" is often used when people actually mean "typical" and your task as a data scientist is to figure out how best to determine what it means to be "typical!"
 
 This is sometimes easier said than done.  Possible choices for defining what it means to be typical include:
 
@@ -93,17 +93,17 @@ This is sometimes easier said than done.  Possible choices for defining what it 
  
  * The value that reflects the average value of the observations (i.e., `mean`).  All that matters here is the values themselves.
 
-The formula for calculating the sample mean (\( \bar{x} \)) is given by:
+The formula for calculating the sample mean ($\bar{x}$) is given by:
 
-\[ \bar{x} = \frac{1}{n} \sum_{i=1}^{n} x_i \]
+$$\bar{x} = \frac{1}{n} \sum_{i=1}^{n} x_i$$
 
 Where:
 
- *  \( \bar{x} \) represents the sample mean.
+ *  $\bar{x}$ represents the sample mean.
 
- *  \( n \) is the number of observations in the sample.
+ *  $n$ is the number of observations in the sample.
 
- *  \( x_i \) represents each individual observation in the sample.
+ *  $x_i$ represents each individual observation in the sample.
 
 Something that is true of data science is that you are often asked to answer questions that are not well defined.  As a result, one of the first tasks you have to do is to figure out what someone wants to know (i.e., what you are being asked to do), figure out what you can do with the available data, and consider the possible slippage between what you can say and what you are being asked to say!
 
@@ -160,7 +160,7 @@ NOTE: If we wanted to use a non-tidyverse code, we could also use the ability to
 summary(hurr$BaseDam2014)
 ```
 
-So, how deadly is the "typical" hurricane? Well, it depends on what we mean by `typical'. We have a continuous variatible (`deaths') so we can compute the median or mean.
+So, how deadly is the "typical" hurricane? Well, it depends on what we mean by "typical". We have a continuous variatible (`deaths`) so we can compute the median or mean.
 
 ```{r}
 hurr |>
@@ -186,7 +186,7 @@ Lets return to the claim that "female hurricanes are deadlier." This is a claim 
 ```{r}
 hurr |>
   group_by(mf) |>
-  summarize(n = n(),
+  summarize(N = n(),
             mean_deaths   = mean(deaths),
             median_deaths = median(deaths))
 ```
@@ -201,7 +201,7 @@ We can see if this matters by looking at the results when both kinds of names we
 hurr |>
   filter(Year >= 1979) |>
   group_by(mf) |>
-  summarize(n = n(),
+  summarize(N = n(),
             mean_deaths   = mean(deaths),
             median_deaths = median(deaths))
 ```
@@ -256,13 +256,13 @@ We start out by doing the same type of wrangling that we have always done. The g
 
 As we go make note of how much ambiguity and discretion there is in what we are doing.  As I have repeatedly emphasized, analyzing data requires making an argument about how to measure, analyze and interpret the patterns we find in available data.  When we use data to answer a question, our answer is only as good as the arguments we can make to justify the consequential choices we are making.  
 
-For example, what does it mean to ``be competitive"?  Does that mean the margin in vote share between candidates is close to being tied?  Within two percentage points?  Five? Ten?  Or does competition mean the fraction of districts won by each candidate -- regardless of the margin?  
+For example, what does it mean to "be competitive"?  Does that mean the margin in vote share between candidates is close to being tied?  Within two percentage points?  Five? Ten?  Or does competition mean the fraction of districts won by each candidate -- regardless of the margin?  
 
 Consider, for example, if one party won every single district 50.05 \% to 49.95 \%.  The overall popular vote margin would be very small -- 0.1\% -- but one party would have won every district! (Keep this possibility in mind as it is exactly the logic that redistricting exploits.)
 
 ## Continuous
 
-Let's start by taking a look at `dem_margin_2024map` -- Harris's percent minus Trump's percent in each district. This is a continuous variable. Let's take a look at the 10 most Democratic districts in the United States by using the ``arrange` function that we are going to look at in `desc`ending order, and then print the top 10 using `head`. (There are lots of ways to do this -- this is just a fancy way.)
+Let's start by taking a look at `dem_margin_2024map` -- Harris's percent minus Trump's percent in each district. This is a continuous variable. Let's take a look at the 10 most Democratic districts in the United States by using the `arrange` function that we are going to look at in `desc`ending order, and then print the top 10 using `head`. (There are lots of ways to do this -- this is just a fancy way.)
 
 ```{r}
 cd |> 
@@ -281,7 +281,7 @@ What do you observe about them?  Where are they?
 
 ### Measures for Continuous Variables
 
-The mean is used most of the time for continuous variables, but as we have just seen, it can be VERY sensitive to outliers and lead misleading characterizations. The median (50th percentile) is usually better for describing what is ``typical," but the downside is that it can be difficult to explain to general audiences. 
+The mean is used most of the time for continuous variables, but as we have just seen, it can be VERY sensitive to outliers and lead misleading characterizations. The median (50th percentile) is usually better for describing what is "typical," but the downside is that it can be difficult to explain to general audiences. 
 
 ```{r}
 cd |>
@@ -357,7 +357,7 @@ cd |>
 
 More than half of districts are safe for one party and only about 1 in 10 is a toss-up.  Note that if we had coded the categories as numbers (1, 2, 3, 4) `R` would happily compute a mean, but the categories are not really meaningful -- why is something a `2` rather than a `4`?  We assigned values to categories to denote order, but the scale of those numeric differences is not at all meaningful. (Technically speaking, they are ordinal rather than cardinal values.)
 
-BOTTOM LINE: Tricky! If you have an ordered categorical variable, either the `mode` or the` median` almost always makes sense.  However, sometimes the `mean` is also often used -- e.g., in our exit poll analysis we took the average opinion about the importance of racism in the country despite the variable being an ordered categorical variable.  This highlights the importance of always thinking about what you are trying to measure and making an argument about why the measure is appropriate!
+BOTTOM LINE: Tricky! If you have an ordered categorical variable, either the `mode` or the `median` almost always makes sense.  However, sometimes the `mean` is also often used -- e.g., the average ideology using a 7-point question despite the variable being an ordered categorical variable.  This highlights the importance of always thinking about what you are trying to measure and making an argument about why the measure is appropriate!
 
 ## Categorical: unordered
 
@@ -471,7 +471,7 @@ Now California, where the tools were used in the other direction: the safest Dem
 # INSERT CODE HERE
 ```
 
-*Quick Exercise* Redo the competitiveness categories using `dem_margin_2026map` to create a new variable called `competitive_2024map`. Did redistricting make districts more or less competitive?
+*Quick Exercise* Redo the competitiveness categories using `dem_margin_2026map` to create a new variable called `competitive_2026map`. Did redistricting make districts more or less competitive?
 
 ```{r}
 # INSERT CODE HERE
@@ -497,7 +497,7 @@ Since these are percentages -- 10.1\% and 8.5\% -- one measure is simply the *pe
 
 ...so a 1.6 percentage point decline.
 
-\[ \mbox{Percentage Point Change:} X_{new} \% - X_{old} \% \]
+$$\text{Percentage Point Change: } X_{new}\% - X_{old}\%$$
 
 But we could also discuss this in terms of *percent change* -- that is how much the value differs from a baseline value.  Instead of subtracting percentages, this involves division to compare the size of the value relative to a baseline -- here the number of toss-ups under the old lines.
 
@@ -507,7 +507,7 @@ But we could also discuss this in terms of *percent change* -- that is how much 
 
 So the number of toss-up districts declined by about 16\%.
 
-\[ \mbox{Percent Change:} 100 \times \frac{X_{new} - X_{old}}{X_{old}} \% \]
+$$\text{Percent Change: } 100 \times \frac{X_{new} - X_{old}}{X_{old}}\%$$
 
 Note how differently those numbers seem, even though they describe the same change -- a 1.6 percentage point decline seems small, but a 16\% decline seems large.  This is where understanding how humans comprehend numbers becomes important!
 
@@ -582,17 +582,16 @@ Now the cushions give way.  Under the new lines Texas goes from 8 Harris distric
 
 One caution: a uniform swing is an assumption, not a fact.  Real swings vary across districts, and we will build tools to think about that kind of uncertainty next session.
 
-# New R Functions Introduced in Lecture 5
+# New R Functions Introduced in Session 5
 
-Functions introduced in Lectures 2–4 are intentionally omitted.
+Functions introduced in Sessions 2–4 are intentionally omitted.
 
-| Function | What it does |
+| Function or symbol | What it does |
 |---|---|
 | `arrange()` | Sorts rows by a variable, smallest to largest. |
 | `desc()` | Reverses the ordering of a variable inside `arrange()`. |
-| `seq()` | Creates a sequence of equally spaced values. |
-| `length()` | Counts the number of values in a vector. |
 | `abs()` | Returns the absolute value of a number. |
+| `median()` | Calculates the median, the middle value after sorting. |
 
 # Works Cited
 

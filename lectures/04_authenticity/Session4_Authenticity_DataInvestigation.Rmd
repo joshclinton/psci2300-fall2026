@@ -31,8 +31,10 @@ is correct, and then inspect the posted data.
 
 The main question for today is:
 
-> Do the posted data provide credible evidence that inauthenticity increases
-> the desire to clean?
+<div class="alert alert-info">
+**MOTIVATION QUESTION**
+Do the posted data provide credible evidence that inauthenticity increases the desire to clean?
+</div>
 
 # The Claim
 
@@ -133,7 +135,7 @@ library(package_name)
 ```
 
 Copy the pattern and replace `package_name` with the library we have used in
-the previous lectures.
+the previous sessions.
 
 ```{r load-library}
 # INSERT CODE HERE
@@ -507,16 +509,15 @@ YOUR ANSWER HERE:
 The point was not simply to obtain the final four means. The path to those
 means showed us why the finding cannot be taken at face value.
 
-# New R Functions Introduced in Lecture 4
+# New R Functions Introduced in Session 4
 
-This workshop primarily uses the cumulative toolkit from Lectures 2 and 3.
+This workshop primarily uses the cumulative toolkit from Sessions 2 and 3.
 
-| Function | What it does |
+| Function or symbol | What it does |
 |---|---|
 | `is.na()` | Identifies values that are missing. |
 | `group_by()` | Defines the groups used by a following summary. |
 | `n()` | Counts observations within `summarize()`. |
-| `sum()` | Adds values; here it counts values for which `is.na()` is true. |
 
 # Appendix: Experiment 4 Materials
 

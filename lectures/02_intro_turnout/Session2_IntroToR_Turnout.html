@@ -11,7 +11,7 @@
 
 <meta name="author" content="Prof. Josh Clinton" />
 
-<meta name="date" content="2026-09-22" />
+<meta name="date" content="2026-09-24" />
 
 <title>Hello World! Intro to R, RStudio, and Working With Data</title>
 
@@ -1482,7 +1482,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Hello World! Intro to R, RStudio, and
 Working With Data</h1>
 <h4 class="author">Prof. Josh Clinton</h4>
-<h4 class="date">2026-09-22</h4>
+<h4 class="date">2026-09-24</h4>
 
 </div>
 
@@ -1573,7 +1573,7 @@ to be a <a href="https://www.washingtonpost.com/news/wonk/wp/2013/04/16/is-the-b
 global economic policy</a>. See, for example, a story about the impact
 in <a href="https://www.nytimes.com/2010/06/29/business/global/29austerity.html">Ireland</a>,
 including a quote by one of the Harvard economists responsible for the
-study with the error noting that ``the Ireland experience points to the
+study with the error noting that “the Ireland experience points to the
 profound challenges that the current strategy [which was based on this
 erroneous research] implies.” (See also the <em>New Yorker</em> article
 on “The Reinhart and Rogoff Controversy: A Summing Up” by John Cassidy
@@ -1614,7 +1614,7 @@ and she developed an entire program to find and correct errors produced
 by data entry in Excel! Link <a href="https://www.eurekalert.org/news-releases/810347">here</a>.
 Discouragingly, note that the estimate that 30% of published papers
 analyzing genetic sequences were incorrect due to the sequences being
-``auto-corrected” by Excel was mentioned in a story that was written 5
+“auto-corrected” by Excel was mentioned in a story that was written 5
 years after Dr. Byrne received the award and after the creation of a
 program specifically designed to prevent this!</p>
 <div style="text-align:center">
@@ -1671,7 +1671,7 @@ EXIT</strong></div>
 <p>When starting out it can be easy to forget that R needs to be told
 where to look to find things!</p>
 <ol style="list-style-type: decimal">
-<li>For <strong>every</strong> assignment/lecture create a new folder on
+<li>For <strong>every</strong> assignment/session create a new folder on
 your computer (e.g., “Topic 3”).<br />
 </li>
 <li>Download the code and data into this folder. (Or move them from the
@@ -1772,8 +1772,12 @@ RMarkdown file so that next time we can run the code directly!</p>
 <p>A second way to access data is to use some functions directly in
 R.<br />
 This is what the GUI is actually doing behind the scenes.<br />
-We are going to focus on three functions in this class: -
-<code>load</code> - <code>read_rds</code> - <code>url</code></p>
+We are going to focus on three functions in this class:</p>
+<ul>
+<li><code>load</code></li>
+<li><code>read_rds</code></li>
+<li><code>url</code></li>
+</ul>
 <p>We can also read in non-R files – sometimes using additional packages
 to expand the skills of R. For example, we can read in comma-delimited
 files (<code>read.csv</code>), tab-delimited files
@@ -1874,8 +1878,8 @@ ensure the objects are created in the Global Environment.</p>
 <p>Once we are finished, we can knit the entire document to keep a clean
 record.</p>
 <p>OK, back to business!</p>
-<p>In the code chunk below ``Run All Code Chunks Above” to get us back
-to where we were.</p>
+<p>In the code chunk below “Run All Code Chunks Above” to get us back to
+where we were.</p>
 <p>Now let’s take a quick look at the object <code>df</code>:</p>
 <pre class="r"><code>df</code></pre>
 <p>NOTE: the <code>eval=FALSE</code> in the chunk title means that when
@@ -2013,10 +2017,12 @@ can do:</p>
 <p>In exploring data, many times we want to look at smaller parts of the
 dataset. There are two commands we’ll introduce today and review again
 next time to help with this.</p>
-<p>-<code>filter</code> selects only those cases or rows that meet some
-logical criteria.</p>
-<p>-<code>select</code> selects only those variables or columns that
-meet some criteria</p>
+<ul>
+<li><p><code>filter</code> selects only those cases or rows that meet
+some logical criteria.</p></li>
+<li><p><code>select</code> selects only those variables or columns that
+meet some criteria</p></li>
+</ul>
 <p>For more on these, please see this <a href="https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html">vignette</a>.</p>
 <p>Let’s just inspect the data for all of the variables we have related
 to the 2024 elections.</p>
@@ -2156,6 +2162,7 @@ see if this has changed over time?</p>
   summarize(AvgVEPturnout = mean(VEPturnout, na.rm = TRUE))</code></pre>
 <p><em>Quick Exercise</em> How does that compare with the turnout
 estimate using the ANES?</p>
+<pre class="r"><code># INSERT CODE HERE</code></pre>
 <p>THINK! Is that a fair comparison? What is going on given what we saw
 in the data itself?</p>
 <p>What do you observe? Do you believe that? What might give you pause
@@ -2174,8 +2181,8 @@ midterm and presidential elections? Or over time? If you had to predict
 what turnout in 2026 would be, how would you do that?</p>
 </div>
 </div>
-<div id="new-r-functions" class="section level1">
-<h1>New R Functions</h1>
+<div id="new-r-functions-introduced-in-session-2" class="section level1">
+<h1>New R Functions Introduced in Session 2</h1>
 <table>
 <colgroup>
 <col width="50%" />
@@ -2183,7 +2190,7 @@ what turnout in 2026 would be, how would you do that?</p>
 </colgroup>
 <thead>
 <tr class="header">
-<th>Function</th>
+<th>Function or symbol</th>
 <th>What it does</th>
 </tr>
 </thead>
@@ -2223,30 +2230,35 @@ dataset.</td>
 <td>Shows the first few rows of a dataset.</td>
 </tr>
 <tr class="odd">
-<td><code>c()</code></td>
-<td>Combines values into a collection.</td>
-</tr>
-<tr class="even">
 <td><code>filter()</code></td>
 <td>Selects rows that meet specified conditions.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>select()</code></td>
 <td>Selects variables, or columns, from a dataset.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>summarize()</code></td>
 <td>Calculates a summary of a dataset or variable.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>mean()</code></td>
 <td>Calculates the average of a variable.</td>
 </tr>
+<tr class="odd">
+<td><code>$</code></td>
+<td>Refers to one variable in a dataset, as in <code>df$VEP</code>.</td>
+</tr>
 <tr class="even">
-<td><code>median()</code></td>
-<td>Calculates the median of a variable.</td>
+<td><code>==</code>, <code>&gt;</code>, <code>&lt;</code>,
+<code>&gt;=</code>, <code>&lt;=</code></td>
+<td>Compare values: equal to, greater than, less than, and so on.</td>
 </tr>
 <tr class="odd">
+<td><code>&amp;</code>, <code>|</code></td>
+<td>Combine logical conditions: AND, OR.</td>
+</tr>
+<tr class="even">
 <td><code>|&gt;</code></td>
 <td>Passes the result of one command to the next command: “and
 then.”</td>

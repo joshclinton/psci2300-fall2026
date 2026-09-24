@@ -53,7 +53,7 @@ The questions below are in *italics*.  Place your text responses after each ques
 # INSERT ANSWER
 ```
 
-6. *What if the shift is anti-incumbent and Democrats gain 3 percentage points and Republicans lose 3? How does the code for `shift` change? Think first!*
+6. *What if Democrats everywhere gain 3 percentage points (because Republicans everywhere lose 3 percentage points)? How does the code for `shift` change? Think first!*
 
 ```{r}
 # INSERT ANSWER
@@ -94,19 +94,19 @@ The questions below are in *italics*.  Place your text responses after each ques
 12.  *Your parent finds a piece of code in your bedroom and they are worried about what kind of stuff you have gotten yourself involved in. In language that most people would understand, explain what each part of the following code does and why it is important. No coding required. (That will be next PS).*
 
 ```{r, eval = FALSE}
-SampledHarrisSupport <- NULL
+SampledHarrisSupport = NULL
 set.seed(2300)
 
 for (i in 1:100) {
 
-  one_estimate <- ces_gender %>%
-    slice_sample(prop = 1, replace = TRUE) %>%
+  one_estimate = ces_gender |>
+    slice_sample(prop = 1, replace = TRUE) |>
     summarize(
       Iteration = i,
       PctHarris = mean(HarrisVoter)
     )
 
-  SampledHarrisSupport <- bind_rows(
+  SampledHarrisSupport = bind_rows(
     SampledHarrisSupport,
     one_estimate
   )

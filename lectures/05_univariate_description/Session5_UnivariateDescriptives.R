@@ -1,5 +1,5 @@
 # PSC 2300: Data and Politics I
-# Lecture 5: Univariate Description: The Cases of Himmicanes and Congressional Redistricting
+# Session 5: Univariate Description: The Cases of Himmicanes and Congressional Redistricting
 # Prof. Josh Clinton
 # Vanderbilt University
 

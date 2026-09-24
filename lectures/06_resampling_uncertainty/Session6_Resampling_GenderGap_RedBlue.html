@@ -11,7 +11,7 @@
 
 <meta name="author" content="Prof. Josh Clinton" />
 
-<meta name="date" content="2026-09-22" />
+<meta name="date" content="2026-09-24" />
 
 <title>Session 6. Uncertainty: Is the Difference Real?</title>
 
@@ -1483,7 +1483,7 @@ border-radius: 0px;
 Real?</h1>
 <h3 class="subtitle">Polling, the Gender Gap, and Red Versus Blue</h3>
 <h4 class="author">Prof. Josh Clinton</h4>
-<h4 class="date">2026-09-22</h4>
+<h4 class="date">2026-09-24</h4>
 
 </div>
 
@@ -1501,6 +1501,9 @@ means might vary.</p></li>
 <li><p>Use a bootstrap interval to ask whether a difference is
 distinguishable from zero.</p></li>
 </ul>
+<div class="alert alert-info">
+<p><strong>MOTIVATION QUESTION</strong> Is the difference real?</p>
+</div>
 </div>
 <div id="uncertainty-in-univariate-statistics" class="section level1">
 <h1>Uncertainty in Univariate Statistics</h1>
@@ -1584,7 +1587,7 @@ because it includes cases that have yet to happen. Seem weird? Let’s try
 to explain this. Suppose that you collected data on the national popular
 vote for every presidential election in the United States to the current
 day. Your sample therefore contains the results of every single
-presidential election contest. There are no ``secret” elections and you
+presidential election contest. There are no “secret” elections and you
 did not forget to include any. You have it all. Despite the fact that
 your sample contains every presidential election, we often want to make
 statements about what we expect the results to be based on the sample of
@@ -1593,7 +1596,7 @@ winner defeats the loser in terms of percentage points then we are using
 the data to make a statement not only about what the margin has
 historically been on average, but also what we would expect the margin
 to be in the future (assuming the political context is relatively
-stable).1</p>
+stable).</p>
 <p>The important distinction is that sample refers to the
 <em>observations in the data you are analyzing</em> and population
 refers to the <em>observations that you are trying to learn</em> about
@@ -1604,7 +1607,7 @@ our sample is the population – then we call this a
 learn – that is to make inferences – about the population. Under what
 conditions are we able to say something? How likely is it that our
 estimates are correct? How certain should we that our estimates are
-close to the truth? And what do we mean by ``close to the truth”?</p>
+close to the truth? And what do we mean by “close to the truth”?</p>
 <p>We are going to focus on a particular approach to quantifying our
 ability to learn that uses the data. While useful for explaining the
 concepts because it uses the data and our programming skills to directly
@@ -1646,7 +1649,7 @@ we have to imitate that thought experiment:</p>
 <li>Examine how much the estimates vary.</li>
 </ol>
 <p>That procedure is called <strong>resampling</strong>. We will begin
-with one polling percentage, then return to the gender gap from Lecture
+with one polling percentage, then return to the gender gap from Session
 3.</p>
 <pre class="r"><code>library(tidyverse)</code></pre>
 </div>
@@ -1657,9 +1660,9 @@ with one polling percentage, then return to the gender gap from Lecture
 load an analysis-ready dataset related to measuring the gender gap that
 was saved as an <code>.rds</code> file. (This is a file format that is
 unique to R rather than a generic file format like the
-comma-separated-values (csv) files that we have used previously. We can
+comma-separated-values (csv) files that we have used previously.) We can
 read this into memory using the <code>readRDS</code> function and then
-take a glimpse. without repeating the wrangling.</p>
+take a glimpse without repeating the wrangling.</p>
 <pre class="r"><code>ces_gender = readRDS(&quot;CES2024_GenderGap.rds&quot;)
 
 glimpse(ces_gender)</code></pre>
@@ -1679,7 +1682,7 @@ respondents who reported voting for Harris. Let’s compute that.</p>
 of survey respondents. But much might it change if the CES had
 interviewed a different sample? If we treat respondents as a random
 sample of the population, the amount that the answers differs due to
-randomness alone is called the ``margin of error.”</p>
+randomness alone is called the “margin of error.”</p>
 <p>Note that this is not the same as survey error! The margin of error
 is how much a survey-estimate may change as a result of random sampling
 and the fact that some people were randomly selected to be interviewed
@@ -1702,8 +1705,8 @@ random).</p>
 <p>For my seed value I am going to choose the answer to life, the
 universe, and everything. (Does anyone get this reference or am I
 officially too old?).</p>
-<p><em>NOTE: Always set a seed if you are sampling so you can replicate
-your results!</em></p>
+<p>NOTE: Always set a seed if you are sampling so you can replicate your
+results!</p>
 <pre class="r"><code>set.seed(42)</code></pre>
 <p>Resampling uses the variation in the observed data to approximate
 what we might have found in other samples.</p>
@@ -1918,9 +1921,9 @@ from last time that the value of the 50th percentile is what we call the
 that value and 50% of our data is below that value. But we can find
 whatever percentiles we want.</p>
 <p>To see this let’s create a simple variable that ranges from 0 to
-1000. (Note that <code>:</code> ust indicates to R to create sequence
-(<code>seq</code>) from <code>1</code> to <code>1000</code>).</p>
-<pre class="r"><code>newvar = seq(0:1000)</code></pre>
+1000. (Note that <code>seq(0, 1000)</code> tells R to create a sequence
+from <code>0</code> to <code>1000</code>.)</p>
+<pre class="r"><code>newvar = seq(0, 1000)</code></pre>
 <p>Now let’s compute the median two ways: using the median and using the
 <code>quantile</code> function.</p>
 <pre class="r"><code>median(newvar)
@@ -1932,8 +1935,8 @@ our data were located. This is sometimes called the
 of our data (around the median) is defined by values between the 25th
 and 75th percentiles.</p>
 <p>Given that we have 1001 values ranging from 0 to 1000, we should find
-the 25th percentile to be assoicated with the value 251 and the 75%
-percentile associated with 751. Let’s check!</p>
+the 25th percentile to be assoicated with the value 250 and the 75%
+percentile associated with 750. Let’s check!</p>
 <pre class="r"><code>quantile(newvar, p = .25)
 quantile(newvar, p = .75)</code></pre>
 <p>Perfect. Note that we can also do both at the same time by
@@ -1979,28 +1982,28 @@ and men. Let’s calculate the two group means again. Here the
 <code>n()</code> is a function that simply gives the total count of the
 observations in our data.</p>
 <pre class="r"><code>ces_gender |&gt;
-  group_by(female) |&gt;
+  group_by(woman) |&gt;
   summarize(
     N = n(),
     PctHarris = mean(HarrisVoter)
   )</code></pre>
 <p>The statistic used to measure the gender gap is just a
-<strong>difference of means</strong>: Harris support among females minus
-Harris support among males.</p>
+<strong>difference of means</strong>: Harris support among women minus
+Harris support among men.</p>
 <p>Recall how we computed it.</p>
-<pre class="r"><code>Female = ces_gender |&gt;
-  filter(female == 1) |&gt;
+<pre class="r"><code>Women = ces_gender |&gt;
+  filter(woman == 1) |&gt;
   summarize(PctHarris = mean(HarrisVoter))
 
-Male = ces_gender |&gt;
-  filter(female == 0) |&gt;
+Men = ces_gender |&gt;
+  filter(woman == 0) |&gt;
   summarize(PctHarris = mean(HarrisVoter))
 
-GenderGap = Female$PctHarris - Male$PctHarris
+GenderGap = Women$PctHarris - Men$PctHarris
 GenderGap</code></pre>
-<p>Females in this sample were about 4.9 percentage points more likely
-than males to report voting for Harris. But how confident can we be
-about that estimate? Might it be different in a different sample?</p>
+<p>Women in this sample were about 4.9 percentage points more likely
+than men to report voting for Harris. But how confident can we be about
+that estimate? Might it be different in a different sample?</p>
 <div id="bootstrap-the-gender-gap" class="section level2">
 <h2>Bootstrap the Gender Gap</h2>
 <p>Let’s go! The loop has the same three parts as before: sample,
@@ -2015,16 +2018,16 @@ for (i in 1:1000) {
   one_sample = ces_gender |&gt;
     slice_sample(prop = 1, replace = TRUE)
 
-  one_female = one_sample |&gt;
-    filter(female == 1) |&gt;
+  one_women = one_sample |&gt;
+    filter(woman == 1) |&gt;
     summarize(PctHarris = mean(HarrisVoter))
 
-  one_male = one_sample |&gt;
-    filter(female == 0) |&gt;
+  one_men = one_sample |&gt;
+    filter(woman == 0) |&gt;
     summarize(PctHarris = mean(HarrisVoter))
 
   one_gap = tibble(
-    GenderGap = one_female$PctHarris - one_male$PctHarris
+    GenderGap = one_women$PctHarris - one_men$PctHarris
   )
 
   SampledGenderGaps = bind_rows(SampledGenderGaps, one_gap)
@@ -2095,7 +2098,7 @@ difference means blue won more often.</p>
 bouts?</li>
 <li>Is the difference distinguishable from zero?</li>
 </ul>
-<pre class="r"><code>athens = read_csv(&quot;athens.csv&quot;) |&gt;
+<pre class="r"><code>athens = read.csv(&quot;athens.csv&quot;) |&gt;
   mutate(
     red_win = if_else(winner == &quot;Red&quot;, 1, 0),
     blue_win = if_else(winner == &quot;Blue&quot;, 1, 0)
@@ -2127,7 +2130,7 @@ for (i in 1:1000) {
     slice_sample(prop = 1, replace = TRUE) |&gt;
     summarize(
       Difference = mean(red_win) - mean(blue_win),
-      n = n()
+      N = n()
     )
 
   SampledDifferences = bind_rows(
@@ -2208,7 +2211,7 @@ that the null hypothesis is true.</p>
 <h2>What Happens When We Add More Data?</h2>
 <p>The Athens result comes from one Olympic Games. But we also have
 comparable results from Olympics held between 1996 and 2020.</p>
-<pre class="r"><code>olympics = read_csv(&quot;olympics.csv&quot;) 
+<pre class="r"><code>olympics = read.csv(&quot;olympics.csv&quot;) 
 
 olympics = olympics |&gt;
   mutate(
@@ -2308,8 +2311,9 @@ bootstrap:</p>
 <ul>
 <li>Decide on the summary measure to be used for the variable (it
 doesn’t have to be the mean)</li>
-<li>Calculate the summary measure on a small subsample (called the
-bootstrap sample) of the data</li>
+<li>Calculate the summary measure on a resample of the data that is the
+same size as the data and drawn with replacement (called the bootstrap
+sample)</li>
 <li>Repeat step 2 many times (how many? Start with 1000, but more is
 better.) Compile the estimates.</li>
 <li>Calculate the percentiles of the bootstrap distribution from the
@@ -2335,41 +2339,70 @@ cannot fix a sample that poorly represents the population.</li>
 available.</li>
 </ul>
 </div>
-<div id="new-r-functions-introduced-in-lecture-6" class="section level1">
-<h1>New R Functions Introduced in Lecture 6</h1>
-<p>Functions introduced in earlier lectures are intentionally
+<div id="new-r-functions-introduced-in-session-6" class="section level1">
+<h1>New R Functions Introduced in Session 6</h1>
+<p>Functions introduced in earlier sessions are intentionally
 omitted.</p>
 <table>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
 <thead>
 <tr class="header">
-<th>Function</th>
+<th>Function or symbol</th>
 <th>What it does</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td><code>readRDS()</code></td>
+<td>Reads one R object saved in an <code>.rds</code> file.</td>
+</tr>
+<tr class="even">
 <td><code>slice_sample()</code></td>
 <td>Randomly draws rows from a data frame.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>set.seed()</code></td>
 <td>Makes random results reproducible.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>tibble()</code></td>
 <td>Creates a data frame in tidyverse format.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>bind_rows()</code></td>
 <td>Adds rows to the bottom of a data frame.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>quantile()</code></td>
 <td>Returns values at specified percentiles.</td>
 </tr>
+<tr class="odd">
+<td><code>c()</code></td>
+<td>Combines values into a vector, for example
+<code>c(.025, .975)</code> or <code>c(0, 1)</code>.</td>
+</tr>
 <tr class="even">
-<td><code>abs()</code></td>
-<td>Returns the absolute distance from zero.</td>
+<td><code>seq()</code></td>
+<td>Generates a sequence of values.</td>
+</tr>
+<tr class="odd">
+<td><code>:</code></td>
+<td>Creates a sequence of integers, as in <code>1:1000</code>.</td>
+</tr>
+<tr class="even">
+<td><code>print()</code></td>
+<td>Prints an object; used here inside a loop.</td>
+</tr>
+<tr class="odd">
+<td><code>nrow()</code></td>
+<td>Reports the number of rows.</td>
+</tr>
+<tr class="even">
+<td><code>pull()</code></td>
+<td>Extracts one column as a vector.</td>
 </tr>
 <tr class="odd">
 <td><code>for</code></td>

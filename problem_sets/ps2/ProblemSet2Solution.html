@@ -11,7 +11,7 @@
 
 <meta name="author" content="YOUR NAME HERE" />
 
-<meta name="date" content="2026-09-23" />
+<meta name="date" content="2026-09-24" />
 
 <title>PSCI 2300 Problem Set 2</title>
 
@@ -352,7 +352,7 @@ display: none;
 
 <h1 class="title toc-ignore">PSCI 2300 Problem Set 2</h1>
 <h4 class="author">YOUR NAME HERE</h4>
-<h4 class="date">2026-09-23</h4>
+<h4 class="date">2026-09-24</h4>
 
 </div>
 
@@ -407,11 +407,11 @@ districts move between categories; row totals describe the old map and
 column totals describe the new map.</p>
 <pre class="r"><code>library(tidyverse)</code></pre>
 <pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-## ✔ dplyr     1.2.1     ✔ readr     2.2.0
-## ✔ forcats   1.0.1     ✔ stringr   1.6.0
-## ✔ ggplot2   4.0.3     ✔ tibble    3.3.1
-## ✔ lubridate 1.9.5     ✔ tidyr     1.3.2
-## ✔ purrr     1.2.2     
+## ✔ dplyr     1.1.4     ✔ readr     2.1.5
+## ✔ forcats   1.0.0     ✔ stringr   1.5.1
+## ✔ ggplot2   4.0.0     ✔ tibble    3.2.1
+## ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+## ✔ purrr     1.0.4     
 ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
@@ -529,8 +529,8 @@ cd |&gt;
 <pre><code>##   seats_old seats_old_shift seats_new seats_new_shift
 ## 1       204             216       201             212</code></pre>
 <ol start="6" style="list-style-type: decimal">
-<li><em>What if the shift is anti-incumbent and Democrats gain 3
-percentage points and Republicans lose 3? How does the code for
+<li><em>What if Democrats everywhere gain 3 percentage points (because
+Republicans everywhere lose 3 percentage points)? How does the code for
 <code>shift</code> change? Think first!</em></li>
 </ol>
 <p>This is what we just did! The phrase “Democrats gain 3 percentage
@@ -632,8 +632,8 @@ our dataset and records Harris support in each sample. This is called
 <strong>bootstrapping</strong>. It helps us see how much an estimate can
 vary when the mix of sampled people changes.</p>
 <ul>
-<li><code>SampledHarrisSupport &lt;- NULL</code> starts an empty
-container for the results.</li>
+<li><code>SampledHarrisSupport = NULL</code> starts an empty container
+for the results.</li>
 <li><code>set.seed(2300)</code> makes the random draws reproducible:
 running the same code with the same data and settings gives the same
 results. The number 2300 is a chosen starting value, not a sample
@@ -641,9 +641,9 @@ size.</li>
 <li><code>for (i in 1:100)</code> repeats the instructions inside the
 braces 100 times. <code>i</code> keeps track of which repetition we are
 on.</li>
-<li><code>ces_gender %&gt;%</code> starts with the survey dataset and
-passes it to the next step. Each <code>%&gt;%</code> means, roughly,
-“and then”.</li>
+<li><code>ces_gender |&gt;</code> starts with the survey dataset and
+passes it to the next step. Each <code>|&gt;</code> means, roughly, “and
+then”.</li>
 <li><code>slice_sample(prop = 1, replace = TRUE)</code> randomly draws
 as many rows as the original dataset contains. Sampling <strong>with
 replacement</strong> means a person can be selected more than once,
@@ -656,7 +656,7 @@ coded 1 for a Harris voter and 0 otherwise, its mean is the proportion
 supporting Harris. Despite the name <code>PctHarris</code>, a result of
 0.52 means 52%; the code does not multiply by 100. This calculation
 assumes the indicator has no missing values.</li>
-<li><code>one_estimate &lt;-</code> saves that one-row summary for the
+<li><code>one_estimate =</code> saves that one-row summary for the
 current repetition.</li>
 <li><code>bind_rows(SampledHarrisSupport, one_estimate)</code> adds the
 newest summary below the earlier summaries. Assigning it back to
@@ -667,19 +667,19 @@ of replacing them with only the latest estimate.</li>
 <strong>100 rows, one per repetition</strong>, with the columns
 <code>Iteration</code> and <code>PctHarris</code>.</li>
 </ul>
-<pre class="r"><code>SampledHarrisSupport &lt;- NULL
+<pre class="r"><code>SampledHarrisSupport = NULL
 set.seed(2300)
 
 for (i in 1:100) {
 
-  one_estimate &lt;- ces_gender %&gt;%
-    slice_sample(prop = 1, replace = TRUE) %&gt;%
+  one_estimate = ces_gender |&gt;
+    slice_sample(prop = 1, replace = TRUE) |&gt;
     summarize(
       Iteration = i,
       PctHarris = mean(HarrisVoter)
     )
 
-  SampledHarrisSupport &lt;- bind_rows(
+  SampledHarrisSupport = bind_rows(
     SampledHarrisSupport,
     one_estimate
   )

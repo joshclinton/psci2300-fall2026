@@ -134,7 +134,7 @@ summary(SampledHarrisSupport)
 
 # -- From a Margin of Error to an Interval --
 
-newvar = seq(0:1000)
+newvar = seq(0, 1000)
 
 median(newvar)
 quantile(newvar, p = .5)
@@ -157,21 +157,21 @@ SampledHarrisSupport |>
 # ---- A Harder Question: Is the Gender Gap "Real"? ----
 
 ces_gender |>
-  group_by(female) |>
+  group_by(woman) |>
   summarize(
     N = n(),
     PctHarris = mean(HarrisVoter)
   )
 
-Female = ces_gender |>
-  filter(female == 1) |>
+Women = ces_gender |>
+  filter(woman == 1) |>
   summarize(PctHarris = mean(HarrisVoter))
 
-Male = ces_gender |>
-  filter(female == 0) |>
+Men = ces_gender |>
+  filter(woman == 0) |>
   summarize(PctHarris = mean(HarrisVoter))
 
-GenderGap = Female$PctHarris - Male$PctHarris
+GenderGap = Women$PctHarris - Men$PctHarris
 GenderGap
 
 # -- Bootstrap the Gender Gap --
@@ -183,16 +183,16 @@ for (i in 1:1000) {
   one_sample = ces_gender |>
     slice_sample(prop = 1, replace = TRUE)
 
-  one_female = one_sample |>
-    filter(female == 1) |>
+  one_women = one_sample |>
+    filter(woman == 1) |>
     summarize(PctHarris = mean(HarrisVoter))
 
-  one_male = one_sample |>
-    filter(female == 0) |>
+  one_men = one_sample |>
+    filter(woman == 0) |>
     summarize(PctHarris = mean(HarrisVoter))
 
   one_gap = tibble(
-    GenderGap = one_female$PctHarris - one_male$PctHarris
+    GenderGap = one_women$PctHarris - one_men$PctHarris
   )
 
   SampledGenderGaps = bind_rows(SampledGenderGaps, one_gap)
@@ -218,7 +218,7 @@ ces_gender_small = ces_gender |>
 
 # ---- Same Method, New Question ----
 
-athens = read_csv("athens.csv") |>
+athens = read.csv("athens.csv") |>
   mutate(
     red_win = if_else(winner == "Red", 1, 0),
     blue_win = if_else(winner == "Blue", 1, 0)
@@ -243,7 +243,7 @@ for (i in 1:1000) {
     slice_sample(prop = 1, replace = TRUE) |>
     summarize(
       Difference = mean(red_win) - mean(blue_win),
-      n = n()
+      N = n()
     )
 
   SampledDifferences = bind_rows(
@@ -290,7 +290,7 @@ NullDifferences |>
 
 # -- What Happens When We Add More Data? --
 
-olympics = read_csv("olympics.csv") 
+olympics = read.csv("olympics.csv") 
 
 olympics = olympics |>
   mutate(

@@ -11,7 +11,7 @@
 
 <meta name="author" content="YOUR NAME HERE" />
 
-<meta name="date" content="2026-09-19" />
+<meta name="date" content="2026-09-24" />
 
 <title>PSCI 2300 Problem Set 2</title>
 
@@ -352,7 +352,7 @@ display: none;
 
 <h1 class="title toc-ignore">PSCI 2300 Problem Set 2</h1>
 <h4 class="author">YOUR NAME HERE</h4>
-<h4 class="date">2026-09-19</h4>
+<h4 class="date">2026-09-24</h4>
 
 </div>
 
@@ -421,8 +421,8 @@ a majority? What is the effect of redistricting?</em></li>
 </ol>
 <pre class="r"><code># INSERT ANSWER</code></pre>
 <ol start="6" style="list-style-type: decimal">
-<li><em>What if the shift is anti-incumbent and Democrats gain 3
-percentage points and Republicans lose 3? How does the code for
+<li><em>What if Democrats everywhere gain 3 percentage points (because
+Republicans everywhere lose 3 percentage points)? How does the code for
 <code>shift</code> change? Think first!</em></li>
 </ol>
 <pre class="r"><code># INSERT ANSWER</code></pre>
@@ -464,19 +464,19 @@ In language that most people would understand, explain what each part of
 the following code does and why it is important. No coding required.
 (That will be next PS).</em></li>
 </ol>
-<pre class="r"><code>SampledHarrisSupport &lt;- NULL
+<pre class="r"><code>SampledHarrisSupport = NULL
 set.seed(2300)
 
 for (i in 1:100) {
 
-  one_estimate &lt;- ces_gender %&gt;%
-    slice_sample(prop = 1, replace = TRUE) %&gt;%
+  one_estimate = ces_gender |&gt;
+    slice_sample(prop = 1, replace = TRUE) |&gt;
     summarize(
       Iteration = i,
       PctHarris = mean(HarrisVoter)
     )
 
-  SampledHarrisSupport &lt;- bind_rows(
+  SampledHarrisSupport = bind_rows(
     SampledHarrisSupport,
     one_estimate
   )

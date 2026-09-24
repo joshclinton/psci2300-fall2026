@@ -11,7 +11,7 @@
 
 <meta name="author" content="YOUR NAME HERE" />
 
-<meta name="date" content="2026-09-22" />
+<meta name="date" content="2026-09-24" />
 
 <title>PSCI 2300 Problem Set 3</title>
 
@@ -352,7 +352,7 @@ display: none;
 
 <h1 class="title toc-ignore">PSCI 2300 Problem Set 3</h1>
 <h4 class="author">YOUR NAME HERE</h4>
-<h4 class="date">2026-09-22</h4>
+<h4 class="date">2026-09-24</h4>
 
 </div>
 
@@ -522,7 +522,7 @@ number as <code>GroceryGap</code>. Which group reported more grocery
 trips?</em></li>
 </ol>
 <p>HINT: In Session 6, we created two one-row summaries and subtracted
-<code>Female$PctHarris - Male$PctHarris</code>. Use that same approach.
+<code>Women$PctHarris - Men$PctHarris</code>. Use that same approach.
 Note that we are comparing the percentage who reported a grocery trip,
 not the number of trips each person took.</p>
 <pre class="r"><code># INSERT ANSWER</code></pre>
@@ -652,9 +652,9 @@ became less worried?</em></p>
 share worried fell; a positive change means it rose.</p>
 <pre class="r"><code># INSERT ANSWER</code></pre>
 <p><strong>B.</strong> <em>How certain are we about those changes? Adapt
-the loop below to store both <code>DemChange</code> and
-<code>RepChange</code> in each row of <code>SampledChanges</code>. Use
-1,000 repetitions, then calculate a 95% bootstrap interval for each
+the gender-gap loop from Session 6 to store both <code>DemChange</code>
+and <code>RepChange</code> in each row of <code>SampledChanges</code>.
+Use 1,000 repetitions, then calculate a 95% bootstrap interval for each
 party’s change. Does either interval include zero? What would zero mean
 here?</em></p>
 <p>There is one extra step: we resample <strong>each month’s file
@@ -664,7 +664,7 @@ both September means. Do not match the first April row to the first
 September row; those row positions do not identify the same person.</p>
 <pre class="r"><code># INSERT ANSWER</code></pre>
 <p><strong>C.</strong> <em>Did the parties change by different amounts?
-Add one more column to <code>one_change</code>:
+Add one more column to the one-row result your loop stores:
 <code>ChangeDifference = DemChange - RepChange</code>. Rerun your loop,
 then use <code>quantile()</code> to calculate an interval for
 <code>ChangeDifference</code>. Does it include zero? Explain what its
