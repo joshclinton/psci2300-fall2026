@@ -1618,7 +1618,7 @@ median(example)</code></pre>
 ##  97.5</code></pre>
 <p>The median and 50th percentile are the same thing – 50. The 25th and
 75th percentiles are 25 and 75. The 2.5th and 97.5th percentiles are 2.5
-and 97.5. These are percentiles of the toy numbers to show how how the
+and 97.5. These are percentiles of the toy numbers to show how the
 percentiles map onto the numeric sequence.</p>
 </div>
 <div id="how-many-republicans-were-worried" class="section level1">
@@ -1642,8 +1642,8 @@ ObservedWorrySmall</code></pre>
 <p>The sample proportion is 56.4%, so more than half of these 101
 Republican respondents are worried. The mean does not tell us how
 confident to be that a majority beyond this sample were worried because
-it only gives how many in this particular sample expressed confidence.
-To assess how much the average value we get could vary across samples we
+it only gives how many in this particular sample expressed worry. To
+assess how much the average value we get could vary across samples we
 need to use resampling.</p>
 <p><strong>4.</strong> <em>Adapt the code below to collect 1,000
 resampled estimates of Republican concern. Run
@@ -1691,7 +1691,7 @@ Republican respondents. Sampling with replacement allows the same
 respondent to be included multiple times – which is critical for
 simulating random selection and giving different estimates. If we were
 to sample without replacement we would get the same answer and only
-rearrange the order of respondents in each new sample (check this!.</p>
+rearrange the order of respondents in each new sample (check this!).</p>
 <p><strong>5.</strong> <em>Now use <code>quantile()</code> on your
 <strong>resampled estimates</strong>. Find the 2.5th and 97.5th
 percentiles of <code>PctWorried</code>, save the summary as
@@ -1866,9 +1866,8 @@ GroceryIntervalSmall</code></pre>
 excludes zero and it is entirely negative. As a result, the resampling
 analysis means that the partisan difference is distinguishable from zero
 – which would indicate the same average number of grocery trips for
-Democrats and Republicans. This allows us to tell us how confidence we
-can be that one number is bigger than another given sampling
-variability.</p>
+Democrats and Republicans. This tells us how confident we can be that
+one number is bigger than another given sampling variability.</p>
 </div>
 <div id="what-changes-when-we-have-more-data" class="section level1">
 <h1>What Changes When We Have More Data?</h1>
@@ -2080,7 +2079,7 @@ anything (e.g., if we only talked to people over the age of 80 then our
 interval may be quite small, but that would not mean that we can
 interpret that as evidence that our estimates apply to everyone!). Nor
 does this prove causality – we cannot say that partisanship caused
-differences in the likleihood of going to the grocery store as there are
+differences in the likelihood of going to the grocery store as there are
 many things that may be related to both partisanship and the willingness
 to go to the store during the pandemic (e.g., urban/rural, exposure to
 elite messaging, etc.).</p>
@@ -2245,9 +2244,10 @@ ChangeDifferenceInterval</code></pre>
 with an interval of 18.5 to 25.3 percentage points. Zero would mean
 equal changes between Democrats and Republicans. The positive interval
 means the Democratic change is more positive (or less negative) than the
-Republican change - i.e., their behavior changed more. If we think about
-this alongside the differences in proportions, we see a substantial
-Republican decline alongside little detectable Democratic change.</p>
+Republican change - i.e., Republican worry fell by much more than
+Democratic worry changed. If we think about this alongside the
+differences in proportions, we see a substantial Republican decline
+alongside little detectable Democratic change.</p>
 </div>
 <div id="where-the-data-came-from" class="section level1">
 <h1>Where the data came from</h1>

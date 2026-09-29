@@ -82,7 +82,7 @@ quantile(example, p = .025)
 quantile(example, p = .975)
 ```
 
-The median and 50th percentile are the same thing -- 50. The 25th and 75th percentiles are 25 and 75. The 2.5th and 97.5th percentiles are 2.5 and 97.5. These are percentiles of the toy numbers to show how how the percentiles map onto the numeric sequence.
+The median and 50th percentile are the same thing -- 50. The 25th and 75th percentiles are 25 and 75. The 2.5th and 97.5th percentiles are 2.5 and 97.5. These are percentiles of the toy numbers to show how the percentiles map onto the numeric sequence.
 
 # How Many Republicans Were Worried?
 
@@ -99,7 +99,7 @@ ObservedWorrySmall = Republicans |>
 ObservedWorrySmall
 ```
 
-The sample proportion is `r round(100 * ObservedWorrySmall$PctWorried, 1)`%, so more than half of these 101 Republican respondents are worried. The mean does not tell us how confident to be that a majority beyond this sample were worried because it only gives how many in this particular sample expressed confidence. To assess how much the average value we get could vary across samples we need to use resampling.
+The sample proportion is `r round(100 * ObservedWorrySmall$PctWorried, 1)`%, so more than half of these 101 Republican respondents are worried. The mean does not tell us how confident to be that a majority beyond this sample were worried because it only gives how many in this particular sample expressed worry. To assess how much the average value we get could vary across samples we need to use resampling.
 
 **4.** *Adapt the code below to collect 1,000 resampled estimates of Republican concern. Run `summary(SampledWorry)` afterward. How many estimates did you collect? What does one row of `SampledWorry` represent? Why do we need `replace = TRUE`?*
 
@@ -135,7 +135,7 @@ SampledWorry |>
   summarize(N = n())
 ```
 
-There are 1,000 rows, each holding the summarized mean measuring the percentage of worried respondents from one 101-row resample of  Republican respondents. Sampling with replacement allows the same respondent to be included multiple times -- which is critical for simulating random selection and giving different estimates. If we were to sample without replacement we would get the same answer and only rearrange the order of respondents in each new sample (check this!.
+There are 1,000 rows, each holding the summarized mean measuring the percentage of worried respondents from one 101-row resample of  Republican respondents. Sampling with replacement allows the same respondent to be included multiple times -- which is critical for simulating random selection and giving different estimates. If we were to sample without replacement we would get the same answer and only rearrange the order of respondents in each new sample (check this!).
 
 **5.** *Now use `quantile()` on your **resampled estimates**. Find the 2.5th and 97.5th percentiles of `PctWorried`, save the summary as `WorryInterval95`, and calculate the interval's width (`Upper - Lower`). Does the interval include `.50`? What does that mean?*
 
@@ -247,7 +247,7 @@ GroceryIntervalSmall = SampledGroceryGaps |>
 GroceryIntervalSmall
 ```
 
-The interval is approximately `r round(100 * GroceryIntervalSmall$Lower, 1)` to `r round(100 * GroceryIntervalSmall$Upper, 1)` percentage points. It excludes zero and it is entirely negative. As a result, the resampling analysis means that the partisan difference is distinguishable from zero -- which would indicate the same average number of grocery trips for Democrats and Republicans. This allows us to tell us how confidence we can be that one number is bigger than another given sampling variability.
+The interval is approximately `r round(100 * GroceryIntervalSmall$Lower, 1)` to `r round(100 * GroceryIntervalSmall$Upper, 1)` percentage points. It excludes zero and it is entirely negative. As a result, the resampling analysis means that the partisan difference is distinguishable from zero -- which would indicate the same average number of grocery trips for Democrats and Republicans. This tells us how confident we can be that one number is bigger than another given sampling variability.
 
 # What Changes When We Have More Data?
 
@@ -358,7 +358,7 @@ No. This is a ridiculous take. Creating more resamples does not create new data 
 
 **12.** *You have 30 seconds to explain your findings to someone who has never used R. What do the data suggest about Republican concern and the partisan grocery gap, and what changed when we used more respondents? Would a narrow interval prove that this survey represents all Americans? Would it prove that party identification caused the difference? Keep your answer to a short paragraph.*
 
-In the larger sample, about 61% of Republicans reported being worried, which we can be confident is more than a majority of Republicans because the interval excludes 50%. Democrats, on average, reported grocery trips about 11 percentage points less often than Republicans. This difference is real -- and not due to differences in who might respond to our survey under random sampling. A narrow interval does not prove that the survey is representative -- it only means that if we were to do the survey again that we would likely get a similar answer.  But if the survey is bad to begin with, this will not fix anything (e.g., if we only talked to people over the age of 80 then our interval may be quite small, but that would not mean that we can interpret that as evidence that our estimates apply to everyone!).  Nor does this prove causality -- we cannot say that partisanship caused differences in the likleihood of going to the grocery store as there are many things that may be related to both partisanship and the willingness to go to the store during the pandemic (e.g., urban/rural, exposure to elite messaging, etc.).
+In the larger sample, about 61% of Republicans reported being worried, which we can be confident is more than a majority of Republicans because the interval excludes 50%. Democrats, on average, reported grocery trips about 11 percentage points less often than Republicans. This difference is real -- and not due to differences in who might respond to our survey under random sampling. A narrow interval does not prove that the survey is representative -- it only means that if we were to do the survey again that we would likely get a similar answer.  But if the survey is bad to begin with, this will not fix anything (e.g., if we only talked to people over the age of 80 then our interval may be quite small, but that would not mean that we can interpret that as evidence that our estimates apply to everyone!).  Nor does this prove causality -- we cannot say that partisanship caused differences in the likelihood of going to the grocery store as there are many things that may be related to both partisanship and the willingness to go to the store during the pandemic (e.g., urban/rural, exposure to elite messaging, etc.).
 
 # Optional Challenge: Who Moved, and by How Much?
 
@@ -477,7 +477,7 @@ ChangeDifferenceInterval = SampledChanges |>
 ChangeDifferenceInterval
 ```
 
-The difference between the signed changes is `r round(100 * ObservedChanges$ChangeDifference, 1)` percentage points, with an interval of `r round(100 * ChangeDifferenceInterval$Lower, 1)` to `r round(100 * ChangeDifferenceInterval$Upper, 1)` percentage points. Zero would mean equal changes between Democrats and Republicans. The positive interval means the Democratic change is more positive (or less negative) than the Republican change - i.e., their behavior changed more.  If we think about this alongside the differences in proportions, we see a substantial Republican decline alongside little detectable Democratic change. 
+The difference between the signed changes is `r round(100 * ObservedChanges$ChangeDifference, 1)` percentage points, with an interval of `r round(100 * ChangeDifferenceInterval$Lower, 1)` to `r round(100 * ChangeDifferenceInterval$Upper, 1)` percentage points. Zero would mean equal changes between Democrats and Republicans. The positive interval means the Democratic change is more positive (or less negative) than the Republican change - i.e., Republican worry fell by much more than Democratic worry changed.  If we think about this alongside the differences in proportions, we see a substantial Republican decline alongside little detectable Democratic change. 
 
 # Where the data came from
 
