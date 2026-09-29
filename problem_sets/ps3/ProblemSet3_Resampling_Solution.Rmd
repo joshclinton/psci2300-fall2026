@@ -1,0 +1,437 @@
+---
+title: 'PSCI 2300 Problem Set 3: Solution'
+author: "Josh Clinton"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# A Politicized Pandemic? How Sure Are We?
+
+**Solution. Due September 28.**
+
+This key includes working code and reference interpretations.
+
+In class we used resampling to ask how much an estimate might change if we had collected a different sample. We looked at the gender gap and whether athletes wearing red won more often than athletes wearing blue. Now let's use the same tools to look at something else.
+
+In April 2020, were Democrats and Republicans equally likely to report going to a grocery store? And how sure could we be about our answer if we had interviewed only a small number of people?
+
+The data come from a study I published with Jon Cohen, John Lapinski, and Marc Trussler. We asked people about their concerns and activities during the COVID-19 pandemic. The full teaching file is huge. You do not need to make your laptop work through a million respondents to learn how this works!
+
+I have prepared two much smaller files. Both contain respondents interviewed in **April 2020**. One has 200 respondents; the other has 5,000. The 200 respondents are also in the larger file. Start with the small file and leave the larger one alone until Question 9.
+
+Recall that problem sets are graded by completion. I want you to try to figure things out on your own, with friends, or with help from me or Alex. The point is to understand what the code is doing and what the results mean.
+
+HINT: Nothing here is intentionally tricky. Copy and paste is your friend for avoiding silly syntax errors. Session 6 contains the code patterns you need. Change the object names and variables, then explain what your changes do. We will spend a little extra time on `quantile()` before putting everything together.
+
+For Brightspace, fill in the responses below and save the file with your VUNET ID in its name. Run chunks as you work, then knit when everything works. An R script with your written answers included as comments is also acceptable, as in PS2.
+
+The questions are in *italics*. Put your written answers after each question and your code in the answer chunk. When I ask what you observe, tell me what the number means!
+
+## The data
+
+Keep this Rmd and both CSV files in the same folder.
+
+- [COVID_April_small.csv](COVID_April_small.csv): 200 respondents.
+- [COVID_April_large.csv](COVID_April_large.csv): 5,000 respondents.
+
+| Variable | Meaning |
+|:--|:--|
+| `party` | `"Democrat"` or `"Republican"`. Each group includes people who lean toward that party. |
+| `worried` | 1 = somewhat or very worried about COVID-19; 0 = not too worried or not worried at all. |
+| `grocery` | 1 = reported going to a grocery store in the previous 24 hours; 0 = did not. |
+
+Each row is a respondent. I took out the missing data and dropped nonpartisans. The data is **unweighted** and it does not reproduce what we actually did.
+
+# Start Small
+
+**1.** *Load `tidyverse` and read `COVID_April_small.csv` into an object called `covid`. Use `glimpse()` and `count()` to inspect it. How many Democrats and Republicans are there? If a variable contains only zeros and ones, what does taking the mean tell us?*
+
+```{r q1}
+library(tidyverse)
+covid = read.csv("COVID_April_small.csv")
+glimpse(covid)
+covid |> count(party)
+```
+
+**Reference interpretation:** There are 99 Democrats and 101 Republicans. The mean of a zero-or-one variable is the proportion coded 1; multiply by 100 to express it as a percentage.
+
+**2.** *Before we resample anything, let's review `quantile()`. Run the example below. Do `median()` and `quantile(..., p = .5)` give the same answer? Now find the 25th and 75th percentiles by changing `p`. Finally, find the 2.5th and 97.5th percentiles. What values do you get?*
+
+Here `0:100` creates the numbers 0, 1, 2, and so on through 100. The argument `p` is a **proportion**, so the 25th percentile uses `.25`, not `25`.
+
+```{r quantile-example}
+example = 0:100
+median(example)
+quantile(example, p = .5)
+```
+
+NOTE: A percentile can fall between two observed values.
+
+```{r q2}
+quantile(example, p = .25)
+quantile(example, p = .75)
+quantile(example, p = .025)
+quantile(example, p = .975)
+```
+
+**Reference interpretation:** The median and 50th percentile are both 50. The 25th and 75th percentiles are 25 and 75. The 2.5th and 97.5th percentiles are 2.5 and 97.5. These are percentiles of the toy numbers; later we use percentiles of resampled estimates.
+
+# How Many Republicans Were Worried?
+
+**3.** *Create a new object called `Republicans` that contains only Republicans in `covid`. Use `summarize()` to calculate their average worry. Express your answer as a percentage. Were more than half worried? Does this tell you how confidence you are that a majority were worried or not? Why or why not?*
+
+```{r q3}
+Republicans = covid |>
+  filter(party == "Republican")
+ObservedWorrySmall = Republicans |>
+  summarize(N = n(), PctWorried = mean(worried))
+ObservedWorrySmall
+```
+
+**Reference interpretation:** The sample proportion is `r round(100 * ObservedWorrySmall$PctWorried, 1)`%, so more than half of these 101 Republican respondents are worried. The mean alone does not tell us how confident to be that a majority beyond this sample were worried: it gives a point estimate without quantifying sampling uncertainty. We need to assess how much that estimate could vary across samples, which the bootstrap interval in Question 5 helps us do.
+
+**4.** *Adapt the code below to collect 1,000 resampled estimates of Republican concern. Run `summary(SampledWorry)` afterward. How many estimates did you collect? What does one row of `SampledWorry` represent? Why do we need `replace = TRUE`?*
+
+This is the same sample-calculate-store pattern we used in class. The example starts with five repetitions so you can check what it does. Copy it into your answer chunk and make the change needed for 1,000.
+
+```{r worry-loop-pattern, eval=FALSE}
+set.seed(42)
+SampledWorry = NULL
+
+for (i in 1:5) {
+  one_estimate = Republicans |>
+    slice_sample(prop = 1, replace = TRUE) |>
+    summarize(PctWorried = mean(worried))
+
+  SampledWorry = bind_rows(SampledWorry, one_estimate)
+}
+```
+
+```{r q4}
+set.seed(42)
+SampledWorry = NULL
+for (i in 1:1000) {
+  one_estimate = Republicans |>
+    slice_sample(prop = 1, replace = TRUE) |>
+    summarize(PctWorried = mean(worried))
+  SampledWorry = bind_rows(SampledWorry, one_estimate)
+}
+summary(SampledWorry)
+SampledWorry |> summarize(N = n())
+```
+
+**Reference interpretation:** There are 1,000 rows, each holding the worried proportion from one 101-row resample of the Republican respondents. Sampling with replacement allows repeated respondents and therefore different compositions and estimates. Sampling all rows without replacement would only rearrange the original respondents.
+
+**5.** *Now use `quantile()` on your **resampled estimates**. Find the 2.5th and 97.5th percentiles of `PctWorried`, save the summary as `WorryInterval95`, and calculate the interval's width (`Upper - Lower`). Does the interval include `.50`? What does that mean?*
+
+Start with this command to find the lower endpoint:
+
+```{r lower-endpoint-pattern, eval=FALSE}
+quantile(SampledWorry$PctWorried, p = .025)
+```
+
+Then adapt the interval summary from Session 6. The columns should be `Lower`, `Estimate`, `Upper`, and `Width`. Use `mean(PctWorried)` for `Estimate`, as in the lecture. Keep results as proportions while calculating; multiply by 100 when describing them as percentages or percentage points.
+
+NOTE: These are percentiles of **1,000 estimated proportions**, not percentiles of individual respondents' zero-or-one answers. We use the middle 95% of those resampled estimates to form a 95% bootstrap interval. An interval that includes `.50` does not establish that the true share is exactly one-half.
+
+```{r q5}
+WorryInterval95 = SampledWorry |>
+  summarize(
+    Lower = quantile(PctWorried, p = .025),
+    Estimate = mean(PctWorried),
+    Upper = quantile(PctWorried, p = .975),
+    Width = Upper - Lower
+  )
+WorryInterval95
+```
+
+**Reference interpretation:** The interval is approximately `r round(100 * WorryInterval95$Lower, 1)`% to `r round(100 * WorryInterval95$Upper, 1)`%, a width of `r round(100 * WorryInterval95$Width, 1)` percentage points. It includes 50%, so this interval does not distinguish the share from one-half. That is not proof of an exact 50-50 split.
+
+# Were the Parties Doing the Same Thing?
+
+**6.** *Use the small `covid` file to calculate the mean of `grocery` separately for Democrats and Republicans. Then calculate **Democrat minus Republican** and save that number as `GroceryGap`. Which group reported more grocery trips? Explain the size of the gap in percentage points and what its sign means.*
+
+HINT: In Session 6, we created two one-row summaries and subtracted `Women$PctHarris - Men$PctHarris`. Use that same approach. We are comparing the percentage who reported a grocery trip, not the number of trips each person took.
+
+```{r q6}
+DemocratGrocery = covid |>
+  filter(party == "Democrat") |>
+  summarize(PctGrocery = mean(grocery))
+RepublicanGrocery = covid |>
+  filter(party == "Republican") |>
+  summarize(PctGrocery = mean(grocery))
+DemocratGrocery
+RepublicanGrocery
+GroceryGap = DemocratGrocery$PctGrocery - RepublicanGrocery$PctGrocery
+GroceryGap
+```
+
+**Reference interpretation:** The rates are approximately `r round(100 * DemocratGrocery$PctGrocery, 1)`% for Democrats and `r round(100 * RepublicanGrocery$PctGrocery, 1)`% for Republicans. Democrat minus Republican is `r round(100 * GroceryGap, 1)` percentage points. The negative sign means Democrats reported grocery trips less often.
+
+**7.** *Adapt the **gender-gap bootstrap loop** from Session 6 to resample the grocery gap 1,000 times. Save the results in `SampledGroceryGaps`. Run `summary()` on your results. What does one row now represent?*
+
+The steps are the same: resample the whole `covid` file once, calculate the two party means within that resample, subtract, and store the difference. Use `set.seed(42)` immediately before the loop and start with an empty results object.
+
+| In the lecture | For this question |
+|:--|:--|
+| `ces_gender` | `covid` |
+| `woman == 1` | `party == "Democrat"` |
+| `woman == 0` | `party == "Republican"` |
+| `HarrisVoter` | `grocery` |
+| The `GenderGap` column | A `GroceryGap` column |
+| `SampledGenderGaps` | `SampledGroceryGaps` |
+
+Rename the intermediate objects so you can keep track of what they contain. You still need the `tibble()` step that creates the one-row difference before `bind_rows()` stores it.
+
+```{r q7}
+set.seed(42)
+SampledGroceryGaps = NULL
+for (i in 1:1000) {
+  one_sample = covid |>
+    slice_sample(prop = 1, replace = TRUE)
+  one_democrat = one_sample |>
+    filter(party == "Democrat") |>
+    summarize(PctGrocery = mean(grocery))
+  one_republican = one_sample |>
+    filter(party == "Republican") |>
+    summarize(PctGrocery = mean(grocery))
+  one_gap = tibble(
+    GroceryGap = one_democrat$PctGrocery - one_republican$PctGrocery
+  )
+  SampledGroceryGaps = bind_rows(SampledGroceryGaps, one_gap)
+}
+summary(SampledGroceryGaps)
+```
+
+**Reference interpretation:** Each row is a Democrat-minus-Republican difference computed from one resample of the same 200 respondents. The two means in a row come from that one resample.
+
+**8.** *Use `quantile()` to construct a 95% bootstrap interval for `GroceryGap`. Save the summary as `GroceryIntervalSmall`, with the same four columns as in Question 5. Does it include zero? What would a difference of zero mean here? What can you conclude about the difference, allowing for sampling uncertainty?*
+
+HINT: We want an interval for the **difference itself**, just as in class. Calculate percentiles of the `GroceryGap` column in `SampledGroceryGaps`.
+
+```{r q8}
+GroceryIntervalSmall = SampledGroceryGaps |>
+  summarize(
+    Lower = quantile(GroceryGap, p = .025),
+    Estimate = mean(GroceryGap),
+    Upper = quantile(GroceryGap, p = .975),
+    Width = Upper - Lower
+  )
+GroceryIntervalSmall
+```
+
+**Reference interpretation:** The interval is approximately `r round(100 * GroceryIntervalSmall$Lower, 1)` to `r round(100 * GroceryIntervalSmall$Upper, 1)` percentage points. It excludes zero and is entirely negative. Under this resampling analysis, the partisan difference is distinguishable from zero. Zero would mean equal grocery-trip rates. This is an interval for a difference, not a comparison of the overlap of two separate intervals.
+
+# What Changes When We Have More Data?
+
+**9.** *Read `COVID_April_large.csv` into a new object called `covid_large`. Check the number of respondents in each party. Now repeat the Republican-worry analysis and the grocery-gap analysis using this larger file. Keep 1,000 repetitions and `prop = 1` in both loops. Save the two interval summaries as `WorryIntervalLarge` and `GroceryIntervalLarge`.*
+
+Copy and paste your working code! Create `RepublicansLarge` from `covid_large`, and use new names such as `SampledWorryLarge` and `SampledGroceryGapsLarge` for the stored estimates. Remember to clear each new results object and set the seed to 42 before each loop. Do not add the new estimates to your small-sample results.
+
+Also calculate the observed Republican worry proportion and observed grocery gap in the larger file, so you can compare the estimates themselves as well as the intervals.
+
+```{r q9}
+covid_large = read.csv("COVID_April_large.csv")
+covid_large |> count(party)
+RepublicansLarge = covid_large |>
+  filter(party == "Republican")
+ObservedWorryLarge = RepublicansLarge |>
+  summarize(N = n(), PctWorried = mean(worried))
+ObservedWorryLarge
+
+set.seed(42)
+SampledWorryLarge = NULL
+for (i in 1:1000) {
+  one_estimate = RepublicansLarge |>
+    slice_sample(prop = 1, replace = TRUE) |>
+    summarize(PctWorried = mean(worried))
+  SampledWorryLarge = bind_rows(SampledWorryLarge, one_estimate)
+}
+WorryIntervalLarge = SampledWorryLarge |>
+  summarize(
+    Lower = quantile(PctWorried, p = .025),
+    Estimate = mean(PctWorried),
+    Upper = quantile(PctWorried, p = .975),
+    Width = Upper - Lower
+  )
+WorryIntervalLarge
+
+DemocratGroceryLarge = covid_large |>
+  filter(party == "Democrat") |>
+  summarize(PctGrocery = mean(grocery))
+RepublicanGroceryLarge = covid_large |>
+  filter(party == "Republican") |>
+  summarize(PctGrocery = mean(grocery))
+GroceryGapLarge = DemocratGroceryLarge$PctGrocery - RepublicanGroceryLarge$PctGrocery
+GroceryGapLarge
+
+set.seed(42)
+SampledGroceryGapsLarge = NULL
+for (i in 1:1000) {
+  one_sample = covid_large |>
+    slice_sample(prop = 1, replace = TRUE)
+  one_democrat = one_sample |>
+    filter(party == "Democrat") |>
+    summarize(PctGrocery = mean(grocery))
+  one_republican = one_sample |>
+    filter(party == "Republican") |>
+    summarize(PctGrocery = mean(grocery))
+  one_gap = tibble(
+    GroceryGap = one_democrat$PctGrocery - one_republican$PctGrocery
+  )
+  SampledGroceryGapsLarge = bind_rows(SampledGroceryGapsLarge, one_gap)
+}
+GroceryIntervalLarge = SampledGroceryGapsLarge |>
+  summarize(
+    Lower = quantile(GroceryGap, p = .025),
+    Estimate = mean(GroceryGap),
+    Upper = quantile(GroceryGap, p = .975),
+    Width = Upper - Lower
+  )
+GroceryIntervalLarge
+```
+
+**Reference interpretation:** The larger file has 2,709 Democrats and 2,291 Republicans. Both sets of stored estimates contain 1,000 rows, just as before. Each resample now contains more respondents.
+
+**10.** *Compare the small and large samples. For each analysis, report the observed estimate, the lower and upper interval endpoints, and the interval width. Which estimate is more precise? Does the Republican-worry interval include `.50`? Does the grocery-gap interval include zero? Did either conclusion change?*
+
+You can report the four rows in words or fill in this table by hand. No new table-making code is required. Use percentages for the worry estimate and its endpoints; use percentage points for the grocery gap, its endpoints, and all interval widths.
+
+| Analysis | Sample | Observed estimate | Lower | Upper | Width |
+|:--|:--|--:|--:|--:|--:|
+| Republican worry (%) | Small | `r round(100 * ObservedWorrySmall$PctWorried, 1)` | `r round(100 * WorryInterval95$Lower, 1)` | `r round(100 * WorryInterval95$Upper, 1)` | `r round(100 * WorryInterval95$Width, 1)` |
+| Republican worry (%) | Large | `r round(100 * ObservedWorryLarge$PctWorried, 1)` | `r round(100 * WorryIntervalLarge$Lower, 1)` | `r round(100 * WorryIntervalLarge$Upper, 1)` | `r round(100 * WorryIntervalLarge$Width, 1)` |
+| Grocery gap (percentage points) | Small | `r round(100 * GroceryGap, 1)` | `r round(100 * GroceryIntervalSmall$Lower, 1)` | `r round(100 * GroceryIntervalSmall$Upper, 1)` | `r round(100 * GroceryIntervalSmall$Width, 1)` |
+| Grocery gap (percentage points) | Large | `r round(100 * GroceryGapLarge, 1)` | `r round(100 * GroceryIntervalLarge$Lower, 1)` | `r round(100 * GroceryIntervalLarge$Upper, 1)` | `r round(100 * GroceryIntervalLarge$Width, 1)` |
+
+*The larger sample need not give exactly the same estimate as the smaller one. Does a narrower interval mean that the estimated difference must get larger? Explain using what you found.*
+
+**Reference interpretation for Question 10:** Both intervals are narrower with the larger sample. The Republican-worry interval includes 50% in the small sample but excludes it in the large sample. Both grocery-gap intervals exclude zero. The observed grocery gap becomes smaller in magnitude with the larger sample, yet its estimate is more precise. Precision concerns interval width, not effect size. Because the samples are nested, these are not independent replications.
+
+**11.** *A friend says: "I don't need the larger file. I'll just run the small-file loop 10,000 times instead of 1,000. Then I will have ten times as much data." Are they right? Explain the difference between collecting more respondents and drawing more bootstrap samples. No new code is needed.*
+
+**Reference interpretation for Question 11:** No. Reusing the same respondents more times does not add information from new respondents. More repetitions make the simulated percentiles more stable; they do not generally make the underlying sampling uncertainty smaller. With only finitely many repetitions, the endpoints can change a little.
+
+**12.** *You have 30 seconds to explain your findings to someone who has never used R. What do the data suggest about Republican concern and the partisan grocery gap, and what changed when we used more respondents? Would a narrow interval prove that this survey represents all Americans? Would it prove that party identification caused the difference? Keep your answer to a short paragraph.*
+
+**Reference interpretation for Question 12:** In the larger sample, about 61% of Republicans reported being worried, with an interval above 50%. Democrats reported grocery trips about 11 percentage points less often than Republicans, with an interval below zero. More respondents narrowed both intervals; they did not make the differences larger. These are unweighted survey responses, so selection and reporting error remain possible. Party identification was not randomly assigned, and these comparisons do not establish a causal effect.
+
+# Optional Challenge: Who Moved, and by How Much?
+
+So far we have compared parties at one point in time. But the pandemic did not stand still. Did the parties' concerns change as 2020 went on? Who moved, and by how much?
+
+For this challenge, use the **5,000-person April file** and [COVID_September_large.csv](COVID_September_large.csv), another prepared sample of 5,000 respondents. The September file has the same variables and coding. Using the two large files keeps the comparison focused on time rather than the small-versus-large exercise.
+
+NOTE: These are separate monthly samples, not a panel that follows the same people. We can compare the groups' reported concern over time, but we cannot say which individual respondents changed their minds.
+
+**A.** *Read the September file into `covid_september`. Calculate the mean of `worried` for each party in each month. Then calculate **September minus April** separately for Democrats and Republicans. Report both changes in percentage points. Which group became more worried? Which became less worried?*
+
+HINT: You need four means. Follow the same `filter()` and `summarize()` pattern as before. A negative change means the share worried fell; a positive change means it rose.
+
+```{r challenge-a}
+covid_september = read.csv("COVID_September_large.csv")
+covid_september |> count(party)
+AprilDem = covid_large |>
+  filter(party == "Democrat") |>
+  summarize(PctWorried = mean(worried))
+AprilRep = covid_large |>
+  filter(party == "Republican") |>
+  summarize(PctWorried = mean(worried))
+SeptemberDem = covid_september |>
+  filter(party == "Democrat") |>
+  summarize(PctWorried = mean(worried))
+SeptemberRep = covid_september |>
+  filter(party == "Republican") |>
+  summarize(PctWorried = mean(worried))
+AprilDem
+AprilRep
+SeptemberDem
+SeptemberRep
+ObservedChanges = tibble(
+  DemChange = SeptemberDem$PctWorried - AprilDem$PctWorried,
+  RepChange = SeptemberRep$PctWorried - AprilRep$PctWorried,
+  ChangeDifference = DemChange - RepChange
+)
+ObservedChanges
+```
+
+**Reference interpretation:** Democratic worry rises from `r round(100 * AprilDem$PctWorried, 1)`% to `r round(100 * SeptemberDem$PctWorried, 1)`%, a change of `r round(100 * ObservedChanges$DemChange, 1)` percentage points. Republican worry falls from `r round(100 * AprilRep$PctWorried, 1)`% to `r round(100 * SeptemberRep$PctWorried, 1)`%, a change of `r round(100 * ObservedChanges$RepChange, 1)` percentage points. These are comparisons of separate monthly samples, not measured changes in particular individuals.
+
+**B.** *How certain are we about those changes? Adapt the gender-gap loop from Session 6 to store both `DemChange` and `RepChange` in each row of `SampledChanges`. Use 1,000 repetitions, then calculate a 95% bootstrap interval for each party's change. Does either interval include zero? What would zero mean here?*
+
+There is one extra step: we resample **each month's file separately** before calculating the change. Use the same April resample for both April party means, and the same September resample for both September means. Do not match the first April row to the first September row; those row positions do not identify the same person.
+
+```{r challenge-b}
+set.seed(42)
+SampledChanges = NULL
+for (i in 1:1000) {
+  one_april = covid_large |>
+    slice_sample(prop = 1, replace = TRUE)
+  one_september = covid_september |>
+    slice_sample(prop = 1, replace = TRUE)
+  april_dem = one_april |>
+    filter(party == "Democrat") |>
+    summarize(PctWorried = mean(worried))
+  april_rep = one_april |>
+    filter(party == "Republican") |>
+    summarize(PctWorried = mean(worried))
+  september_dem = one_september |>
+    filter(party == "Democrat") |>
+    summarize(PctWorried = mean(worried))
+  september_rep = one_september |>
+    filter(party == "Republican") |>
+    summarize(PctWorried = mean(worried))
+  one_change = tibble(
+    DemChange = september_dem$PctWorried - april_dem$PctWorried,
+    RepChange = september_rep$PctWorried - april_rep$PctWorried,
+    ChangeDifference = DemChange - RepChange
+  )
+  SampledChanges = bind_rows(SampledChanges, one_change)
+}
+DemChangeInterval = SampledChanges |>
+  summarize(
+    Lower = quantile(DemChange, p = .025),
+    Estimate = mean(DemChange),
+    Upper = quantile(DemChange, p = .975)
+  )
+RepChangeInterval = SampledChanges |>
+  summarize(
+    Lower = quantile(RepChange, p = .025),
+    Estimate = mean(RepChange),
+    Upper = quantile(RepChange, p = .975)
+  )
+DemChangeInterval
+RepChangeInterval
+```
+
+**Reference interpretation:** The Democratic-change interval is `r round(100 * DemChangeInterval$Lower, 1)` to `r round(100 * DemChangeInterval$Upper, 1)` percentage points and includes zero. The Republican-change interval is `r round(100 * RepChangeInterval$Lower, 1)` to `r round(100 * RepChangeInterval$Upper, 1)` percentage points and excludes zero. Zero represents no change in the share worried. The Democratic interval does not prove that concern was exactly unchanged. This complete reference loop already includes the extra column requested in part C.
+
+**C.** *Did the parties change by different amounts? Add one more column to the one-row result your loop stores: `ChangeDifference = DemChange - RepChange`. Rerun your loop, then use `quantile()` to calculate an interval for `ChangeDifference`. Does it include zero? Explain what its sign means and what you can conclude about who changed more.*
+
+This is still the same resampling method. We are just saving one more subtraction in each repetition. Do not decide that the changes differ merely because one party's interval includes zero and the other's does not. Check the interval for the **difference between their changes**.
+
+*Finally, would these results establish why concern changed, or that the same individuals became more or less worried? Explain briefly.*
+
+```{r challenge-c}
+ChangeDifferenceInterval = SampledChanges |>
+  summarize(
+    Lower = quantile(ChangeDifference, p = .025),
+    Estimate = mean(ChangeDifference),
+    Upper = quantile(ChangeDifference, p = .975)
+  )
+ChangeDifferenceInterval
+```
+
+**Reference interpretation:** The difference between the signed changes is `r round(100 * ObservedChanges$ChangeDifference, 1)` percentage points, with an interval of `r round(100 * ChangeDifferenceInterval$Lower, 1)` to `r round(100 * ChangeDifferenceInterval$Upper, 1)` percentage points. Zero would mean equal changes. The positive interval means the Democratic change is more positive (or less negative) than the Republican change; combined with the observed rates, the pattern is a substantial Republican decline alongside little detectable Democratic change. It does not identify a cause. Changes in who responds can also contribute to differences across these unweighted samples. The files cannot establish how any particular person changed. The bootstrap treats the two monthly samples as independent and does not estimate within-person change.
+
+# Where the data came from
+
+Joshua Clinton, Jon Cohen, John Lapinski, and Marc Trussler. 2021. ["Partisan pandemic: How partisanship and public health concerns affect individuals' social mobility during COVID-19."](https://doi.org/10.1126/sciadv.abd7204) *Science Advances* 7(2): eabd7204. The CSV files are unweighted subsets of the course's existing April and September 2020 survey data, prepared for this assignment.
