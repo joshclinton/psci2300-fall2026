@@ -28,7 +28,7 @@ Summarizing Univariate (Single) Relationship using Bargraphs, Histograms, and De
 
 - Using variable types (continuous vs. discrete) to determine which `geom` to use.
 
-- Functions for conditional relationships: `facet_wrap`, `coord_flip`, `geom_boxplot`, `geom_point`, `geom_jitter`, `as.Date`, `cut`, `scale_x_date`, `geom_line`
+- Functions for conditional relationships: `facet_wrap`, `scale_fill_manual`, `coord_flip`, `geom_boxplot`, `geom_point`, `geom_jitter`, `as.Date`, `cut`, `scale_x_date`, `geom_line`
 
 # Motivation: Communicating Data is Essential
 
@@ -412,7 +412,7 @@ Before making a graph, we therefore need to ask:
 4. Are the variables discrete or continuous?
 5. What will each part of the graph represent?
 
-# Discrete Variable By Discrete Variable (Barplot)
+## Discrete Variable By Discrete Variable (Barplot)
 
 If we are working with discrete/categorical/ordinal data -- i.e., variables that take on a finite (and small) number of unique values -- then we are interested in how to compare across bar graphs.
 
@@ -420,19 +420,17 @@ Before we used `geom_bar` to plot the number of observations associated with eac
 
 Conditional variation involves examining how the values of two or more variables are related to one another. Earlier we made these comparisons by creating different tibbles and then comparing across tibbles, but we can also make comparisons without creating multiple tibbles.
 
-## Each observation is a survey respondent
+### Each observation is a survey respondent
 
-We are going to return to the 2024 Cooperative Election Study data. In this dataset, every row is a person who reported voting for either Harris or Trump.
+We are going to return to the 2024 Cooperative Election Study data. In this dataset, every row is a person who reported voting for either Harris or Trump. This is the `ces_gender` data we saved in Session 3 and used again in Session 6, so it already contains `presvote` (Harris or Trump) and `gender2` (Man or Woman). The only new variable we need is an age group.
 
 ```{r}
 library(scales)
 
-CES2024 = readRDS("CES2024_GenderGap.rds")
+ces_gender = readRDS("CES2024_GenderGap.rds")
 
-CES2024 = CES2024 |>
+ces_gender = ces_gender |>
   mutate(
-    vote = if_else(HarrisVoter == 1, "Harris", "Trump"),
-    gender = if_else(woman == 1, "Woman", "Man"),
     age_group = case_when(
       age < 30 ~ "18–29",
       age < 65 ~ "30–64",
@@ -440,7 +438,7 @@ CES2024 = CES2024 |>
     )
   )
 
-glimpse(CES2024)
+glimpse(ces_gender)
 ```
 
 Our question is: **Does presidential support differ by gender?**
@@ -448,9 +446,9 @@ Our question is: **Does presidential support differ by gender?**
 Let's start with what we already know how to do.
 
 ```{r}
-CES2024 |>
+ces_gender |>
   ggplot() +
-  geom_bar(aes(x = vote), color = "black") +
+  geom_bar(aes(x = presvote), color = "black") +
   labs(
     title = "Reported 2024 Presidential Vote",
     x = "Candidate",
@@ -461,17 +459,17 @@ CES2024 |>
 
 This answers a question about the number of respondents who reported voting for Harris or Trump. It does not yet answer whether support differs by gender.
 
-## Adding a second variable using `fill`
+### Adding a second variable using `fill`
 
 To show how reported vote varies by gender we are going to use the `fill` of the graph to create different color bars depending on the value of the variable used to `fill`.
 
 So we include a character or factor variable as a `fill` in the `ggplot` aesthetic. We also include `fill` in the `labs` function to make sure that we label the meaning of the values being plotted.
 
 ```{r}
-CES2024 |>
+ces_gender |>
   ggplot() +
   geom_bar(
-    aes(x = vote, fill = gender),
+    aes(x = presvote, fill = gender2),
     color = "black",
     position = "dodge"
   ) +
@@ -492,17 +490,19 @@ What does the height of each bar show? Does this answer the question we asked?
 # INSERT CODE HERE
 ```
 
-## Counts or proportions?
+### Counts or proportions?
 
 There are not exactly the same number of men and women in the data. A graph of counts therefore mixes together two things: the size of each group and the percentage of each group supporting a candidate.
 
 If our question is whether support differs by gender, we need to compare percentages within gender. Setting `position = "fill"` makes every bar the same height and shows the proportion of observations in each category.
 
+Because the colors now stand for candidates, we also use `scale_fill_manual` to choose them ourselves rather than accept the defaults: blue for Harris and red for Trump.
+
 ```{r}
-CES2024 |>
+ces_gender |>
   ggplot() +
   geom_bar(
-    aes(x = gender, fill = vote),
+    aes(x = gender2, fill = presvote),
     color = "black",
     position = "fill"
   ) +
@@ -513,23 +513,24 @@ CES2024 |>
     fill = "Reported Vote"
   ) +
   scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  scale_fill_manual(values = c("Harris" = "blue", "Trump" = "red")) +
   theme_bw()
 ```
 
 What does each bar sum to? What is the denominator? How does the answer differ from the graph of counts?
 
-## Adding another comparison using `facet_wrap`
+### Adding another comparison using `facet_wrap`
 
 Another way to compare a visualization in terms of another variable is to use `facet_wrap` to "wrap" the visualization using different values of another variable ("facet") of interest. The facet we use has to be a discrete/categorical variable.
 
 Our next question is: **Does the gender gap look the same among younger, middle-aged, and older voters?**
 
 ```{r}
-CES2024 |>
+ces_gender |>
   drop_na(age_group) |>
   ggplot() +
   geom_bar(
-    aes(x = gender, fill = vote),
+    aes(x = gender2, fill = presvote),
     color = "black",
     position = "fill"
   ) +
@@ -540,6 +541,7 @@ CES2024 |>
     fill = "Reported Vote"
   ) +
   scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  scale_fill_manual(values = c("Harris" = "blue", "Trump" = "red")) +
   facet_wrap(~age_group) +
   theme_bw()
 ```
@@ -554,9 +556,9 @@ What do the results show? Is there a single "gender gap"? What new problem might
 
 We are describing relationships among respondents. Nothing in these graphs establishes that gender or age **caused** the reported vote choice.
 
-# Continuous Variable By Discrete Variable
+## Continuous Variable By Discrete Variable
 
-## Each observation is now a poll
+### Each observation is now a poll
 
 We are now changing both the dataset and the unit of analysis. In the CES data, every row was a respondent. In the next dataset, every row is a publicly released national poll. This is the same file of 2020 national polls we used above. We read it in again so that we can convert the dates into a date format and the vote shares into proportions -- which means that `margin` is now a proportion rather than a number of percentage points.
 
@@ -590,7 +592,7 @@ How can we visualize how the `margin` from one type of survey compares to the `m
 
 We could plot multiple histograms, but it becomes hard to compare more than two categories. To compare variation across types of surveys we need a visualization that summarizes the distribution within each category.
 
-## Boxplots
+### Boxplots
 
 A boxplot reports the median, the 25th percentile, the 75th percentile, whiskers extending to the most extreme values no more than 1.5 times the interquartile range from the box, and points beyond those whiskers as potential outliers.
 
@@ -613,7 +615,7 @@ Pres2020.PV |>
 
 What does the line inside each box represent? Do the modes contain the same number of polls? Does the graph show that difference?
 
-# Continuous Variable By Continuous Variable (Scatterplot)
+## Continuous Variable By Continuous Variable (Scatterplot)
 
 When we have two continuous variables we use a scatterplot to visualize the relationship. A scatterplot is simply a graph of every point in (x,y), where x is the value associated with the x-variable and y is the value associated with the y-variable.
 
@@ -642,7 +644,7 @@ Pres2020.PV |>
 
 What do you observe? Why did we filter one extremely large poll? What information did that remove?
 
-## Overplotting and `geom_jitter`
+### Overplotting and `geom_jitter`
 
 It can be hard to know how many observations are located at each point. One tool is to alter the `alpha` transparency. A faint point indicates relatively few observations at a location, whereas darker areas indicate overlapping observations.
 
@@ -672,7 +674,7 @@ Note how much the visualization changes. While we are slightly changing the disp
 
 Does the relationship show that increasing the sample size would cause a poll to be more accurate? What else differs across these polls?
 
-# Visualizing More Dimensions -- And Introducing Dates!
+## POSSIBLE ASIDE: Visualizing More Dimensions -- And Introducing Dates!
 
 We can put this together and equip you with the tools you need to start your own polling aggregator! After what we talk about, you should be able to do something similar -- if not better -- than websites like RealClearPolitics.
 
@@ -694,7 +696,7 @@ So the motivation question that is going to guide our visualization is simply: *
 
 Give you some tools to do some _amazing_ things!
 
-## Telling Time
+### Telling Time
 
 - Time is often a critical _descriptive_ variable. (Not causal!)
 
@@ -708,7 +710,7 @@ Give you some tools to do some _amazing_ things!
 
 Dates are a special format in R (character with quasi-numeric properties). We converted `EndDate` using `as.Date()` when we prepared the polling data.
 
-## What are we plotting?
+### What are we plotting?
 
 - Media Question: How did the polls vary over time?
 
@@ -718,7 +720,7 @@ Dates are a special format in R (character with quasi-numeric properties). We co
 
 - Are they discrete/categorical or continuous?
 
-## Plot every poll over time
+### Plot every poll over time
 
 A scatterplot shows each poll's margin at the date the poll ended.
 
@@ -744,7 +746,7 @@ raw_poll_plot
 
 What does every point represent? What does the horizontal line represent? Do the polls vary more or less than you expected?
 
-## Should we connect the polls?
+### Should we connect the polls?
 
 In addition to plotting points using `geom_point`, we can add lines using `geom_line`. The line connects values in sequence, so it does not always make sense to include.
 
@@ -765,7 +767,7 @@ Pres2020.PV |>
 
 What does a line segment claim is connected? Are a YouGov poll and an Ipsos poll ending on adjacent dates parts of a single sequence? While `geom_line` may accentuate variation, the result here is not a meaningful summary of the relationship.
 
-## Change the observation: polls to weeks
+### Change the observation: polls to weeks
 
 If we want a line to show a polling average, we first have to create the quantity the line will connect. We will group the polls by the week in which they ended and calculate the average margin in each week.
 
@@ -813,7 +815,7 @@ But why a week? Why a mean? Should each poll count equally? Would the graph chan
 # INSERT CODE HERE
 ```
 
-# Choosing the Plot
+## Choosing the Plot
 
 | Outcome | Conditioning variable | Useful plot |
 |---|---|---|
@@ -832,24 +834,41 @@ For every graph, return to the same questions:
 
 # New R Functions Introduced in Session 11
 
-Functions introduced in earlier sessions are intentionally omitted.
+Functions introduced in earlier sessions are intentionally omitted. The exception is the `ggplot` functions that appeared on the Session 8 slides: they are repeated here because this is the first time we use them ourselves.
+
+## `ggplot` functions
 
 | Function or symbol | What it does |
 |---|---|
+| `ggplot()` | Creates a plot object and defines the data to be plotted. |
+| `aes()` | Maps a variable to an element of a plot (x-axis, y-axis, fill, size). |
 | `geom_bar()` | Counts and plots the unique values of a discrete variable. |
 | `geom_histogram()` | Groups a continuous variable into bins and plots the counts. |
 | `geom_density()` | Displays a smoothed distribution without choosing histogram bins. |
-| `facet_wrap()` | Creates separate plot panels for each value of a variable. |
-| `theme_bw()` | Applies a black-and-white plot theme. |
-| `coord_flip()` | Switches the x- and y-axes. |
 | `geom_boxplot()` | Displays a numeric distribution using its median, quartiles, whiskers, and potential outliers. |
 | `geom_point()` | Plots the relationship between two variables as points. |
 | `geom_jitter()` | Displaces overlapping points so they are visible. |
+| `geom_line()` | Connects observations in sequence. |
+| `geom_vline()` | Adds a vertical reference line. |
+| `geom_hline()` | Adds a horizontal reference line. |
+| `labs()` | Adds a title and labels for the axes and legend. |
+| `scale_x_continuous()` | Controls breaks, limits, and labels on a continuous x-axis. |
+| `scale_y_continuous()` | Controls breaks, limits, and labels on a continuous y-axis. |
+| `scale_x_date()` | Controls the labels and breaks on a date axis. |
+| `scale_fill_manual()` | Sets the fill color used for each value of a variable. |
+| `percent_format()`, `comma` | Format axis labels as percentages or with commas (from the `scales` package). |
+| `facet_wrap()` | Creates separate plot panels for each value of a variable. |
+| `coord_flip()` | Switches the x- and y-axes. |
+| `theme_bw()` | Applies a black-and-white plot theme. |
+
+## Other functions
+
+| Function or symbol | What it does |
+|---|---|
 | `as.Date()` | Converts values into dates. |
 | `cut()` | Divides values such as dates into intervals. |
-| `scale_x_date()` | Controls the labels and breaks on a date axis. |
-| `geom_hline()` | Adds a horizontal reference line. |
-| `geom_line()` | Connects observations in sequence. |
+| `drop_na()` | Drops rows with missing values in the named variables. |
+| `unique()` | Returns each distinct value once. |
 
 # Works Cited
 

@@ -1504,10 +1504,10 @@ The so-called “Grammar of Graphics”.</p>
 <li><p>Using variable types (continuous vs. discrete) to determine which
 <code>geom</code> to use.</p></li>
 <li><p>Functions for conditional relationships: <code>facet_wrap</code>,
-<code>coord_flip</code>, <code>geom_boxplot</code>,
-<code>geom_point</code>, <code>geom_jitter</code>, <code>as.Date</code>,
-<code>cut</code>, <code>scale_x_date</code>,
-<code>geom_line</code></p></li>
+<code>scale_fill_manual</code>, <code>coord_flip</code>,
+<code>geom_boxplot</code>, <code>geom_point</code>,
+<code>geom_jitter</code>, <code>as.Date</code>, <code>cut</code>,
+<code>scale_x_date</code>, <code>geom_line</code></p></li>
 </ul>
 </div>
 <div id="motivation-communicating-data-is-essential" class="section level1">
@@ -1955,9 +1955,8 @@ are trying to graph.</p>
 <li>Are the variables discrete or continuous?</li>
 <li>What will each part of the graph represent?</li>
 </ol>
-</div>
-<div id="discrete-variable-by-discrete-variable-barplot" class="section level1">
-<h1>Discrete Variable By Discrete Variable (Barplot)</h1>
+<div id="discrete-variable-by-discrete-variable-barplot" class="section level2">
+<h2>Discrete Variable By Discrete Variable (Barplot)</h2>
 <p>If we are working with discrete/categorical/ordinal data – i.e.,
 variables that take on a finite (and small) number of unique values –
 then we are interested in how to compare across bar graphs.</p>
@@ -1970,19 +1969,20 @@ more variables are related to one another. Earlier we made these
 comparisons by creating different tibbles and then comparing across
 tibbles, but we can also make comparisons without creating multiple
 tibbles.</p>
-<div id="each-observation-is-a-survey-respondent" class="section level2">
-<h2>Each observation is a survey respondent</h2>
+<div id="each-observation-is-a-survey-respondent" class="section level3">
+<h3>Each observation is a survey respondent</h3>
 <p>We are going to return to the 2024 Cooperative Election Study data.
 In this dataset, every row is a person who reported voting for either
-Harris or Trump.</p>
+Harris or Trump. This is the <code>ces_gender</code> data we saved in
+Session 3 and used again in Session 6, so it already contains
+<code>presvote</code> (Harris or Trump) and <code>gender2</code> (Man or
+Woman). The only new variable we need is an age group.</p>
 <pre class="r"><code>library(scales)
 
-CES2024 = readRDS(&quot;CES2024_GenderGap.rds&quot;)
+ces_gender = readRDS(&quot;CES2024_GenderGap.rds&quot;)
 
-CES2024 = CES2024 |&gt;
+ces_gender = ces_gender |&gt;
   mutate(
-    vote = if_else(HarrisVoter == 1, &quot;Harris&quot;, &quot;Trump&quot;),
-    gender = if_else(woman == 1, &quot;Woman&quot;, &quot;Man&quot;),
     age_group = case_when(
       age &lt; 30 ~ &quot;18–29&quot;,
       age &lt; 65 ~ &quot;30–64&quot;,
@@ -1990,13 +1990,13 @@ CES2024 = CES2024 |&gt;
     )
   )
 
-glimpse(CES2024)</code></pre>
+glimpse(ces_gender)</code></pre>
 <p>Our question is: <strong>Does presidential support differ by
 gender?</strong></p>
 <p>Let’s start with what we already know how to do.</p>
-<pre class="r"><code>CES2024 |&gt;
+<pre class="r"><code>ces_gender |&gt;
   ggplot() +
-  geom_bar(aes(x = vote), color = &quot;black&quot;) +
+  geom_bar(aes(x = presvote), color = &quot;black&quot;) +
   labs(
     title = &quot;Reported 2024 Presidential Vote&quot;,
     x = &quot;Candidate&quot;,
@@ -2007,8 +2007,8 @@ gender?</strong></p>
 voting for Harris or Trump. It does not yet answer whether support
 differs by gender.</p>
 </div>
-<div id="adding-a-second-variable-using-fill" class="section level2">
-<h2>Adding a second variable using <code>fill</code></h2>
+<div id="adding-a-second-variable-using-fill" class="section level3">
+<h3>Adding a second variable using <code>fill</code></h3>
 <p>To show how reported vote varies by gender we are going to use the
 <code>fill</code> of the graph to create different color bars depending
 on the value of the variable used to <code>fill</code>.</p>
@@ -2016,10 +2016,10 @@ on the value of the variable used to <code>fill</code>.</p>
 in the <code>ggplot</code> aesthetic. We also include <code>fill</code>
 in the <code>labs</code> function to make sure that we label the meaning
 of the values being plotted.</p>
-<pre class="r"><code>CES2024 |&gt;
+<pre class="r"><code>ces_gender |&gt;
   ggplot() +
   geom_bar(
-    aes(x = vote, fill = gender),
+    aes(x = presvote, fill = gender2),
     color = &quot;black&quot;,
     position = &quot;dodge&quot;
   ) +
@@ -2037,8 +2037,8 @@ we asked?</p>
 or worse? Why?</p>
 <pre class="r"><code># INSERT CODE HERE</code></pre>
 </div>
-<div id="counts-or-proportions" class="section level2">
-<h2>Counts or proportions?</h2>
+<div id="counts-or-proportions" class="section level3">
+<h3>Counts or proportions?</h3>
 <p>There are not exactly the same number of men and women in the data. A
 graph of counts therefore mixes together two things: the size of each
 group and the percentage of each group supporting a candidate.</p>
@@ -2046,10 +2046,13 @@ group and the percentage of each group supporting a candidate.</p>
 compare percentages within gender. Setting
 <code>position = &quot;fill&quot;</code> makes every bar the same height and shows
 the proportion of observations in each category.</p>
-<pre class="r"><code>CES2024 |&gt;
+<p>Because the colors now stand for candidates, we also use
+<code>scale_fill_manual</code> to choose them ourselves rather than
+accept the defaults: blue for Harris and red for Trump.</p>
+<pre class="r"><code>ces_gender |&gt;
   ggplot() +
   geom_bar(
-    aes(x = gender, fill = vote),
+    aes(x = gender2, fill = presvote),
     color = &quot;black&quot;,
     position = &quot;fill&quot;
   ) +
@@ -2060,23 +2063,24 @@ the proportion of observations in each category.</p>
     fill = &quot;Reported Vote&quot;
   ) +
   scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  scale_fill_manual(values = c(&quot;Harris&quot; = &quot;blue&quot;, &quot;Trump&quot; = &quot;red&quot;)) +
   theme_bw()</code></pre>
 <p>What does each bar sum to? What is the denominator? How does the
 answer differ from the graph of counts?</p>
 </div>
-<div id="adding-another-comparison-using-facet_wrap" class="section level2">
-<h2>Adding another comparison using <code>facet_wrap</code></h2>
+<div id="adding-another-comparison-using-facet_wrap" class="section level3">
+<h3>Adding another comparison using <code>facet_wrap</code></h3>
 <p>Another way to compare a visualization in terms of another variable
 is to use <code>facet_wrap</code> to “wrap” the visualization using
 different values of another variable (“facet”) of interest. The facet we
 use has to be a discrete/categorical variable.</p>
 <p>Our next question is: <strong>Does the gender gap look the same among
 younger, middle-aged, and older voters?</strong></p>
-<pre class="r"><code>CES2024 |&gt;
+<pre class="r"><code>ces_gender |&gt;
   drop_na(age_group) |&gt;
   ggplot() +
   geom_bar(
-    aes(x = gender, fill = vote),
+    aes(x = gender2, fill = presvote),
     color = &quot;black&quot;,
     position = &quot;fill&quot;
   ) +
@@ -2087,6 +2091,7 @@ younger, middle-aged, and older voters?</strong></p>
     fill = &quot;Reported Vote&quot;
   ) +
   scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  scale_fill_manual(values = c(&quot;Harris&quot; = &quot;blue&quot;, &quot;Trump&quot; = &quot;red&quot;)) +
   facet_wrap(~age_group) +
   theme_bw()</code></pre>
 <p>What do the results show? Is there a single “gender gap”? What new
@@ -2101,10 +2106,10 @@ graphs establishes that gender or age <strong>caused</strong> the
 reported vote choice.</p>
 </div>
 </div>
-<div id="continuous-variable-by-discrete-variable" class="section level1">
-<h1>Continuous Variable By Discrete Variable</h1>
-<div id="each-observation-is-now-a-poll" class="section level2">
-<h2>Each observation is now a poll</h2>
+<div id="continuous-variable-by-discrete-variable" class="section level2">
+<h2>Continuous Variable By Discrete Variable</h2>
+<div id="each-observation-is-now-a-poll" class="section level3">
+<h3>Each observation is now a poll</h3>
 <p>We are now changing both the dataset and the unit of analysis. In the
 CES data, every row was a respondent. In the next dataset, every row is
 a publicly released national poll. This is the same file of 2020
@@ -2145,8 +2150,8 @@ more than two categories. To compare variation across types of surveys
 we need a visualization that summarizes the distribution within each
 category.</p>
 </div>
-<div id="boxplots" class="section level2">
-<h2>Boxplots</h2>
+<div id="boxplots" class="section level3">
+<h3>Boxplots</h3>
 <p>A boxplot reports the median, the 25th percentile, the 75th
 percentile, whiskers extending to the most extreme values no more than
 1.5 times the interquartile range from the box, and points beyond those
@@ -2169,8 +2174,8 @@ Pres2020.PV |&gt;
 the same number of polls? Does the graph show that difference?</p>
 </div>
 </div>
-<div id="continuous-variable-by-continuous-variable-scatterplot" class="section level1">
-<h1>Continuous Variable By Continuous Variable (Scatterplot)</h1>
+<div id="continuous-variable-by-continuous-variable-scatterplot" class="section level2">
+<h2>Continuous Variable By Continuous Variable (Scatterplot)</h2>
 <p>When we have two continuous variables we use a scatterplot to
 visualize the relationship. A scatterplot is simply a graph of every
 point in (x,y), where x is the value associated with the x-variable and
@@ -2198,8 +2203,8 @@ and absolute error answer different questions.</p>
   theme_bw()</code></pre>
 <p>What do you observe? Why did we filter one extremely large poll? What
 information did that remove?</p>
-<div id="overplotting-and-geom_jitter" class="section level2">
-<h2>Overplotting and <code>geom_jitter</code></h2>
+<div id="overplotting-and-geom_jitter" class="section level3">
+<h3>Overplotting and <code>geom_jitter</code></h3>
 <p>It can be hard to know how many observations are located at each
 point. One tool is to alter the <code>alpha</code> transparency. A faint
 point indicates relatively few observations at a location, whereas
@@ -2236,8 +2241,9 @@ cause a poll to be more accurate? What else differs across these
 polls?</p>
 </div>
 </div>
-<div id="visualizing-more-dimensions-and-introducing-dates" class="section level1">
-<h1>Visualizing More Dimensions – And Introducing Dates!</h1>
+<div id="possible-aside-visualizing-more-dimensions-and-introducing-dates" class="section level2">
+<h2>POSSIBLE ASIDE: Visualizing More Dimensions – And Introducing
+Dates!</h2>
 <p>We can put this together and equip you with the tools you need to
 start your own polling aggregator! After what we talk about, you should
 be able to do something similar – if not better – than websites like
@@ -2264,8 +2270,8 @@ the course of the 2020 Election?</strong></p>
 <li><p>How do we summarize, visualize, and communicate?</p></li>
 </ul>
 <p>Give you some tools to do some <em>amazing</em> things!</p>
-<div id="telling-time" class="section level2">
-<h2>Telling Time</h2>
+<div id="telling-time" class="section level3">
+<h3>Telling Time</h3>
 <ul>
 <li><p>Time is often a critical <em>descriptive</em> variable. (Not
 causal!)</p></li>
@@ -2281,8 +2287,8 @@ why?).</p></li>
 properties). We converted <code>EndDate</code> using
 <code>as.Date()</code> when we prepared the polling data.</p>
 </div>
-<div id="what-are-we-plotting" class="section level2">
-<h2>What are we plotting?</h2>
+<div id="what-are-we-plotting" class="section level3">
+<h3>What are we plotting?</h3>
 <ul>
 <li><p>Media Question: How did the polls vary over time?</p></li>
 <li><p>Data Scientist Question: What do we need to plot?
@@ -2291,8 +2297,8 @@ properties). We converted <code>EndDate</code> using
 <li><p>Are they discrete/categorical or continuous?</p></li>
 </ul>
 </div>
-<div id="plot-every-poll-over-time" class="section level2">
-<h2>Plot every poll over time</h2>
+<div id="plot-every-poll-over-time" class="section level3">
+<h3>Plot every poll over time</h3>
 <p>A scatterplot shows each poll’s margin at the date the poll
 ended.</p>
 <pre class="r"><code>raw_poll_plot = Pres2020.PV |&gt;
@@ -2315,8 +2321,8 @@ raw_poll_plot</code></pre>
 <p>What does every point represent? What does the horizontal line
 represent? Do the polls vary more or less than you expected?</p>
 </div>
-<div id="should-we-connect-the-polls" class="section level2">
-<h2>Should we connect the polls?</h2>
+<div id="should-we-connect-the-polls" class="section level3">
+<h3>Should we connect the polls?</h3>
 <p>In addition to plotting points using <code>geom_point</code>, we can
 add lines using <code>geom_line</code>. The line connects values in
 sequence, so it does not always make sense to include.</p>
@@ -2337,8 +2343,8 @@ Ipsos poll ending on adjacent dates parts of a single sequence? While
 <code>geom_line</code> may accentuate variation, the result here is not
 a meaningful summary of the relationship.</p>
 </div>
-<div id="change-the-observation-polls-to-weeks" class="section level2">
-<h2>Change the observation: polls to weeks</h2>
+<div id="change-the-observation-polls-to-weeks" class="section level3">
+<h3>Change the observation: polls to weeks</h3>
 <p>If we want a line to show a polling average, we first have to create
 the quantity the line will connect. We will group the polls by the week
 in which they ended and calculate the average margin in each week.</p>
@@ -2385,8 +2391,8 @@ prefer, and why?</p>
 <pre class="r"><code># INSERT CODE HERE</code></pre>
 </div>
 </div>
-<div id="choosing-the-plot" class="section level1">
-<h1>Choosing the Plot</h1>
+<div id="choosing-the-plot" class="section level2">
+<h2>Choosing the Plot</h2>
 <table>
 <colgroup>
 <col width="33%" />
@@ -2432,10 +2438,15 @@ prefer, and why?</p>
 <li>What can we actually conclude?</li>
 </ol>
 </div>
+</div>
 <div id="new-r-functions-introduced-in-session-11" class="section level1">
 <h1>New R Functions Introduced in Session 11</h1>
-<p>Functions introduced in earlier sessions are intentionally
-omitted.</p>
+<p>Functions introduced in earlier sessions are intentionally omitted.
+The exception is the <code>ggplot</code> functions that appeared on the
+Session 8 slides: they are repeated here because this is the first time
+we use them ourselves.</p>
+<div id="ggplot-functions" class="section level2">
+<h2><code>ggplot</code> functions</h2>
 <table>
 <colgroup>
 <col width="50%" />
@@ -2448,6 +2459,15 @@ omitted.</p>
 </tr>
 </thead>
 <tbody>
+<tr class="odd">
+<td><code>ggplot()</code></td>
+<td>Creates a plot object and defines the data to be plotted.</td>
+</tr>
+<tr class="even">
+<td><code>aes()</code></td>
+<td>Maps a variable to an element of a plot (x-axis, y-axis, fill,
+size).</td>
+</tr>
 <tr class="odd">
 <td><code>geom_bar()</code></td>
 <td>Counts and plots the unique values of a discrete variable.</td>
@@ -2462,52 +2482,99 @@ omitted.</p>
 bins.</td>
 </tr>
 <tr class="even">
-<td><code>facet_wrap()</code></td>
-<td>Creates separate plot panels for each value of a variable.</td>
-</tr>
-<tr class="odd">
-<td><code>theme_bw()</code></td>
-<td>Applies a black-and-white plot theme.</td>
-</tr>
-<tr class="even">
-<td><code>coord_flip()</code></td>
-<td>Switches the x- and y-axes.</td>
-</tr>
-<tr class="odd">
 <td><code>geom_boxplot()</code></td>
 <td>Displays a numeric distribution using its median, quartiles,
 whiskers, and potential outliers.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>geom_point()</code></td>
 <td>Plots the relationship between two variables as points.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>geom_jitter()</code></td>
 <td>Displaces overlapping points so they are visible.</td>
 </tr>
-<tr class="even">
-<td><code>as.Date()</code></td>
-<td>Converts values into dates.</td>
-</tr>
 <tr class="odd">
-<td><code>cut()</code></td>
-<td>Divides values such as dates into intervals.</td>
+<td><code>geom_line()</code></td>
+<td>Connects observations in sequence.</td>
 </tr>
 <tr class="even">
-<td><code>scale_x_date()</code></td>
-<td>Controls the labels and breaks on a date axis.</td>
+<td><code>geom_vline()</code></td>
+<td>Adds a vertical reference line.</td>
 </tr>
 <tr class="odd">
 <td><code>geom_hline()</code></td>
 <td>Adds a horizontal reference line.</td>
 </tr>
 <tr class="even">
-<td><code>geom_line()</code></td>
-<td>Connects observations in sequence.</td>
+<td><code>labs()</code></td>
+<td>Adds a title and labels for the axes and legend.</td>
+</tr>
+<tr class="odd">
+<td><code>scale_x_continuous()</code></td>
+<td>Controls breaks, limits, and labels on a continuous x-axis.</td>
+</tr>
+<tr class="even">
+<td><code>scale_y_continuous()</code></td>
+<td>Controls breaks, limits, and labels on a continuous y-axis.</td>
+</tr>
+<tr class="odd">
+<td><code>scale_x_date()</code></td>
+<td>Controls the labels and breaks on a date axis.</td>
+</tr>
+<tr class="even">
+<td><code>scale_fill_manual()</code></td>
+<td>Sets the fill color used for each value of a variable.</td>
+</tr>
+<tr class="odd">
+<td><code>percent_format()</code>, <code>comma</code></td>
+<td>Format axis labels as percentages or with commas (from the
+<code>scales</code> package).</td>
+</tr>
+<tr class="even">
+<td><code>facet_wrap()</code></td>
+<td>Creates separate plot panels for each value of a variable.</td>
+</tr>
+<tr class="odd">
+<td><code>coord_flip()</code></td>
+<td>Switches the x- and y-axes.</td>
+</tr>
+<tr class="even">
+<td><code>theme_bw()</code></td>
+<td>Applies a black-and-white plot theme.</td>
 </tr>
 </tbody>
 </table>
+</div>
+<div id="other-functions" class="section level2">
+<h2>Other functions</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Function or symbol</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>as.Date()</code></td>
+<td>Converts values into dates.</td>
+</tr>
+<tr class="even">
+<td><code>cut()</code></td>
+<td>Divides values such as dates into intervals.</td>
+</tr>
+<tr class="odd">
+<td><code>drop_na()</code></td>
+<td>Drops rows with missing values in the named variables.</td>
+</tr>
+<tr class="even">
+<td><code>unique()</code></td>
+<td>Returns each distinct value once.</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <div id="works-cited" class="section level1">
 <h1>Works Cited</h1>

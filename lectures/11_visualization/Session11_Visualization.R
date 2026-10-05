@@ -150,18 +150,18 @@ Pres2020.PV |>
   ) +
   theme_bw()
 
-# ---- Discrete Variable By Discrete Variable (Barplot) ----
+# ---- Conditional Relationships ----
 
-# -- Each observation is a survey respondent --
+# -- Discrete Variable By Discrete Variable (Barplot) --
+
+# - Each observation is a survey respondent -
 
 library(scales)
 
-CES2024 = readRDS("CES2024_GenderGap.rds")
+ces_gender = readRDS("CES2024_GenderGap.rds")
 
-CES2024 = CES2024 |>
+ces_gender = ces_gender |>
   mutate(
-    vote = if_else(HarrisVoter == 1, "Harris", "Trump"),
-    gender = if_else(woman == 1, "Woman", "Man"),
     age_group = case_when(
       age < 30 ~ "18–29",
       age < 65 ~ "30–64",
@@ -169,11 +169,11 @@ CES2024 = CES2024 |>
     )
   )
 
-glimpse(CES2024)
+glimpse(ces_gender)
 
-CES2024 |>
+ces_gender |>
   ggplot() +
-  geom_bar(aes(x = vote), color = "black") +
+  geom_bar(aes(x = presvote), color = "black") +
   labs(
     title = "Reported 2024 Presidential Vote",
     x = "Candidate",
@@ -181,12 +181,12 @@ CES2024 |>
   ) +
   theme_bw()
 
-# -- Adding a second variable using fill --
+# - Adding a second variable using fill -
 
-CES2024 |>
+ces_gender |>
   ggplot() +
   geom_bar(
-    aes(x = vote, fill = gender),
+    aes(x = presvote, fill = gender2),
     color = "black",
     position = "dodge"
   ) +
@@ -198,12 +198,12 @@ CES2024 |>
   ) +
   theme_bw()
 
-# -- Counts or proportions? --
+# - Counts or proportions? -
 
-CES2024 |>
+ces_gender |>
   ggplot() +
   geom_bar(
-    aes(x = gender, fill = vote),
+    aes(x = gender2, fill = presvote),
     color = "black",
     position = "fill"
   ) +
@@ -214,15 +214,16 @@ CES2024 |>
     fill = "Reported Vote"
   ) +
   scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  scale_fill_manual(values = c("Harris" = "blue", "Trump" = "red")) +
   theme_bw()
 
-# -- Adding another comparison using facet_wrap --
+# - Adding another comparison using facet_wrap -
 
-CES2024 |>
+ces_gender |>
   drop_na(age_group) |>
   ggplot() +
   geom_bar(
-    aes(x = gender, fill = vote),
+    aes(x = gender2, fill = presvote),
     color = "black",
     position = "fill"
   ) +
@@ -233,12 +234,13 @@ CES2024 |>
     fill = "Reported Vote"
   ) +
   scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  scale_fill_manual(values = c("Harris" = "blue", "Trump" = "red")) +
   facet_wrap(~age_group) +
   theme_bw()
 
-# ---- Continuous Variable By Discrete Variable ----
+# -- Continuous Variable By Discrete Variable --
 
-# -- Each observation is now a poll --
+# - Each observation is now a poll -
 
 Pres2020.PV = readRDS(file = "polls2020.rds")
 
@@ -258,7 +260,7 @@ glimpse(Pres2020.PV)
 Pres2020.PV |>
   count(Mode, sort = TRUE)
 
-# -- Boxplots --
+# - Boxplots -
 
 common_modes = c("Online", "Live phone - RDD", "IVR/Online")
 
@@ -275,7 +277,7 @@ Pres2020.PV |>
   coord_flip() +
   theme_bw()
 
-# ---- Continuous Variable By Continuous Variable (Scatterplot) ----
+# -- Continuous Variable By Continuous Variable (Scatterplot) --
 
 Pres2020.PV |>
   filter(SampleSize < 50000) |>
@@ -294,7 +296,7 @@ Pres2020.PV |>
   scale_y_continuous(labels = percent_format(accuracy = 1)) +
   theme_bw()
 
-# -- Overplotting and geom_jitter --
+# - Overplotting and geom_jitter -
 
 Pres2020.PV |>
   filter(SampleSize < 50000) |>
@@ -314,9 +316,9 @@ Pres2020.PV |>
   scale_y_continuous(labels = percent_format(accuracy = 1)) +
   theme_bw()
 
-# ---- Visualizing More Dimensions -- And Introducing Dates! ----
+# -- POSSIBLE ASIDE: Visualizing More Dimensions -- And Introducing Dates! --
 
-# -- Plot every poll over time --
+# - Plot every poll over time -
 
 raw_poll_plot = Pres2020.PV |>
   ggplot(aes(x = EndDate, y = margin)) +
@@ -336,7 +338,7 @@ raw_poll_plot = Pres2020.PV |>
 
 raw_poll_plot
 
-# -- Should we connect the polls? --
+# - Should we connect the polls? -
 
 Pres2020.PV |>
   ggplot(aes(x = EndDate, y = margin)) +
@@ -351,7 +353,7 @@ Pres2020.PV |>
   scale_y_continuous(labels = percent_format(accuracy = 1)) +
   theme_bw()
 
-# -- Change the observation: polls to weeks --
+# - Change the observation: polls to weeks -
 
 weekly_poll_average = Pres2020.PV |>
   mutate(week = as.Date(cut(EndDate, breaks = "week"))) |>
