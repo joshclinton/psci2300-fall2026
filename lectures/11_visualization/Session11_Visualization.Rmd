@@ -1,5 +1,5 @@
 ---
-title: "Session 11. Univariate Data Visualization in `ggplot`"
+title: "Session 11. Visualizing With the Grammar of Graphics"
 author: "Prof. Josh Clinton"
 institute: "Vanderbilt University"
 date: "`r Sys.Date()`"
@@ -23,6 +23,12 @@ Summarizing Univariate (Single) Relationship using Bargraphs, Histograms, and De
 - Plot types: `geom_bar`, `geom_histogram`, `geom_density`
 
 - Plot aesthetics: `labs`, `scale_x_continuous`, `geom_vline`, `theme_bw`
+
+- Summarizing Bivariate (Two Variables) Relationships using `ggplot`.
+
+- Using variable types (continuous vs. discrete) to determine which `geom` to use.
+
+- Functions for conditional relationships: `facet_wrap`, `coord_flip`, `geom_boxplot`, `geom_point`, `geom_jitter`, `as.Date`, `cut`, `scale_x_date`, `geom_line`
 
 # Motivation: Communicating Data is Essential
 
@@ -386,6 +392,444 @@ For each application:
 4. What did the plot reveal that the numeric summary did not?
 5. What can we actually conclude?
 
+# Conditional Relationships
+
+- Conditional data: when a variable varies with respect to some other variable. Maybe correlational? Maybe causal?
+
+- Key question: Assessing how the value of the outcome of interest varies _depending_ on the value of another variable of interest?
+
+- Typically: outcome of interest (_dependent variable_): Y-axis.
+
+- Variables possibly related to (or causing?) the outcome (_independent variables_): X-axis.
+
+The graphs we use depend on the **type of variables** we are trying to graph.
+
+Before making a graph, we therefore need to ask:
+
+1. What is the question?
+2. What is an observation in the data?
+3. What variables do we need?
+4. Are the variables discrete or continuous?
+5. What will each part of the graph represent?
+
+# Discrete Variable By Discrete Variable (Barplot)
+
+If we are working with discrete/categorical/ordinal data -- i.e., variables that take on a finite (and small) number of unique values -- then we are interested in how to compare across bar graphs.
+
+Before we used `geom_bar` to plot the number of observations associated with each value of a variable. But we often want to know how the number of observations may vary according to a second variable.
+
+Conditional variation involves examining how the values of two or more variables are related to one another. Earlier we made these comparisons by creating different tibbles and then comparing across tibbles, but we can also make comparisons without creating multiple tibbles.
+
+## Each observation is a survey respondent
+
+We are going to return to the 2024 Cooperative Election Study data. In this dataset, every row is a person who reported voting for either Harris or Trump.
+
+```{r}
+library(scales)
+
+CES2024 = readRDS("CES2024_GenderGap.rds")
+
+CES2024 = CES2024 |>
+  mutate(
+    vote = if_else(HarrisVoter == 1, "Harris", "Trump"),
+    gender = if_else(woman == 1, "Woman", "Man"),
+    age_group = case_when(
+      age < 30 ~ "18–29",
+      age < 65 ~ "30–64",
+      age >= 65 ~ "65+"
+    )
+  )
+
+glimpse(CES2024)
+```
+
+Our question is: **Does presidential support differ by gender?**
+
+Let's start with what we already know how to do.
+
+```{r}
+CES2024 |>
+  ggplot() +
+  geom_bar(aes(x = vote), color = "black") +
+  labs(
+    title = "Reported 2024 Presidential Vote",
+    x = "Candidate",
+    y = "Number of Respondents"
+  ) +
+  theme_bw()
+```
+
+This answers a question about the number of respondents who reported voting for Harris or Trump. It does not yet answer whether support differs by gender.
+
+## Adding a second variable using `fill`
+
+To show how reported vote varies by gender we are going to use the `fill` of the graph to create different color bars depending on the value of the variable used to `fill`.
+
+So we include a character or factor variable as a `fill` in the `ggplot` aesthetic. We also include `fill` in the `labs` function to make sure that we label the meaning of the values being plotted.
+
+```{r}
+CES2024 |>
+  ggplot() +
+  geom_bar(
+    aes(x = vote, fill = gender),
+    color = "black",
+    position = "dodge"
+  ) +
+  labs(
+    title = "Reported 2024 Presidential Vote by Gender",
+    x = "Candidate",
+    y = "Number of Respondents",
+    fill = "Gender"
+  ) +
+  theme_bw()
+```
+
+What does the height of each bar show? Does this answer the question we asked?
+
+*Quick Exercise* Redo the code without `position = "dodge"`. What happens? Do you like this better or worse? Why?
+
+```{r}
+# INSERT CODE HERE
+```
+
+## Counts or proportions?
+
+There are not exactly the same number of men and women in the data. A graph of counts therefore mixes together two things: the size of each group and the percentage of each group supporting a candidate.
+
+If our question is whether support differs by gender, we need to compare percentages within gender. Setting `position = "fill"` makes every bar the same height and shows the proportion of observations in each category.
+
+```{r}
+CES2024 |>
+  ggplot() +
+  geom_bar(
+    aes(x = gender, fill = vote),
+    color = "black",
+    position = "fill"
+  ) +
+  labs(
+    title = "Reported 2024 Presidential Vote Within Gender",
+    x = "Gender",
+    y = "Percentage of Respondents",
+    fill = "Reported Vote"
+  ) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  theme_bw()
+```
+
+What does each bar sum to? What is the denominator? How does the answer differ from the graph of counts?
+
+## Adding another comparison using `facet_wrap`
+
+Another way to compare a visualization in terms of another variable is to use `facet_wrap` to "wrap" the visualization using different values of another variable ("facet") of interest. The facet we use has to be a discrete/categorical variable.
+
+Our next question is: **Does the gender gap look the same among younger, middle-aged, and older voters?**
+
+```{r}
+CES2024 |>
+  drop_na(age_group) |>
+  ggplot() +
+  geom_bar(
+    aes(x = gender, fill = vote),
+    color = "black",
+    position = "fill"
+  ) +
+  labs(
+    title = "Reported 2024 Presidential Vote by Gender and Age",
+    x = "Gender",
+    y = "Percentage of Respondents",
+    fill = "Reported Vote"
+  ) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  facet_wrap(~age_group) +
+  theme_bw()
+```
+
+What do the results show? Is there a single "gender gap"? What new problem might arise as we divide the respondents into smaller groups?
+
+*Quick Exercise* Use `count()` to determine how many respondents appear in every gender-by-age group. Does the graph show those differences in cell size?
+
+```{r}
+# INSERT CODE HERE
+```
+
+We are describing relationships among respondents. Nothing in these graphs establishes that gender or age **caused** the reported vote choice.
+
+# Continuous Variable By Discrete Variable
+
+## Each observation is now a poll
+
+We are now changing both the dataset and the unit of analysis. In the CES data, every row was a respondent. In the next dataset, every row is a publicly released national poll. This is the same file of 2020 national polls we used above. We read it in again so that we can convert the dates into a date format and the vote shares into proportions -- which means that `margin` is now a proportion rather than a number of percentage points.
+
+```{r}
+Pres2020.PV = readRDS(file = "polls2020.rds")
+
+Pres2020.PV = Pres2020.PV |>
+  mutate(
+    EndDate = as.Date(EndDate, "%m/%d/%Y"),
+    Trump = Trump / 100,
+    Biden = Biden / 100,
+    margin = Biden - Trump,
+    actual_margin = (DemCertVote - RepCertVote) / 100,
+    margin_error = margin - actual_margin,
+    absolute_error = abs(margin_error)
+  )
+
+glimpse(Pres2020.PV)
+```
+
+Suppose we were concerned with whether some polls might give different answers because of variation in who the poll is able to reach using that method. People who take polls via landline phones (do you even know what that is?) might differ from those who take surveys online. Or people contacted using randomly generated phone numbers (RDD) may differ from those contacted from a voter registration list that has had telephone numbers merged onto it.
+
+Polls were done using lots of different methods in 2020.
+
+```{r}
+Pres2020.PV |>
+  count(Mode, sort = TRUE)
+```
+
+How can we visualize how the `margin` from one type of survey compares to the `margin` from another type of poll? We cannot use a scatterplot because the data are from different observations (here polls).
+
+We could plot multiple histograms, but it becomes hard to compare more than two categories. To compare variation across types of surveys we need a visualization that summarizes the distribution within each category.
+
+## Boxplots
+
+A boxplot reports the median, the 25th percentile, the 75th percentile, whiskers extending to the most extreme values no more than 1.5 times the interquartile range from the box, and points beyond those whiskers as potential outliers.
+
+```{r}
+common_modes = c("Online", "Live phone - RDD", "IVR/Online")
+
+Pres2020.PV |>
+  filter(Mode %in% common_modes) |>
+  ggplot() +
+  geom_boxplot(aes(x = Mode, y = margin), fill = "slateblue") +
+  labs(
+    title = "2020 Popular Vote Poll Margin by Interview Mode",
+    x = "Mode of Survey Interview",
+    y = "Biden–Trump Margin"
+  ) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  coord_flip() +
+  theme_bw()
+```
+
+What does the line inside each box represent? Do the modes contain the same number of polls? Does the graph show that difference?
+
+# Continuous Variable By Continuous Variable (Scatterplot)
+
+When we have two continuous variables we use a scatterplot to visualize the relationship. A scatterplot is simply a graph of every point in (x,y), where x is the value associated with the x-variable and y is the value associated with the y-variable.
+
+Our question is: **Were polls with more respondents more accurate?**
+
+Accuracy here means the absolute distance between the poll's Biden–Trump margin and the certified Biden–Trump margin. Signed error and absolute error answer different questions.
+
+```{r}
+Pres2020.PV |>
+  filter(SampleSize < 50000) |>
+  ggplot() +
+  geom_point(
+    aes(x = SampleSize, y = absolute_error),
+    color = "purple",
+    alpha = .4
+  ) +
+  labs(
+    title = "Absolute Polling Error and Sample Size",
+    x = "Sample Size in Poll",
+    y = "Absolute Error in Biden–Trump Margin"
+  ) +
+  scale_x_continuous(labels = comma) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  theme_bw()
+```
+
+What do you observe? Why did we filter one extremely large poll? What information did that remove?
+
+## Overplotting and `geom_jitter`
+
+It can be hard to know how many observations are located at each point. One tool is to alter the `alpha` transparency. A faint point indicates relatively few observations at a location, whereas darker areas indicate overlapping observations.
+
+Another tool is to add a tiny bit of randomness to the x and y values associated with each point. To do so we replace `geom_point` with `geom_jitter`.
+
+```{r}
+Pres2020.PV |>
+  filter(SampleSize < 50000) |>
+  ggplot() +
+  geom_jitter(
+    aes(x = SampleSize, y = absolute_error),
+    color = "purple",
+    alpha = .4,
+    height = .001
+  ) +
+  labs(
+    title = "Absolute Polling Error and Sample Size",
+    x = "Sample Size in Poll",
+    y = "Absolute Error in Biden–Trump Margin"
+  ) +
+  scale_x_continuous(labels = comma) +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  theme_bw()
+```
+
+Note how much the visualization changes. While we are slightly changing the displayed location of the data by adding random noise, the payoff is that the visualization can better highlight how many observations share a value. But here again is where data science is sometimes art as much as science. The decision of which visualization to use depends on what you think most effectively communicates the nature of the relationship to the reader.
+
+Does the relationship show that increasing the sample size would cause a poll to be more accurate? What else differs across these polls?
+
+# Visualizing More Dimensions -- And Introducing Dates!
+
+We can put this together and equip you with the tools you need to start your own polling aggregator! After what we talk about, you should be able to do something similar -- if not better -- than websites like RealClearPolitics.
+
+<div style="text-align:center">
+![We Love Political Polls](figs/RealClearPolitics.png){width=60%}
+</div>
+
+And perhaps you too can get a fancy contract to create content like at 538.com.
+
+<div style="text-align:center">
+![The Old 538.com](figs/538.png){width=60%}
+</div>
+
+So the motivation question that is going to guide our visualization is simply: **how did the support for Biden and Trump vary across the course of the 2020 Election?**
+
+- What should we measure?
+
+- How do we summarize, visualize, and communicate?
+
+Give you some tools to do some _amazing_ things!
+
+## Telling Time
+
+- Time is often a critical _descriptive_ variable. (Not causal!)
+
+- Also useful for _prediction_?
+
+- We want to evaluate the properties of presidential polling as Election Day 2020 approached.
+
+- Necessary for prediction -- we want the most recent data to account for last-minute shift.
+
+- Necessary for identifying when changes occurred (and why?).
+
+Dates are a special format in R (character with quasi-numeric properties). We converted `EndDate` using `as.Date()` when we prepared the polling data.
+
+## What are we plotting?
+
+- Media Question: How did the polls vary over time?
+
+- Data Scientist Question: What do we need to plot? `margin` or `EndDate`?
+
+- What will each produce?
+
+- Are they discrete/categorical or continuous?
+
+## Plot every poll over time
+
+A scatterplot shows each poll's margin at the date the poll ended.
+
+```{r}
+raw_poll_plot = Pres2020.PV |>
+  ggplot(aes(x = EndDate, y = margin)) +
+  geom_jitter(color = "purple", alpha = .4, height = .002) +
+  geom_hline(
+    yintercept = unique(Pres2020.PV$actual_margin),
+    linewidth = 1
+  ) +
+  labs(
+    title = "Margin in 2020 National Popular Vote Polls Over Time",
+    x = "Poll Ending Date",
+    y = "Biden–Trump Margin"
+  ) +
+  scale_x_date(date_breaks = "1 month", date_labels = "%b") +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  theme_bw()
+
+raw_poll_plot
+```
+
+What does every point represent? What does the horizontal line represent? Do the polls vary more or less than you expected?
+
+## Should we connect the polls?
+
+In addition to plotting points using `geom_point`, we can add lines using `geom_line`. The line connects values in sequence, so it does not always make sense to include.
+
+```{r}
+Pres2020.PV |>
+  ggplot(aes(x = EndDate, y = margin)) +
+  geom_point(color = "purple", alpha = .4) +
+  geom_line() +
+  labs(
+    title = "Individual Poll Margins Connected Over Time",
+    x = "Poll Ending Date",
+    y = "Biden–Trump Margin"
+  ) +
+  scale_x_date(date_breaks = "1 month", date_labels = "%b") +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  theme_bw()
+```
+
+What does a line segment claim is connected? Are a YouGov poll and an Ipsos poll ending on adjacent dates parts of a single sequence? While `geom_line` may accentuate variation, the result here is not a meaningful summary of the relationship.
+
+## Change the observation: polls to weeks
+
+If we want a line to show a polling average, we first have to create the quantity the line will connect. We will group the polls by the week in which they ended and calculate the average margin in each week.
+
+```{r}
+weekly_poll_average = Pres2020.PV |>
+  mutate(week = as.Date(cut(EndDate, breaks = "week"))) |>
+  group_by(week) |>
+  summarize(
+    average_margin = mean(margin, na.rm = TRUE),
+    number_of_polls = n()
+  )
+
+weekly_poll_average
+```
+
+What is an observation in `Pres2020.PV`? What is an observation in `weekly_poll_average`? What information did we retain, and what did we discard?
+
+```{r}
+weekly_poll_average |>
+  ggplot(aes(x = week, y = average_margin)) +
+  geom_point(aes(size = number_of_polls), color = "purple") +
+  geom_line(color = "purple") +
+  geom_hline(
+    yintercept = unique(Pres2020.PV$actual_margin),
+    linewidth = 1
+  ) +
+  labs(
+    title = "Weekly Average of 2020 National Popular Vote Polls",
+    x = "Week",
+    y = "Average Biden–Trump Margin",
+    size = "Number of Polls"
+  ) +
+  scale_x_date(date_breaks = "1 month", date_labels = "%b") +
+  scale_y_continuous(labels = percent_format(accuracy = 1)) +
+  theme_bw()
+```
+
+The line now connects weekly summaries rather than unrelated individual polls. The size of the point shows how many polls contributed to each weekly average.
+
+But why a week? Why a mean? Should each poll count equally? Would the graph change if we chose a different interval or summary? The code produces an answer, but the analyst still has to decide whether the choices are meaningful.
+
+*Quick Exercise* Change `breaks = "week"` to `breaks = "2 weeks"` or change `mean()` to `median()`. How does the graph change? Which version do you prefer, and why?
+
+```{r}
+# INSERT CODE HERE
+```
+
+# Choosing the Plot
+
+| Outcome | Conditioning variable | Useful plot |
+|---|---|---|
+| Discrete | Discrete | Grouped/filled bars or facets |
+| Continuous | Discrete | Boxplot |
+| Continuous | Continuous | Scatterplot or jittered points |
+| Continuous | Time | Points; lines after defining a meaningful sequence |
+
+For every graph, return to the same questions:
+
+1. What is an observation?
+2. What does each mark represent?
+3. What comparison is being made?
+4. What information has been summarized or hidden?
+5. What can we actually conclude?
+
 # New R Functions Introduced in Session 11
 
 Functions introduced in earlier sessions are intentionally omitted.
@@ -397,12 +841,23 @@ Functions introduced in earlier sessions are intentionally omitted.
 | `geom_density()` | Displays a smoothed distribution without choosing histogram bins. |
 | `facet_wrap()` | Creates separate plot panels for each value of a variable. |
 | `theme_bw()` | Applies a black-and-white plot theme. |
+| `coord_flip()` | Switches the x- and y-axes. |
+| `geom_boxplot()` | Displays a numeric distribution using its median, quartiles, whiskers, and potential outliers. |
+| `geom_point()` | Plots the relationship between two variables as points. |
+| `geom_jitter()` | Displaces overlapping points so they are visible. |
+| `as.Date()` | Converts values into dates. |
+| `cut()` | Divides values such as dates into intervals. |
+| `scale_x_date()` | Controls the labels and breaks on a date axis. |
+| `geom_hline()` | Adds a horizontal reference line. |
+| `geom_line()` | Connects observations in sequence. |
 
 # Works Cited
 
 American Association for Public Opinion Research. 2021. *2020 Pre-Election Polling: An Evaluation of the 2020 General Election Polls*. Report of the AAPOR Task Force on 2020 Pre-Election Polling.
 
 Kristal, Ariella S., Ashley V. Whillans, Max H. Bazerman, Francesca Gino, Lisa L. Shu, Nina Mazar, and Dan Ariely. 2020. “Signing at the Beginning Versus at the End Does Not Decrease Dishonesty.” *Proceedings of the National Academy of Sciences* 117: 7103–7107. <https://doi.org/10.1073/pnas.1911695117>.
+
+Schaffner, Brian, Marissa Shih, Stephen Ansolabehere, and Jeremy Pope. 2025. “Cooperative Election Study Common Content, 2024.” Harvard Dataverse, Version 9. <https://doi.org/10.7910/DVN/X11EP6>.
 
 Shu, Lisa L., Nina Mazar, Francesca Gino, Dan Ariely, and Max H. Bazerman. 2012. “Signing at the Beginning Makes Ethics Salient and Decreases Dishonest Self-Reports in Comparison to Signing at the End.” *Proceedings of the National Academy of Sciences* 109: 15197–15200. Retracted. <https://doi.org/10.1073/pnas.1209746109>.
 

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="dcterms.date" content="2026-10-04">
-<meta name="description" content="Visualizing one variable with bar graphs, histograms, and densities: reported mileage from an insurance field experiment and 2020 pre-election polls.">
+<meta name="description" content="Visualizing one variable and relationships between variables with ggplot: reported mileage from an insurance field experiment, 2020 pre-election polls, and the 2024 CES.">
 
 <title>Univariate &amp; Conditional Visualizing: Insurance Fraud, Polling Error, and Plotting Polls – PSCI 2300 — Fall 2026</title>
 <style>
@@ -167,7 +167,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div>
   <div class="description">
-    Visualizing one variable with bar graphs, histograms, and densities: reported mileage from an insurance field experiment and 2020 pre-election polls.
+    Visualizing one variable and relationships between variables with ggplot: reported mileage from an insurance field experiment, 2020 pre-election polls, and the 2024 CES.
   </div>
 </div>
 
@@ -190,11 +190,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><a href="Session11_UnivariateVisualization_ArielyPolling.html" class="btn btn-primary" role="button">View Lecture</a></p>
-<p><a href="Session11_UnivariateVisualization_ArielyPolling.Rmd" class="btn btn-outline-secondary" role="button" download="">Download the R Markdown file</a></p>
-<p><a href="Session11_UnivariateVisualization_ArielyPolling.R" class="btn btn-outline-secondary" role="button" download="">Download the R script</a></p>
+<p><a href="Session11_Visualization.html" class="btn btn-primary" role="button">View Lecture</a></p>
+<p><a href="Session11_Visualization.Rmd" class="btn btn-outline-secondary" role="button" download="">Download the R Markdown file</a></p>
+<p><a href="Session11_Visualization.R" class="btn btn-outline-secondary" role="button" download="">Download the R script</a></p>
 <p><a href="insurance.csv" class="btn btn-outline-secondary" role="button" download="">Download the insurance data</a></p>
 <p><a href="polls2020.rds" class="btn btn-outline-secondary" role="button" download="">Download the 2020 polling data</a></p>
+<p><a href="CES2024_GenderGap.rds" class="btn btn-outline-secondary" role="button" download="">Download the CES 2024 data</a></p>
 <p><a href="ShuEtAl_2012_SigningAtTheBeginning_Retracted.pdf" class="btn btn-outline-secondary" role="button" download="">Download the reading: "Signing at the beginning makes ethics salient and decreases dishonest self-reports in comparison to signing at the end" (Shu et al. 2012, <em>PNAS</em>; retracted)</a></p>
 
 
@@ -656,14 +657,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Univariate &amp; Conditional Visualizing: Insurance Fraud, Polling Error, and Plotting Polls"</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2026-10-04"</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "Visualizing one variable with bar graphs, histograms, and densities: reported mileage from an insurance field experiment and 2020 pre-election polls."</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "Visualizing one variable and relationships between variables with ggplot: reported mileage from an insurance field experiment, 2020 pre-election polls, and the 2024 CES."</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">View Lecture</span><span class="co">](Session11_UnivariateVisualization_ArielyPolling.html)</span>{.btn .btn-primary role="button"}</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">View Lecture</span><span class="co">](Session11_Visualization.html)</span>{.btn .btn-primary role="button"}</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Download the R Markdown file</span><span class="co">](Session11_UnivariateVisualization_ArielyPolling.Rmd)</span>{.btn .btn-outline-secondary role="button" download=""}</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Download the R Markdown file</span><span class="co">](Session11_Visualization.Rmd)</span>{.btn .btn-outline-secondary role="button" download=""}</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Download the R script</span><span class="co">](Session11_UnivariateVisualization_ArielyPolling.R)</span>{.btn .btn-outline-secondary role="button" download=""}</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Download the R script</span><span class="co">](Session11_Visualization.R)</span>{.btn .btn-outline-secondary role="button" download=""}</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Download the insurance data</span><span class="co">](insurance.csv)</span>{.btn .btn-outline-secondary role="button" download=""}</span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
