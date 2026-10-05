@@ -272,7 +272,6 @@ ces_gender |>
 
 # Same gender gap among younger, middle-aged, and older voters?
 ces_gender |>
-  drop_na(age_group) |>
   ggplot() +
   geom_bar(
     aes(x = gender2, fill = presvote),
@@ -334,6 +333,12 @@ Pres2020.PV |>
   scale_y_continuous(labels = percent_format(accuracy = 1)) +
   coord_flip() +
   theme_bw()
+
+# Compare to what we would get using a group_by summary.
+Pres2020.PV |>
+  filter(Mode %in% common_modes) |>
+  group_by(Mode) |>
+  summarize(AvgMargin = mean(margin, na.rm = TRUE))
 
 
 # ---- 9. Continuous by continuous: sample size and accuracy ------------------

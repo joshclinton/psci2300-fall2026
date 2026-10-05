@@ -540,7 +540,6 @@ Our next question is: **Does the gender gap look the same among younger, middle-
 
 ```{r}
 ces_gender |>
-  drop_na(age_group) |>
   ggplot() +
   geom_bar(
     aes(x = gender2, fill = presvote),
@@ -627,6 +626,16 @@ Pres2020.PV |>
 ```
 
 What does the line inside each box represent? Do the modes contain the same number of polls? Does the graph show that difference?
+
+We can compare that to what we would get using a `group_by` summary:
+```{r}
+Pres2020.PV |>
+  filter(Mode %in% common_modes) |>
+  group_by(Mode) |>
+  summarize(AvgMargin = mean(margin,na.rm=TRUE))
+```
+
+Note how much more efficiently a graph conveys the same information.
 
 ## Continuous Variable By Continuous Variable (Scatterplot)
 
@@ -880,7 +889,6 @@ Functions introduced in earlier sessions are intentionally omitted. The exceptio
 |---|---|
 | `as.Date()` | Converts values into dates. |
 | `cut()` | Divides values such as dates into intervals. |
-| `drop_na()` | Drops rows with missing values in the named variables. |
 | `unique()` | Returns each distinct value once. |
 
 # Works Cited

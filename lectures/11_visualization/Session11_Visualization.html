@@ -2096,7 +2096,6 @@ use has to be a discrete/categorical variable.</p>
 <p>Our next question is: <strong>Does the gender gap look the same among
 younger, middle-aged, and older voters?</strong></p>
 <pre class="r"><code>ces_gender |&gt;
-  drop_na(age_group) |&gt;
   ggplot() +
   geom_bar(
     aes(x = gender2, fill = presvote),
@@ -2191,6 +2190,14 @@ Pres2020.PV |&gt;
   theme_bw()</code></pre>
 <p>What does the line inside each box represent? Do the modes contain
 the same number of polls? Does the graph show that difference?</p>
+<p>We can compare that to what we would get using a
+<code>group_by</code> summary:</p>
+<pre class="r"><code>Pres2020.PV |&gt;
+  filter(Mode %in% common_modes) |&gt;
+  group_by(Mode) |&gt;
+  summarize(AvgMargin = mean(margin,na.rm=TRUE))</code></pre>
+<p>Note how much more efficiently a graph conveys the same
+information.</p>
 </div>
 </div>
 <div id="continuous-variable-by-continuous-variable-scatterplot" class="section level2">
@@ -2584,10 +2591,6 @@ whiskers, and potential outliers.</td>
 <td>Divides values such as dates into intervals.</td>
 </tr>
 <tr class="odd">
-<td><code>drop_na()</code></td>
-<td>Drops rows with missing values in the named variables.</td>
-</tr>
-<tr class="even">
 <td><code>unique()</code></td>
 <td>Returns each distinct value once.</td>
 </tr>
