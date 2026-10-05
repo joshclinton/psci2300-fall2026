@@ -2060,7 +2060,11 @@ group and the percentage of each group supporting a candidate.</p>
 <p>If our question is whether support differs by gender, we need to
 compare percentages within gender. Setting
 <code>position = &quot;fill&quot;</code> makes every bar the same height and shows
-the proportion of observations in each category.</p>
+the proportion of observations in each category. Notice that we have
+also swapped the two variables – <code>gender2</code> is now on the
+x-axis and <code>presvote</code> is the <code>fill</code> – because each
+bar is divided by its own total, and we want that total to be the number
+of men or the number of women.</p>
 <p>Because the colors now stand for candidates, we also use
 <code>scale_fill_manual</code> to choose them ourselves rather than
 accept the defaults: blue for Harris and red for Trump.</p>

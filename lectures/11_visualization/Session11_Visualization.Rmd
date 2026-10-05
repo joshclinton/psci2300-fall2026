@@ -507,7 +507,7 @@ What does the height of each bar show? Does this answer the question we asked?
 
 There are not exactly the same number of men and women in the data. A graph of counts therefore mixes together two things: the size of each group and the percentage of each group supporting a candidate.
 
-If our question is whether support differs by gender, we need to compare percentages within gender. Setting `position = "fill"` makes every bar the same height and shows the proportion of observations in each category.
+If our question is whether support differs by gender, we need to compare percentages within gender. Setting `position = "fill"` makes every bar the same height and shows the proportion of observations in each category. Notice that we have also swapped the two variables -- `gender2` is now on the x-axis and `presvote` is the `fill` -- because each bar is divided by its own total, and we want that total to be the number of men or the number of women.
 
 Because the colors now stand for candidates, we also use `scale_fill_manual` to choose them ourselves rather than accept the defaults: blue for Harris and red for Trump.
 
