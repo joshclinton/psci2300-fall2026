@@ -11,7 +11,7 @@
 
 <meta name="author" content="Prof. Josh Clinton" />
 
-<meta name="date" content="2026-10-04" />
+<meta name="date" content="2026-10-05" />
 
 <title>Session 11. Visualizing With the Grammar of Graphics</title>
 
@@ -1482,7 +1482,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Session 11. Visualizing With the Grammar of
 Graphics</h1>
 <h4 class="author">Prof. Josh Clinton</h4>
-<h4 class="date">2026-10-04</h4>
+<h4 class="date">2026-10-05</h4>
 
 </div>
 
@@ -1803,8 +1803,17 @@ we have summarized.)</p>
   ) +
   scale_x_continuous(breaks = 0:9) +
   theme_bw()</code></pre>
+<p><em>Quick Exercise</em> Now make a graph to compare how
+<code>baseline_miles</code> compares across <code>condition</code>. What
+do you predict if there was random assigment? What do you observe?</p>
+<pre class="r"><code># INSERT CODE HERE</code></pre>
 <p>Data Colada presents evidence that the insurance dataset was
 fabricated. It does not establish with certainty who fabricated it.</p>
+<p><em>Challenge Yourself!</em>. Using the tools that you have gained
+consider how the average number of reported miles between those who sign
+at the beginning and end vary depending on whether we include or exclude
+suspicious cases? How would we do that? And how do we interpret the
+results</p>
 </div>
 </div>
 <div id="application-2-2020-election-polls" class="section level1">
@@ -1875,6 +1884,12 @@ reference point.</p>
 <p>What do you observe? Is the error centered on zero? What does the
 shape allow us to say about the polling error? What does it not
 explain?</p>
+<p><em>Challenge Yourself!</em> Here we have plotting the distribution
+of polls against the truth. We can also use these skills to plot
+uncertainty. Instead of polling all of the polls compute the polling
+average using resampling and then compare how the distribution of the
+overall average compares to the truth. Can we be 95% certain that the
+polling average contains the true value?</p>
 </div>
 <div id="density" class="section level2">
 <h2>Density</h2>

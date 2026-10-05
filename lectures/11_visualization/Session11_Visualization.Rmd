@@ -284,7 +284,16 @@ insurance |>
 ```
 
 
+*Quick Exercise* Now make a graph to compare how `baseline_miles` compares across `condition`. What do you predict if there was random assigment? What do you observe?
+
+```{r}
+# INSERT CODE HERE
+```
+
 Data Colada presents evidence that the insurance dataset was fabricated. It does not establish with certainty who fabricated it.
+
+*Challenge Yourself!*. Using the tools that you have gained consider how the average number of reported miles between those who sign at the beginning and end vary depending on whether we include or exclude suspicious cases?  How would we do that? And how do we interpret the results
+
 
 # Application 2: 2020 Election Polls
 
@@ -354,6 +363,10 @@ We now know the certified result.
 ```
 
 What do you observe? Is the error centered on zero? What does the shape allow us to say about the polling error? What does it not explain?
+
+*Challenge Yourself!* Here we have plotting the distribution of polls against the truth. We can also use these skills to plot uncertainty.  Instead of polling all of the polls compute the polling average using resampling and then compare how the distribution of the overall average compares to the truth.  Can we be 95\% certain that the polling average contains the true value?
+
+
 
 ## Density
 

@@ -136,6 +136,19 @@ insurance |>
   scale_x_continuous(breaks = 0:9) +
   theme_bw()
 
+# Exercise: Now make a graph to compare how baseline_miles compares across
+# condition. What do you predict if there was random assignment? What do you
+# observe?
+
+
+
+# Challenge Yourself! How does the average number of reported miles for those
+# who sign at the beginning and end vary depending on whether we include or
+# exclude suspicious cases? How would we do that? How do we interpret the
+# results?
+
+
+
 
 # ---- 6. Application 2: 2020 election polls ----------------------------------
 
@@ -166,6 +179,13 @@ poll_margin_plot
 
 # Exercise: Plot the distribution of polling error for Biden. Add a vertical
 # line at zero so that accurate polls have a visible reference point.
+
+
+
+# Challenge Yourself! Instead of plotting all of the polls, compute the polling
+# average using resampling. How does the distribution of the overall average
+# compare to the truth? Can we be 95% certain that the polling average
+# contains the true value?
 
 
 
