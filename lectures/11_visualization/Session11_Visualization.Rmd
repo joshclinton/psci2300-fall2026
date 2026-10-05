@@ -292,7 +292,7 @@ insurance |>
 
 Data Colada presents evidence that the insurance dataset was fabricated. It does not establish with certainty who fabricated it.
 
-*Challenge Yourself!* Using the tools that you have gained consider how the average number of reported miles between those who sign at the beginning and end vary depending on whether we include or exclude suspicious cases?  How would we do that? And how do we interpret the results?
+*Challenge Yourself!* Using the tools that you have gained consider how the average number of reported miles between those who sign at the beginning and end varies depending on whether we include or exclude suspicious cases?  How would we do that? And how do we interpret the results?
 
 
 # Application 2: 2020 Election Polls
