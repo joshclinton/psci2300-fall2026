@@ -23,8 +23,37 @@ library(tidyverse)
 library(scales)
 
 
-# ---- 2. Application 1: the insurance mileage data ---------------------------
+# ---- 2. Application 1: a benchmark for what random digits look like ---------
 
+# Before looking at real data, build a benchmark: 15,000 numbers generated
+# completely at random. What does the last digit look like?
+#
+# runif() draws numbers uniformly between min and max: every value is equally
+# likely. round() makes them whole numbers, like odometer readings.
+# set.seed() makes the random draws reproducible.
+# tibble() defines number as a tidyverse object.
+set.seed(42)
+
+random_numbers = tibble(number = round(runif(15000, min = 0, max = 99999)))
+
+# The last digit is one digit from the end (-1). str_sub() (string subset)
+# works on strings, so as.numeric() turns the result back into a number.
+random_numbers = random_numbers |>
+  mutate(
+    last_digit = as.numeric(str_sub(number, -1))
+  )
+
+# What should the last digit look like?
+random_numbers |>
+  count(last_digit)
+
+# This is what "random" looks like: every digit about equally often, with
+# small wobbles from sampling. Should numbers that people report look like this?
+
+
+# ---- 3. Application 1: now the data ----------------------------------------
+
+# Check that the data is plausible and makes sense.
 # Each row is the first car on a policy. miles_driven = updated - baseline.
 insurance = read.csv("insurance.csv")
 
@@ -37,7 +66,7 @@ insurance |>
   summary()
 
 
-# ---- 3. Build a histogram in stages -----------------------------------------
+# ---- 4. Build a histogram in stages -----------------------------------------
 
 # A blank canvas!
 insurance |>
@@ -72,9 +101,10 @@ mileage_plot = insurance |>
 mileage_plot
 
 
-# ---- 4. Do the numbers look like numbers people report? ---------------------
+# ---- 5. Do the numbers look like numbers people report? ---------------------
 
-# People often round. What should the final digit look like?
+# People often round. What should the final digit look like? Should it look
+# like the benchmark of uniformly random numbers from section 2?
 insurance |>
   count(baseline_last_digit)
 
@@ -95,8 +125,12 @@ insurance |>
 
 
 
+# So what do we make of this? If humans have tendencies that affect how they
+# report, would that only affect them at one point in time? Should we expect
+# these to be consistent or inconsistent?
 
-# ---- 5. One more piece of information: the font -----------------------------
+
+# ---- 6. Another piece of information: the font ------------------------------
 
 # Two fonts: half Calibri, half Cambria. Look separately.
 insurance |>
@@ -150,7 +184,7 @@ insurance |>
 
 
 
-# ---- 6. Application 2: 2020 election polls ----------------------------------
+# ---- 7. Application 2: 2020 election polls ----------------------------------
 
 # Each row is a 2020 national poll.
 Pres2020.PV = readRDS(file = "polls2020.rds")
@@ -202,7 +236,7 @@ Pres2020.PV |>
   theme_bw()
 
 
-# ---- 7. Discrete by discrete: vote and gender in the 2024 CES ---------------
+# ---- 8. Discrete by discrete: vote and gender in the 2024 CES ---------------
 
 # ces_gender from Sessions 3 and 6. Each row is a Harris or Trump voter.
 ces_gender = readRDS("CES2024_GenderGap.rds")
@@ -295,7 +329,7 @@ ces_gender |>
 
 
 
-# ---- 8. Continuous by discrete: poll margins by interview mode --------------
+# ---- 9. Continuous by discrete: poll margins by interview mode --------------
 
 # Each observation is now a poll. Same file, read in again:
 # dates converted and vote shares now proportions.
@@ -341,7 +375,7 @@ Pres2020.PV |>
   summarize(AvgMargin = mean(margin, na.rm = TRUE))
 
 
-# ---- 9. Continuous by continuous: sample size and accuracy ------------------
+# ---- 10. Continuous by continuous: sample size and accuracy ------------------
 
 # Were polls with more respondents more accurate? alpha = transparency.
 Pres2020.PV |>
@@ -381,7 +415,7 @@ Pres2020.PV |>
   theme_bw()
 
 
-# ---- 10. POSSIBLE ASIDE: polls over time ------------------------------------
+# ---- 11. POSSIBLE ASIDE: polls over time ------------------------------------
 
 # Each poll's margin at the date the poll ended.
 raw_poll_plot = Pres2020.PV |>

@@ -70,6 +70,7 @@ Visualization can find things hidden by numeric summaries.
 
 It is always a good idea to plot the main variables you are interested in! The first thing I always do after reading in data and looking at the numeric summaries is to plot the distribution of the variables I am primarily interested in using the tools we are covering in this unit. This will let me know what the nature of my data is, whether there are weird values (and possible errors?)
 
+
 # Application 1: Insurance Mileage
 
 <div class="alert alert-info">
@@ -99,7 +100,42 @@ But does the data look like data that could have actually been reported by peopl
 
 **What do the reported mileage data look like, and should we trust them?**
 
-Before making a graph you need to think: What would you expect the distribution of miles driven in a year to look like? Where should most observations be? Would you expect a sharp upper boundary? Your first job is to check to make sure the data is plausible and makes sense!
+Before making a graph you need to think: What would you expect the distribution of miles driven in a year to look like? Where should most observations be? Would you expect a sharp upper boundary? 
+
+## A Benchmark: What Do Digits Look Like When Numbers Are Random?
+
+Before we look at any real data, let's build a benchmark we can compare real data against. Let's generate 15,000 numbers completely at random and see what the last digit of those randomly generated numbers look like.
+
+`runif()` draws numbers **uniformly** between a minimum and a maximum -- every value in the range is equally likely. We round the draws to whole numbers so they look like the odometer readings we are about to work with. `set.seed()` makes the "random" draws reproducible: everyone who runs this code gets the same 15,000 numbers. `tibble` is needed to define `number` as a tidyverse object.
+
+```{r}
+library(tidyverse)
+set.seed(42)
+
+random_numbers = tibble(number = round(runif(15000, min = 0, max = 99999)))
+```
+
+Now we extract the digits. The **last** digit is simply one digit from the end (i.e., `-1`).  We are using a function for strings here -- `str_sub` (i.e., string subset) -- so we need to use `as.numeric()` to turn it back into a number.
+
+```{r}
+random_numbers = random_numbers |>
+  mutate(
+     last_digit  = as.numeric(str_sub(number, -1))
+  )
+```
+
+Now let's see what the last digit should be.
+
+```{r}
+random_numbers |>
+  count(last_digit)
+```
+
+This is what "random" looks like: every digit shows up about equally often, with only small wobbles from sampling. Keep this picture in mind. When we look at numbers that *people* report, should the digits look like this?
+
+## Now the data...
+
+Now into the actual data. Your first job is to check to make sure the data is plausible and makes sense!
 
 This is the same reason why we `glimpse` and `head` and `summary` when reading a dataset into R.
 
@@ -205,7 +241,7 @@ Why does the distribution stop where it does? Is 50,000 a plausible maximum, or 
 
 ## Do the reported numbers look like numbers people report?
 
-People often round odometer readings. What would you predict the final digit of a reported odometer reading should look like?
+People often round odometer readings. What would you predict the final digit of a reported odometer reading should look like? Should it look like the benchmark of uniformly random numbers we created at the start of class?
 
 ```{r}
 insurance |>
@@ -233,7 +269,9 @@ insurance |>
 # INSERT CODE HERE
 ```
 
-## One more piece of information
+So what do we make of this?  If we think humans have tendencies that affect how they report would that only affect them at one point in time?  Should we expect these to be consistent or inconsistent?
+
+## Another piece of information
 
 The posted spreadsheet contains two fonts. Half of the rows are Calibri and half are Cambria. Let's look separately at how the data being recorded in each font differs before deciding what that might mean.
 
@@ -282,7 +320,6 @@ insurance |>
   scale_x_continuous(breaks = 0:9) +
   theme_bw()
 ```
-
 
 *Quick Exercise* Now make a graph to compare how `baseline_miles` compares across `condition`. What do you predict if there was random assignment? What do you observe?
 
@@ -887,6 +924,9 @@ Functions introduced in earlier sessions are intentionally omitted. The exceptio
 
 | Function or symbol | What it does |
 |---|---|
+| `runif()` | Draws random numbers uniformly between a minimum and a maximum. |
+| `str_sub()` | Extracts part of a string by position; negative positions count from the end. |
+| `as.numeric()` | Converts values (such as a string of digits) into numbers. |
 | `as.Date()` | Converts values into dates. |
 | `cut()` | Divides values such as dates into intervals. |
 | `unique()` | Returns each distinct value once. |
