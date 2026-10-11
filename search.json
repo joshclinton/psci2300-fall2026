@@ -166,5 +166,12 @@
     "title": "Randomized Experiments & Causal Effects: Turning Out Social Pressure",
     "section": "",
     "text": "Session 13 · Monday, October 12, 2026. How can we make causal claims? The importance of randomization and experiments. Can social pressure affect turnout? Reading: Gerber, Green, and Larimer (2008), Social Pressure and Voter Turnout, APSR. View Lecture. Download the R Markdown file. Download the R script. Download the social pressure data."
+  },
+  {
+    "objectID": "lectures/14_workshop_discrimination/index.html",
+    "href": "lectures/14_workshop_discrimination/index.html",
+    "title": "WORKSHOP: Auditing Discrimination",
+    "section": "",
+    "text": "Session 14 · Wednesday, October 14, 2026. How can we detect evidence of discrimination in hiring? Readings: Pager (2003), The Mark of a Criminal Record, AJS. Kline, Rose, and Walters (2022), Systemic Discrimination Among Large U.S. Employers, QJE. View Lecture. Download the R Markdown file. Download the Pager audit data (criminalrecord.csv). Download the large-employer audit data (largeaudit.csv). Data sources: Pager (2003); Kline, Rose, and Walters replication data, Harvard Dataverse."
   }
 ]
