@@ -163,7 +163,7 @@ The remaining variables come from a mail survey about a year after the lottery. 
 # INSERT ANSWER
 ```
 
-**C.** *Among people with `inperson == 1`, compare average blood pressure, cholesterol, and A1c across the two lottery groups. What do you observe? Does "no measurable difference" mean Medicaid had no effect on health?*
+**C.** *Among people with `inperson == 1`, compare average blood pressure, cholesterol, and A1c across the two lottery groups. What do you observe?*
 
 ```{r challenge-c}
 # INSERT ANSWER
@@ -177,6 +177,6 @@ Published studies these data come from:
 
 - Finkelstein, Amy, et al. 2012. "The Oregon Health Insurance Experiment: Evidence from the First Year." *Quarterly Journal of Economics* 127(3): 1057–1106. <https://doi.org/10.1093/qje/qjs020>.
 - Baicker, Katherine, et al. 2013. "The Oregon Experiment—Effects of Medicaid on Clinical Outcomes." *New England Journal of Medicine* 368: 1713–1722. <https://doi.org/10.1056/NEJMsa1212321>.
-- Baicker, Katherine, and Amy Finkelstein. 2019. "The Impact of Medicaid Expansion on Voter Participation: Evidence from the Oregon Health Insurance Experiment." *Quarterly Journal of Political Science* 14(4): 383–400. <https://doi.org/10.1561/100.00019026>.
+- Baicker, Katherine, and Amy Finkelstein. 2019. "The Impact of Medicaid Expansion on Voter Participation: Evidence from the Oregon Health Insurance Experiment." *Quarterly Journal of Political Science* 14(4): 383–400. <https://doi.org/10.1561/100.00019026>. [PDF](BaickerFinkelstein_2019_MedicaidVoterParticipation_QJPS.pdf).
 
 **About `VotedSim2008` and `VotedSim2010`.** The voting study matched the lottery list to Oregon voter files that are not public. These two columns were simulated for this assignment so that the lottery groups reproduce that study's published turnout rates and effects, overall and by gender, with no effect in 2010. They are not measurements of any real person's voting.
