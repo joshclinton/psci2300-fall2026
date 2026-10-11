@@ -159,5 +159,12 @@
     "title": "Pre-Election Polling",
     "section": "",
     "text": "Session 12 · Wednesday, October 7, 2026. Survey instrument: NBC News Decision Desk Poll Questionnaire, October 2026. Readings: Cohn (2016), We Gave Four Good Pollsters the Same Raw Data. Clinton (2024), Poll Results Depend on Pollster Choices. Keeter and Kennedy (2026), Weighting Polls on Party Affiliation and Past Vote, Pew Research Center."
+  },
+  {
+    "objectID": "lectures/13_causality_rct/index.html",
+    "href": "lectures/13_causality_rct/index.html",
+    "title": "Randomized Experiments & Causal Effects: Turning Out Social Pressure",
+    "section": "",
+    "text": "Session 13 · Monday, October 12, 2026. How can we make causal claims? The importance of randomization and experiments. Can social pressure affect turnout? Reading: Gerber, Green, and Larimer (2008), Social Pressure and Voter Turnout, APSR. View Lecture. Download the R Markdown file. Download the R script. Download the social pressure data."
   }
 ]
