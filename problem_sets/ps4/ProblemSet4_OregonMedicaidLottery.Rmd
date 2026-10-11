@@ -1,0 +1,182 @@
+---
+title: 'PSCI 2300 Problem Set 4'
+author: "YOUR NAME HERE"
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# What Happens When People Are Randomly Given the Opportunity to Obtain Medicaid?
+# DUE OCT 19TH
+
+In 2008, Oregon had money to expand Medicaid coverage, but not enough money to cover everyone who wanted it. The state used a lottery to select some people from a waiting list. This created an unusual opportunity to study the effects of expanding access to public health insurance using a randomized design.
+
+But what exactly was randomized? The treatment was **winning the opportunity to apply for Medicaid**. Winning the lottery did not guarantee that a person would apply, remain eligible, or obtain coverage.
+
+Recall that problem sets are graded by completion. I want you to try to figure things out on your own, with friends, or with help from me or Alex. The point is to understand what the code is doing and what the results mean.
+
+HINT: Nothing here is intentionally tricky. Sessions 13 and 14 contain every code snippet you need.
+
+You can also now use AI to help you.  But use it to help, don't outsource your thinking and agency to a machine.  If you want to be capable you need to be able to work _with_ AI. 
+
+Fill in the answers in the spots below. Test things out using `Run Current Chunk` and then, when everything works, `Knit` from above - `Knit to PDF` is best. Make sure you save the name of this file to contain your VUNET ID!  
+
+NOTE: if it is not compiling for you send the document to AI and ask it to help you debug it! Figure out what went wrong and then go ahead.   
+
+The questions are in *italics*. Put your written answers after each question and your code in the answer chunk. When I ask what you observe, tell me what the number means!
+
+## The data
+
+Keep this Rmd and `oregon.csv` in the same folder.
+
+Each row is an adult in a single-family household who signed up **alone** for the 2008 lottery. The lottery information and Medicaid enrollment come from state records and exist for everyone. The other outcomes come from a mail survey about a year later and from in-person interviews about two years later, so they exist only for the people who took part; everyone else is `NA`.
+
+| Variable | Meaning |
+|:--|:--|
+| `lottery` | `"Selected"` or `"Not selected"` in the 2008 lottery. |
+| `female`, `age`, `english` | Recorded when the person signed up, before the lottery. `age` is age in 2008; `english` = 1 if they asked for English-language materials. |
+| `medicaid` | 1 = ever enrolled in Medicaid between March 2008 and September 2009 (state records); 0 = never. |
+| `survey` | 1 = returned the twelve-month mail survey; 0 = did not. The variables below through `depressed` are `NA` unless `survey` is 1. |
+| `rx`, `doctor`, `er`, `hospital` | 1 = any prescription drug use, any doctor visit, any ER visit, any hospital stay in the last six months. |
+| `oop`, `owe`, `borrowed` | 1 = any out-of-pocket medical spending; currently owe money for medical care; borrowed money or skipped bills to pay medical bills. |
+| `health_good` | 1 = rates own health good, very good, or excellent; 0 = fair or poor. |
+| `days_physical_bad`, `days_mental_bad` | Days out of the last 30 when physical (mental) health was not good. |
+| `depressed` | 1 = screened positive for depression on a two-question screener. |
+| `inperson` | 1 = interviewed in person in the Portland area, 2009–2010. The three variables below are `NA` unless `inperson` is 1. |
+| `bp_systolic`, `cholesterol`, `a1c` | Blood pressure (mm Hg), total cholesterol (mg/dl), and hemoglobin A1c (percent), measured at the interview. |
+| `VotedSim2008`, `VotedSim2010` | 1 = voted in the November 2008 (2010) election. **These two columns are simulated.** See the note at the end. |
+
+NOTE: `VotedSim2008` and `VotedSim2010` are not real voting records. The actual study uses Oregon voter files. These columns were generated to reproduce that study's published results.
+
+# Part A: Thinking before Coding
+
+No code in this part. Answer in a sentence or two each.
+
+1. *What is the experimental treatment? What is the control?*
+
+INSERT ANSWER HERE
+
+2. *Define the Fundamental Problem of Causal Inference in terms of a person on the Oregon waiting list. Explain, in one or two sentences, how the lottery gets around it.*
+
+INSERT ANSWER HERE
+
+3. *What is the difference between the effect of **winning the lottery** and the effect of **receiving Medicaid**? Which one can we estimate directly from the randomized comparison, and why?*
+
+INSERT ANSWER HERE
+
+# Part B: Did the Lottery Work as an Experiment?
+
+4. *Load `tidyverse` and read `oregon.csv` into an object called `oregon`. Use `glimpse()` and `count(lottery)` to inspect it. What does one row represent? How many people were selected and how many were not?*
+
+```{r q4}
+# INSERT ANSWER
+```
+
+5. *Before computing anything: why is it important to check the randomization?*
+
+INSERT ANSWER HERE
+
+6. *Now check. Use `group_by(lottery)` and `summarize()` to compare the share who are female and the average age. Do the groups look alike? What would it mean for the study if they did not?*
+
+```{r q6}
+# INSERT ANSWER
+```
+
+7. *Plot the distribution of `age` for the two lottery groups. What type of graph do you need to use?  What does it show?*
+
+```{r q7}
+# INSERT ANSWER
+```
+
+8. *Now a discrete variable. The data record sex as `female`, which is 1 or 0. Wrangle first: use `mutate()` and `if_else()` to create a new variable called `sex` that says `"Female"` or `"Male"`, save the result back into `oregon`. Then graph the relationship between `sex` and `lottery`. What does it show?*
+
+```{r q8}
+# INSERT ANSWER
+```
+
+9. *Did winning the lottery change Medicaid coverage? What share of winners ended up on Medicaid? What share of non-winners did? What does this mean? Save the difference between the two shares as `LotteryEffectOnCoverage`; we need it in Question 14.*
+
+```{r q9}
+# INSERT ANSWER
+```
+
+# Part C: Did Winning the Lottery Change Voting?
+
+Remember that `VotedSim2008` and `VotedSim2010` are simulated to match the published study. They exist for everyone in `oregon`.
+
+10. *Calculate turnout in November 2008 for each lottery group. What does that show?*
+
+```{r q10}
+# INSERT ANSWER
+```
+
+11. *What is the effect in terms of percentage points? In terms of percent change? Is one more accurate than the other? Save the percentage-point difference as `LotteryEffectOnVoting`; we need it in Question 14.*
+
+```{r q11}
+# INSERT ANSWER
+```
+
+12. *How sure are we? Focusing on the percentage point difference, use resampling to compute the percentage who voted in 2008 in each group.*
+
+NOTE: With 57,000 rows, 1,000 repetitions take a minute or two to run. Start with 5 repetitions to check that your loop works, then change it to 1,000 and wait.
+
+```{r q12}
+# INSERT ANSWER
+```
+
+13. *Now compute how much the turnout differs between lottery groups. Using `quantile()` on your resampled differences what can you conclude about how likely it is that turnout is higher for those who won the lottery?*
+
+```{r q13}
+# INSERT ANSWER
+```
+
+14. *Everything we have done so far is in terms of the effect of winning the lottery. If we want to see the effect of Medicaid we need to deal with the fact that Winning the lottery moved only some people onto Medicaid (Question 9). If winning changed voting by putting people on Medicaid, the effect of Medicaid on the people it covered is `LotteryEffectOnVoting` divided by `LotteryEffectOnCoverage`. Calculate it, then express it as a percent of turnout among people who were not selected.*
+
+```{r q14}
+# INSERT ANSWER
+```
+
+15. *What assumption did you make in Question 14? Is it reasonable? No code needed.*
+
+INSERT ANSWER HERE
+
+## Optional Challenge: Health Care, Money, and Health
+
+You do not have to do this, but see if you can challenge yourself. It is the same analysis as Part C applied to the outcomes the study was designed to measure.
+
+The remaining variables come from a mail survey about a year after the lottery. The study mailed it to every winner but only to a random sample of the people who were not selected, so the two groups' return rates differ (check `survey` by `lottery`). Among people who were mailed a survey, about 40 percent of each group returned it. Work with `respondents = oregon |> filter(survey == 1)`.
+
+**A.** *Among `respondents`, make one summary for the Selected group and one for the Not selected group, each with the share for `doctor`, `er`, `borrowed`, and `health_good` (use `na.rm = TRUE`). Subtract the two summaries. Which outcomes changed, and in which direction?*
+
+```{r challenge-a}
+# INSERT ANSWER
+```
+
+**B.** *Resample the `borrowed` difference 1,000 times as in Question 12 and construct a 95% interval as in Question 13. Does it include zero? How does this interval compare to `TurnoutInterval`, and why might the two differ so much?*
+
+```{r challenge-b}
+# INSERT ANSWER
+```
+
+**C.** *Among people with `inperson == 1`, compare average blood pressure, cholesterol, and A1c across the two lottery groups. What do you observe? Does "no measurable difference" mean Medicaid had no effect on health?*
+
+```{r challenge-c}
+# INSERT ANSWER
+```
+
+## Where the data came from
+
+The Oregon Health Insurance Experiment public-use data: Finkelstein, Amy. 2013. *Oregon Health Insurance Experiment Public Use Data.* National Bureau of Economic Research and Harvard Dataverse. <https://doi.org/10.7910/DVN/SJG1ED>. `oregon.csv` keeps people who signed up for the lottery alone and a small set of variables from the descriptive, state-program, twelve-month mail survey, and in-person interview files. No weights are used.
+
+Published studies these data come from:
+
+- Finkelstein, Amy, et al. 2012. "The Oregon Health Insurance Experiment: Evidence from the First Year." *Quarterly Journal of Economics* 127(3): 1057–1106. <https://doi.org/10.1093/qje/qjs020>.
+- Baicker, Katherine, et al. 2013. "The Oregon Experiment—Effects of Medicaid on Clinical Outcomes." *New England Journal of Medicine* 368: 1713–1722. <https://doi.org/10.1056/NEJMsa1212321>.
+- Baicker, Katherine, and Amy Finkelstein. 2019. "The Impact of Medicaid Expansion on Voter Participation: Evidence from the Oregon Health Insurance Experiment." *Quarterly Journal of Political Science* 14(4): 383–400. <https://doi.org/10.1561/100.00019026>.
+
+**About `VotedSim2008` and `VotedSim2010`.** The voting study matched the lottery list to Oregon voter files that are not public. These two columns were simulated for this assignment so that the lottery groups reproduce that study's published turnout rates and effects, overall and by gender, with no effect in 2010. They are not measurements of any real person's voting.
