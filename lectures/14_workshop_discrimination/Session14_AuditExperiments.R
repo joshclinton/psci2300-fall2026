@@ -140,7 +140,7 @@ WhiteNoRecord = white_rates |>
 
 white_rates |>
   mutate(
-    PercentagePointChange = CallbackRate - WhiteNoRecord,
+    PercentagePointChange = 100 * (CallbackRate - WhiteNoRecord),
     PercentChange = 100 * (CallbackRate - WhiteNoRecord) / WhiteNoRecord
   )
 
@@ -154,7 +154,7 @@ BlackNoRecord = black_rates |>
 
 black_rates |>
   mutate(
-    PercentagePointChange = CallbackRate - BlackNoRecord,
+    PercentagePointChange = 100 * (CallbackRate - BlackNoRecord),
     PercentChange = 100 * (CallbackRate - BlackNoRecord) / BlackNoRecord
   )
 
