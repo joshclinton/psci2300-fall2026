@@ -172,8 +172,7 @@
     "href": "lectures/14_workshop_discrimination/index.html",
     "title": "WORKSHOP: Auditing Discrimination",
     "section": "",
-<<<<<<< HEAD
-    "text": "Session 14 · Wednesday, October 14, 2026. How can we detect evidence of discrimination in hiring? Reading guide (PDF). Readings: Pager (2003), The Mark of a Criminal Record, AJS (PDF). Kline, Rose, and Walters (2022), Systemic Discrimination Among Large U.S. Employers, QJE. Video: Pager (2016), Race, Employment and a Criminal Record, Stanford Center on Poverty and Inequality, YouTube. Download the Pager audit data (audit.csv). Download the large-employer audit data (largeaudit.csv). Download the within-job contact gaps (jobgaps.csv). Data sources: Pager (2003); Kline, Rose, and Walters replication data, Harvard Dataverse."
+    "text": "Session 14 · Wednesday, October 14, 2026. How can we detect evidence of discrimination in hiring? Reading guide (PDF). Readings: Pager (2003), The Mark of a Criminal Record, AJS (PDF). Kline, Rose, and Walters (2022), Systemic Discrimination Among Large U.S. Employers, QJE; two-page Becker Friedman Institute summary (PDF). Video: Pager (2016), Race, Employment and a Criminal Record, Stanford Center on Poverty and Inequality, YouTube. Download the R script. Download the Pager audit data (audit.csv). Download the large-employer audit data (largeaudit.csv). Data sources: Pager (2003); Kline, Rose, and Walters replication data, Harvard Dataverse."
   },
   {
     "objectID": "lectures/16_correlation_regression/index.html",
@@ -188,8 +187,5 @@
     "title": "Observational Causality?: Home Fields, Minimum Wages, Expanding Medicaid",
     "section": "",
     "text": "Session 15 · Monday, October 19, 2026. How can we make causal claims without an experiment? Did playing without fans reduce home-field advantage? Does raising the minimum wage reduce employment? How does health care affect politics? Background readings: Bryson, Dolton, Reade, Schreyer, and Singleton (2021), Causal Effects of an Absent Crowd on Performances and Refereeing Decisions during Covid-19, Economics Letters (PDF). Card and Krueger (1994), Minimum Wages and Employment, AER (PDF). Clinton and Sances (2018), The Politics of Policy: The Initial Mass Political Effects of Medicaid Expansion in the States, APSR (PDF). View Lecture. Download the R Markdown file. Download the R script. Download the Bundesliga match data (bundesliga.csv). Download the Card and Krueger minimum-wage data (minwage.csv). Download the Medicaid expansion county data (medicaid.csv). Data sources: football-data.co.uk; Card and Krueger (1994); Clinton and Sances (2018)."
-=======
-    "text": "Session 14 · Wednesday, October 14, 2026. How can we detect evidence of discrimination in hiring? Reading guide (PDF). Readings: Pager (2003), The Mark of a Criminal Record, AJS (PDF). Kline, Rose, and Walters (2022), Systemic Discrimination Among Large U.S. Employers, QJE; two-page Becker Friedman Institute summary (PDF). Video: Pager (2016), Race, Employment and a Criminal Record, Stanford Center on Poverty and Inequality, YouTube. Download the R script. Download the Pager audit data (audit.csv). Download the large-employer audit data (largeaudit.csv). Data sources: Pager (2003); Kline, Rose, and Walters replication data, Harvard Dataverse."
->>>>>>> 98c3789197299c6d5da432b137249fd61fb3573b
   }
 ]
