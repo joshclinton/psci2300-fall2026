@@ -195,7 +195,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="readings">Readings</h2>
 <ul>
 <li>Pager, Devah. 2003. “The Mark of a Criminal Record.” <em>American Journal of Sociology</em> 108(5): 937–975. <a href="https://doi.org/10.1086/374403">https://doi.org/10.1086/374403</a>. <a href="Pager_2003_MarkOfCriminalRecord_AJS.pdf" download="">[PDF]</a></li>
-<li>Kline, Patrick M., Evan K. Rose, and Christopher R. Walters. 2022. “Systemic Discrimination Among Large U.S. Employers.” <em>Quarterly Journal of Economics</em> 137(4): 1963–2036. <a href="https://doi.org/10.1093/qje/qjac024">https://doi.org/10.1093/qje/qjac024</a>. Free working-paper version: <a href="https://www.nber.org/papers/w29053">NBER Working Paper 29053</a>.</li>
+<li>Kline, Patrick M., Evan K. Rose, and Christopher R. Walters. 2022. “Systemic Discrimination Among Large U.S. Employers.” <em>Quarterly Journal of Economics</em> 137(4): 1963–2036. <a href="https://doi.org/10.1093/qje/qjac024">https://doi.org/10.1093/qje/qjac024</a>. Free working-paper version: <a href="https://www.nber.org/papers/w29053">NBER Working Paper 29053</a>. Two-page summary: Becker Friedman Institute, “Systemic Discrimination Among Large US Employers,” Economic Finding, August 11, 2021. <a href="KlineRoseWalters_2021_BFI_Summary.pdf" download="">[PDF]</a></li>
 </ul>
 
 <h2 class="anchored" data-anchor-id="video">Video</h2>
@@ -206,15 +206,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="readingguide">Before Class</h2>
 <p><a href="Session14_ReadingGuide.pdf" class="btn btn-primary" role="button" download="">Download the reading guide (PDF)</a></p>
 
-<h2 class="anchored" data-anchor-id="materials">Data</h2>
+<h2 class="anchored" data-anchor-id="materials">R Script and Data</h2>
+<p><a href="Session14_AuditExperiments.R" class="btn btn-outline-secondary" role="button" download="">Download the R script</a></p>
 <p><a href="audit.csv" class="btn btn-outline-secondary" role="button" download="">Download the Pager audit data (audit.csv)</a></p>
 <p><a href="largeaudit.csv" class="btn btn-outline-secondary" role="button" download="">Download the large-employer audit data (largeaudit.csv)</a></p>
-<p><a href="jobgaps.csv" class="btn btn-outline-secondary" role="button" download="">Download the within-job contact gaps (jobgaps.csv)</a></p>
 
 <h2 class="anchored" data-anchor-id="data-sources">Data Sources</h2>
 <ul>
 <li><code>audit.csv</code>: 696 of the 700 applications in Pager, Devah. 2003. “The Mark of a Criminal Record.” <em>American Journal of Sociology</em> 108(5): 937–975. <a href="https://doi.org/10.1086/374403">https://doi.org/10.1086/374403</a>. Four cases were redacted in the source copy, which is distributed with Imai’s <em>Quantitative Social Science</em>; the course file replaces the 0/1 codes with labels.</li>
-<li><code>largeaudit.csv</code> and <code>jobgaps.csv</code>: Kline, Patrick M., Evan K. Rose, and Christopher R. Walters. 2022. “Replication Data for: ‘Systemic Discrimination Among Large U.S. Employers.’” Harvard Dataverse, V1.1, CC0 1.0. <a href="https://doi.org/10.7910/DVN/HLO4XC">https://doi.org/10.7910/DVN/HLO4XC</a>. <code>largeaudit.csv</code> keeps all 83,643 applications with anonymized employer and job identifiers, the firm’s industry, state, submission date, the racialized-name treatment, the other randomized resume features (gender of the name, age over 40, academic, political, and LGBTQ clubs), and the contact outcome; <code>jobgaps.csv</code> is the within-job white-name minus Black-name contact difference for the 11,026 jobs that received both.</li>
+<li><code>largeaudit.csv</code>: Kline, Patrick M., Evan K. Rose, and Christopher R. Walters. 2022. “Replication Data for: ‘Systemic Discrimination Among Large U.S. Employers.’” Harvard Dataverse, V1.1, CC0 1.0. <a href="https://doi.org/10.7910/DVN/HLO4XC">https://doi.org/10.7910/DVN/HLO4XC</a>. <code>largeaudit.csv</code> keeps all 83,643 applications with anonymized employer and job identifiers, the firm’s industry, state, submission date, the racialized-name treatment, the other randomized resume features (gender of the name, age over 40, academic, political, and LGBTQ clubs), and the contact outcome.</li>
 </ul>
 
 
@@ -684,7 +684,7 @@ description: "How can we detect evidence of discrimination in hiring?"
 ## Readings
 
 - Pager, Devah. 2003. "The Mark of a Criminal Record." *American Journal of Sociology* 108(5): 937–975. &lt;https://doi.org/10.1086/374403&gt;. [[PDF]](Pager_2003_MarkOfCriminalRecord_AJS.pdf){download=""}
-- Kline, Patrick M., Evan K. Rose, and Christopher R. Walters. 2022. "Systemic Discrimination Among Large U.S. Employers." *Quarterly Journal of Economics* 137(4): 1963–2036. &lt;https://doi.org/10.1093/qje/qjac024&gt;. Free working-paper version: [NBER Working Paper 29053](https://www.nber.org/papers/w29053).
+- Kline, Patrick M., Evan K. Rose, and Christopher R. Walters. 2022. "Systemic Discrimination Among Large U.S. Employers." *Quarterly Journal of Economics* 137(4): 1963–2036. &lt;https://doi.org/10.1093/qje/qjac024&gt;. Free working-paper version: [NBER Working Paper 29053](https://www.nber.org/papers/w29053). Two-page summary: Becker Friedman Institute, "Systemic Discrimination Among Large US Employers," Economic Finding, August 11, 2021. [[PDF]](KlineRoseWalters_2021_BFI_Summary.pdf){download=""}
 
 ## Video
 
@@ -694,18 +694,18 @@ description: "How can we detect evidence of discrimination in hiring?"
 
 [Download the reading guide (PDF)](Session14_ReadingGuide.pdf){.btn .btn-primary role="button" download=""}
 
-## Data
+## R Script and Data
+
+[Download the R script](Session14_AuditExperiments.R){.btn .btn-outline-secondary role="button" download=""}
 
 [Download the Pager audit data (audit.csv)](audit.csv){.btn .btn-outline-secondary role="button" download=""}
 
 [Download the large-employer audit data (largeaudit.csv)](largeaudit.csv){.btn .btn-outline-secondary role="button" download=""}
 
-[Download the within-job contact gaps (jobgaps.csv)](jobgaps.csv){.btn .btn-outline-secondary role="button" download=""}
-
 ## Data Sources
 
 - `audit.csv`: 696 of the 700 applications in Pager (2003), &lt;https://doi.org/10.1086/374403&gt;. Four cases were redacted in the source copy, distributed with Imai's *Quantitative Social Science*; the course file replaces the 0/1 codes with labels.
-- `largeaudit.csv` and `jobgaps.csv`: Kline, Rose, and Walters (2022), "Replication Data for: 'Systemic Discrimination Among Large U.S. Employers.'" Harvard Dataverse, V1.1, CC0 1.0. &lt;https://doi.org/10.7910/DVN/HLO4XC&gt;. All 83,643 applications with anonymized employer and job identifiers, the firm's industry, state, submission date, the racialized-name treatment, the other randomized resume features (gender of the name, age over 40, academic, political, and LGBTQ clubs), and the contact outcome; `jobgaps.csv` is the within-job white-name minus Black-name contact difference for the 11,026 jobs that received both.
+- `largeaudit.csv`: Kline, Rose, and Walters (2022), "Replication Data for: 'Systemic Discrimination Among Large U.S. Employers.'" Harvard Dataverse, V1.1, CC0 1.0. &lt;https://doi.org/10.7910/DVN/HLO4XC&gt;. All 83,643 applications with anonymized employer and job identifiers, the firm's industry, state, submission date, the racialized-name treatment, the other randomized resume features (gender of the name, age over 40, academic, political, and LGBTQ clubs), and the contact outcome.
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
