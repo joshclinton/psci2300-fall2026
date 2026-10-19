@@ -173,5 +173,19 @@
     "title": "WORKSHOP: Auditing Discrimination",
     "section": "",
     "text": "Session 14 · Wednesday, October 14, 2026. How can we detect evidence of discrimination in hiring? Reading guide (PDF). Readings: Pager (2003), The Mark of a Criminal Record, AJS (PDF). Kline, Rose, and Walters (2022), Systemic Discrimination Among Large U.S. Employers, QJE. Video: Pager (2016), Race, Employment and a Criminal Record, Stanford Center on Poverty and Inequality, YouTube. Download the Pager audit data (audit.csv). Download the large-employer audit data (largeaudit.csv). Download the within-job contact gaps (jobgaps.csv). Data sources: Pager (2003); Kline, Rose, and Walters replication data, Harvard Dataverse."
+  },
+  {
+    "objectID": "lectures/16_correlation_regression/index.html",
+    "href": "lectures/16_correlation_regression/index.html",
+    "title": "Correlation & Regression: Floridian Butterfly Ballots",
+    "section": "",
+    "text": "Session 16 · Wednesday, October 21, 2026. How can we summarize the relationship between two variables? Does presidential approval predict House losses? Can Palm Beach County's vote for Buchanan be explained? Reading: Wand, Shotts, Sekhon, Mebane, Herron, and Brady (2001), The Butterfly Did It: The Aberrant Vote for Buchanan in Palm Beach County, Florida, APSR (PDF). Download the presidential approval and House election data (approvalvote.csv). Download the Florida county returns (florida.csv). Download the Datasaurus Dozen (datasaurus.csv). Data sources: American Presidency Project and Clerk of the House; Wand et al. (2001); Matejka and Fitzmaurice (2017), Datasaurus Dozen, OpenIntro."
+  },
+  {
+    "objectID": "lectures/15_observational_causality/index.html",
+    "href": "lectures/15_observational_causality/index.html",
+    "title": "Observational Causality?: Home Fields, Minimum Wages, Expanding Medicaid",
+    "section": "",
+    "text": "Session 15 · Monday, October 19, 2026. How can we make causal claims without an experiment? Did playing without fans reduce home-field advantage? Does raising the minimum wage reduce employment? How does health care affect politics? Background readings: Bryson, Dolton, Reade, Schreyer, and Singleton (2021), Causal Effects of an Absent Crowd on Performances and Refereeing Decisions during Covid-19, Economics Letters (PDF). Card and Krueger (1994), Minimum Wages and Employment, AER (PDF). Clinton and Sances (2018), The Politics of Policy: The Initial Mass Political Effects of Medicaid Expansion in the States, APSR (PDF). View Lecture. Download the R Markdown file. Download the R script. Download the Bundesliga match data (bundesliga.csv). Download the Card and Krueger minimum-wage data (minwage.csv). Download the Medicaid expansion county data (medicaid.csv). Data sources: football-data.co.uk; Card and Krueger (1994); Clinton and Sances (2018)."
   }
 ]
