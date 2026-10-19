@@ -1,0 +1,348 @@
+---
+title: 'PSCI 2300 Problem Set 4: Instructor Solution'
+author: "Instructor reference"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# What Happens When People Are Randomly Given the Opportunity to Obtain Medicaid?
+
+**Instructor copy. Due October 19.**
+
+This key includes working code and reference interpretations. It is separate from the student handout. Reference interpretations are notes for grading, not model prose. Each question is quoted from the student handout, followed by the code and notes.
+
+# Part A: Thinking before Coding
+
+1. *What is the experimental treatment? What is the control?*
+
+*Treatment and control.* Treatment: being selected in the lottery, which gave the opportunity to apply for Medicaid. Control: not being selected. Good answers add that the unit is a person on the waiting list and that Medicaid coverage itself is an outcome of the treatment, not the treatment.
+
+2. *Define the Fundamental Problem of Causal Inference in terms of a person on the Oregon waiting list. Explain, in one or two sentences, how the lottery gets around it.*
+
+*Fundamental Problem.* For any one person we observe only the outcome under the condition they received; we never see the same person both selected and not selected. The lottery does not solve this for the individual. It creates two groups that are the same on average, so the group difference estimates the average effect.
+
+3. *What is the difference between the effect of **winning the lottery** and the effect of **receiving Medicaid**? Which one can we estimate directly from the randomized comparison, and why?*
+
+*Winning versus receiving.* The effect of winning is the difference in outcomes between the two lottery groups: everyone selected counts, whether or not they enrolled. The effect of receiving Medicaid is the change for a person who actually obtained coverage. Only the first is estimated directly by the randomized comparison, because enrollment was not randomized: people chose whether to apply, and some controls enrolled on their own.
+
+# Part B: Did the Lottery Work as an Experiment?
+
+4. *Load `tidyverse` and read `oregon.csv` into an object called `oregon`. Use `glimpse()` and `count(lottery)` to inspect it. What does one row represent? How many people were selected and how many were not?*
+
+```{r q4}
+library(tidyverse)
+
+oregon = read.csv("oregon.csv")
+
+glimpse(oregon)
+
+oregon |>
+  count(lottery)
+```
+
+One row is one adult who signed up for the lottery alone; 57,528 rows. About 19,800 selected and 37,700 not. The state had money for fewer people than signed up; unequal sizes do not bias a comparison of averages.
+
+5. *Before computing anything: why is it important to check the randomization?*
+
+Randomization is what makes the two groups comparable. If it worked, they should look alike on everything measured before the lottery; checking is how we know we can attribute later differences to winning (internal validity). Variables fixed before the lottery (`female`, `age`, `english`) can check it; `medicaid` and the survey outcomes were measured afterward and could be changed by winning, so a difference in them is a result, not a check.
+
+6. *Now check. Use `group_by(lottery)` and `summarize()` to compare the share who are female and the average age. Do the groups look alike? What would it mean for the study if they did not?*
+
+```{r q6}
+oregon |>
+  group_by(lottery) |>
+  summarize(
+    N = n(),
+    PctFemale = mean(female),
+    AvgAge = mean(age)
+  )
+```
+
+The groups match to within a point on both. Large differences would mean later differences could not be attributed to the lottery.
+
+7. *Plot the distribution of `age` for the two lottery groups. What type of graph do you need to use?  What does it show?*
+
+```{r q7}
+oregon |>
+  ggplot(aes(x = age, fill = lottery)) +
+  geom_density(alpha = .4) +
+  labs(
+    x = "Age in 2008",
+    y = "Density",
+    fill = "Lottery Result",
+    title = "Age Distribution by Lottery Result"
+  ) +
+  theme_bw()
+```
+
+A continuous variable compared across a discrete group: overlapping densities (a boxplot or faceted histogram also works). The two curves lie on top of each other, as randomization predicts.
+
+8. *Now a discrete variable. The data record sex as `female`, which is 1 or 0. Wrangle first: use `mutate()` and `if_else()` to create a new variable called `sex` that says `"Female"` or `"Male"`, save the result back into `oregon`. Then graph the relationship between `sex` and `lottery`. What does it show?*
+
+```{r q8}
+oregon = oregon |>
+  mutate(sex = if_else(female == 1, "Female", "Male"))
+
+oregon |>
+  count(sex, female)
+
+oregon |>
+  ggplot(aes(x = lottery, fill = sex)) +
+  geom_bar(position = "fill") +
+  labs(
+    x = "Lottery Result",
+    y = "Share of Group",
+    fill = "Sex",
+    title = "Sex Composition by Lottery Result"
+  ) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  theme_bw()
+```
+
+Relabeling turns a 0/1 number into two named categories so the legend reads "Female" and "Male" rather than 0 and 1. Each bar is one lottery group split into the share of women and men; the split is nearly identical (about 56 to 57 percent women in each).
+
+9. *Did winning the lottery change Medicaid coverage? What share of winners ended up on Medicaid? What share of non-winners did? What does this mean? Save the difference between the two shares as `LotteryEffectOnCoverage`; we need it in Question 14.*
+
+```{r q9}
+Coverage = oregon |>
+  group_by(lottery) |>
+  summarize(
+    N = n(),
+    PctMedicaid = mean(medicaid)
+  )
+
+Coverage
+
+ControlCoverage = Coverage |>
+  filter(lottery == "Not selected") |>
+  pull(PctMedicaid)
+
+SelectedCoverage = Coverage |>
+  filter(lottery == "Selected") |>
+  pull(PctMedicaid)
+
+LotteryEffectOnCoverage = SelectedCoverage - ControlCoverage
+
+LotteryEffectOnCoverage
+```
+
+About 42 percent of winners were ever on Medicaid versus about 15 percent of the not selected: winning raised coverage by about 27 points. Most winners never enrolled, so every "effect of winning" is spread over people who mostly did not get the treatment the lottery was meant to deliver. (The handout no longer tells students to save `LotteryEffectOnCoverage`; Question 14 assumes they have it.)
+
+# Part C: Did Winning the Lottery Change Voting?
+
+10. *Calculate turnout in November 2008 for each lottery group. What does that show?*
+
+```{r q10}
+Turnout = oregon |>
+  group_by(lottery) |>
+  summarize(
+    N = n(),
+    PctVoted2008 = mean(VotedSim2008)
+  )
+
+Turnout
+```
+
+34.5 percent of winners voted versus 33.8 percent of the not selected: a small difference in the direction of more voting among winners.
+
+11. *What is the effect in terms of percentage points? In terms of percent change? Is one more accurate than the other? Save the percentage-point difference as `LotteryEffectOnVoting`; we need it in Question 14.*
+
+```{r q11}
+ControlTurnout = Turnout |>
+  filter(lottery == "Not selected") |>
+  pull(PctVoted2008)
+
+SelectedTurnout = Turnout |>
+  filter(lottery == "Selected") |>
+  pull(PctVoted2008)
+
+LotteryEffectOnVoting = SelectedTurnout - ControlTurnout
+
+LotteryEffectOnVoting
+
+100 * LotteryEffectOnVoting / ControlTurnout
+```
+
+About 0.7 percentage points, which is about a 2 percent increase relative to the 33.8 percent baseline. Neither is more accurate; they answer different questions. Percentage points say how many more people out of 100 voted; percent change says how large that is relative to how many were voting anyway. Both are needed to judge the size of an effect.
+
+12. *How sure are we? Focusing on the percentage point difference, use resampling to compute the percentage who voted in 2008 in each group.*
+
+```{r q12}
+set.seed(42)
+n_iterations = 1000
+Selected_means = NULL
+NotSelected_means = NULL
+
+for (i in 1:n_iterations) {
+
+  sampS = oregon |>
+    filter(lottery == "Selected") |>
+    slice_sample(prop = 1, replace = TRUE) |>
+    summarize(AvgS = mean(VotedSim2008))
+
+  Selected_means = bind_rows(Selected_means, sampS)
+
+  sampN = oregon |>
+    filter(lottery == "Not selected") |>
+    slice_sample(prop = 1, replace = TRUE) |>
+    summarize(AvgN = mean(VotedSim2008))
+
+  NotSelected_means = bind_rows(NotSelected_means, sampN)
+}
+
+SampledTurnout = bind_cols(Selected_means, NotSelected_means)
+
+summary(SampledTurnout)
+```
+
+One row is one imaginary rerun: a resample of each group and its 2008 turnout.
+
+13. *Now compute how much the turnout differs between lottery groups. Using `quantile()` on your resampled differences what can you conclude about how likely it is that turnout is higher for those who won the lottery?*
+
+```{r q13}
+SampledTurnout = SampledTurnout |>
+  mutate(SATE = AvgS - AvgN)
+
+TurnoutInterval = SampledTurnout |>
+  summarize(
+    Lower = quantile(SATE, .025),
+    Estimate = mean(SATE),
+    Upper = quantile(SATE, .975),
+    PctAboveZero = mean(SATE > 0)
+  )
+
+TurnoutInterval
+```
+
+The 95 percent interval runs from about −0.1 to +1.5 points and includes zero. About 95 percent of resampled differences are positive, so turnout is probably higher among winners, but a zero effect is within what sampling variation could produce.
+
+14. *HARDER: Everything we have done so far is in terms of the effect of winning the lottery. If we want to see the effect of Medicaid we need to deal with the fact that Winning the lottery moved only some people onto Medicaid (Question 9). If winning changed voting by putting people on Medicaid, the effect of Medicaid on the people it covered is `LotteryEffectOnVoting` divided by `LotteryEffectOnCoverage`. Calculate it, then express it as a percent of turnout among people who were not selected.*
+
+```{r q14}
+LotteryEffectOnVoting / LotteryEffectOnCoverage
+
+100 * (LotteryEffectOnVoting / LotteryEffectOnCoverage) / ControlTurnout
+```
+
+About 2.6 points for people Medicaid covered, which is about 7.6 percent of control-group turnout. The 0.7-point lottery effect, whose interval includes zero, was divided by 0.27 and then expressed relative to 33.8 percent turnout. The headline inherits the uncertainty of the 0.7: if the lottery effect could be zero, so could the "7 percent."
+
+15. *What assumption did you make in Question 14? Is it reasonable? No code needed.*
+
+That winning the lottery affected voting only through Medicaid coverage. Plausible but not certain: applying, being notified, or contact with the state could also change behavior.
+
+## Optional Challenge: Health Care, Money, and Health
+
+**A.** *Among `respondents`, make one summary for the Selected group and one for the Not selected group, each with the share for `doctor`, `er`, `borrowed`, and `health_good` (use `na.rm = TRUE`). Subtract the two summaries. Which outcomes changed, and in which direction?*
+
+```{r challenge-a}
+oregon |>
+  group_by(lottery) |>
+  summarize(PctReturned = mean(survey))
+
+respondents = oregon |>
+  filter(survey == 1)
+
+Selected = respondents |>
+  filter(lottery == "Selected") |>
+  summarize(
+    Doctor = mean(doctor, na.rm = TRUE),
+    ER = mean(er, na.rm = TRUE),
+    Borrowed = mean(borrowed, na.rm = TRUE),
+    HealthGood = mean(health_good, na.rm = TRUE)
+  )
+
+NotSelected = respondents |>
+  filter(lottery == "Not selected") |>
+  summarize(
+    Doctor = mean(doctor, na.rm = TRUE),
+    ER = mean(er, na.rm = TRUE),
+    Borrowed = mean(borrowed, na.rm = TRUE),
+    HealthGood = mean(health_good, na.rm = TRUE)
+  )
+
+Selected
+NotSelected
+Selected - NotSelected
+```
+
+Doctor visits up about 7 points, ER use unchanged, borrowing down about 7 points, good health up about 5 points.
+
+**B.** *Resample the `borrowed` difference 1,000 times as in Question 12 and construct a 95% interval as in Question 13. Does it include zero? How does this interval compare to `TurnoutInterval`, and why might the two differ so much?*
+
+```{r challenge-b}
+set.seed(42)
+Selected_means = NULL
+NotSelected_means = NULL
+
+for (i in 1:n_iterations) {
+
+  sampS = respondents |>
+    filter(lottery == "Selected") |>
+    slice_sample(prop = 1, replace = TRUE) |>
+    summarize(AvgS = mean(borrowed, na.rm = TRUE))
+
+  Selected_means = bind_rows(Selected_means, sampS)
+
+  sampN = respondents |>
+    filter(lottery == "Not selected") |>
+    slice_sample(prop = 1, replace = TRUE) |>
+    summarize(AvgN = mean(borrowed, na.rm = TRUE))
+
+  NotSelected_means = bind_rows(NotSelected_means, sampN)
+}
+
+SampledBorrowed = bind_cols(Selected_means, NotSelected_means) |>
+  mutate(SATE = AvgS - AvgN)
+
+BorrowedInterval = SampledBorrowed |>
+  summarize(
+    Lower = quantile(SATE, .025),
+    Estimate = mean(SATE),
+    Upper = quantile(SATE, .975)
+  )
+
+BorrowedInterval
+```
+
+About −8 to −5 points; zero is far outside. The borrowing effect is both larger relative to its baseline and farther from zero than the turnout effect: a 7-point drop on a 38 percent base versus a 0.7-point rise on a 34 percent base. Same sample sizes, very different signal.
+
+**C.** *Among people with `inperson == 1`, compare average blood pressure, cholesterol, and A1c across the two lottery groups. What do you observe? Does "no measurable difference" mean Medicaid had no effect on health?*
+
+```{r challenge-c}
+interviewed = oregon |>
+  filter(inperson == 1)
+
+Selected = interviewed |>
+  filter(lottery == "Selected") |>
+  summarize(
+    BloodPressure = mean(bp_systolic, na.rm = TRUE),
+    Cholesterol = mean(cholesterol, na.rm = TRUE),
+    A1c = mean(a1c, na.rm = TRUE)
+  )
+
+NotSelected = interviewed |>
+  filter(lottery == "Not selected") |>
+  summarize(
+    BloodPressure = mean(bp_systolic, na.rm = TRUE),
+    Cholesterol = mean(cholesterol, na.rm = TRUE),
+    A1c = mean(a1c, na.rm = TRUE)
+  )
+
+Selected
+NotSelected
+Selected - NotSelected
+```
+
+No measurable differences. "Not distinguishable from zero" is not "zero": only a quarter of winners gained coverage, two years is short for these measures to move, and the interviewed group is a Portland-area subset.
+
+## Note on the simulated columns
+
+`VotedSim2008` and `VotedSim2010` were generated by `data/Build_Oregon_StudentData.R` to reproduce Baicker and Finkelstein (2019), Tables 1 and 3: control turnout 33.8 percent, lottery effect +0.69, Medicaid effect +2.5 (about 7 percent), effect concentrated among men, no 2010 effect. See `README.md` in this folder.
