@@ -49,6 +49,10 @@ What makes something causal?  A persuasive argument (based on design?)
 
 Conceptually, the correlation coefficient describes, on average, how two variables _move together_ (in a linear way!).
 
+<div style="text-align:center">
+![Figure 1 from Messerli (2012), "Chocolate Consumption, Cognitive Function, and Nobel Laureates," *New England Journal of Medicine*.](figs/ChocolateCorrelation.png){width=70%}
+</div>
+
 See below for the math, if interested, but this is the formula:
 
 $$
