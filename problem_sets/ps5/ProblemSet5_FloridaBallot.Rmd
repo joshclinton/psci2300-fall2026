@@ -1,0 +1,195 @@
+---
+title: 'PSCI 2300 Problem Set 5'
+author: "YOUR NAME HERE"
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# Did a Bad Ballot Cost Bill Nelson the 2018 Senate Race?
+# DUE MONDAY, NOVEMBER 2 AT NOON
+
+In 2018, Republican Rick Scott defeated Democrat Bill Nelson for the U.S. Senate in Florida by only 10,033 votes, the closest Senate election in the history of the state. Afterward there were reports that a badly designed ballot in Broward County, the second-largest county in the state and one of its most Democratic, led some voters to skip the Senate race entirely. See, for example, the _New York Times_ article [here](https://www.nytimes.com/2018/11/09/upshot/florida-senate-race-broward-undercount.html) or the _Washington Post_ article [here](https://www.washingtonpost.com/outlook/2018/11/12/how-badly-designed-ballot-might-have-swayed-election-florida/).
+
+A copy of the actual ballot is available [here](https://ballotpedia.org/Florida_official_sample_ballots,_2018). The Senate race was printed in the lower-left corner under a long block of instructions, and it seems plausible that voters missed it. When voters vote in some races on a ballot but not others we call that an **undervote**.
+
+Suppose NBC hires you as a data consultant to determine whether there is evidence consistent with the claim that voters in Broward County missed the Senate race, and whether there were enough of them to have changed the outcome. This is an observational question: nobody randomly assigned ballots to counties. So we will use the three comparisons from Session 15 and then the correlation and regression tools from Session 16.
+
+Recall that problem sets are graded by completion. I want you to try to figure things out on your own, with friends, or with help from me or Alex. The point is to understand what the code is doing and what the results mean.
+
+HINT: Nothing here is intentionally tricky. 
+
+You can also use AI to help you. But use it to help, don't outsource your thinking and agency to a machine. If you want to be capable you need to be able to work _with_ AI.
+
+Fill in the answers in the spots below. Test things out using `Run Current Chunk` and then, when everything works, `Knit` from above - `Knit to PDF` is best. Make sure you save the name of this file to contain your VUNET ID!
+
+NOTE: if it is not compiling for you send the document to AI and ask it to help you debug it! Figure out what went wrong and then go ahead.
+
+The questions are in *italics*. Put your written answers after each question and your code in the answer chunk. When I ask what you observe, tell me what the number means!
+
+## The data
+
+Keep this Rmd and `florida_georgia.csv` in the same folder.
+
+Each row is a county in Florida or Georgia. The variables record the votes for the Democratic and Republican candidates in the 2016 presidential and Senate races and the 2018 Senate and governor races. Georgia had no Senate race in 2018, so those columns are `NA` for Georgia.
+
+| Variable | Meaning |
+|:--|:--|
+| `state` | `"FL"` or `"GA"`. |
+| `county` | County name. |
+| `fips` | The county's five-digit Census code. Broward County is `"12011"`. |
+| `PresDemVote2016`, `PresRepVote2016` | Votes for Clinton and Trump in November 2016. |
+| `SenDemVote2016`, `SenRepVote2016` | Votes for the Democratic and Republican Senate candidates in 2016. |
+| `SenDemVote2018`, `SenRepVote2018` | Votes for Nelson (D) and Scott (R) for Senate in 2018. |
+| `GovDemVote2018`, `GovRepVote2018` | Votes for Gillum (D) and DeSantis (R) for governor in 2018. |
+| `PresDemPct2016` | Clinton's share of the two-party presidential vote in 2016 (votes for Clinton divided by votes for Clinton or Trump). |
+| `SenDemPct2018` | Nelson's share of the two-party Senate vote in 2018 (votes for Nelson divided by votes for Nelson or Scott). |
+
+NOTE: All counts are votes for the two major-party candidates only. Minor-party and write-in votes are not included.
+
+# Part A: Thinking before Coding
+
+No code in this part. Answer in a sentence or two for each.  This is not technically an experiment because nothing was randomized -- but if we can think of the ballot as a "random error" then we can treat it like an experiment.
+
+1. *The claim is that the design of Broward County's ballot caused some voters to skip the Senate race. In the language of Session 15, what is the **unit** of analysis, what is the **treatment**, and what is the **outcome**? Which units are treated and which are the comparison?*
+
+INSERT ANSWER HERE
+
+2. *State the Fundamental Problem of Causal Inference in terms of Broward County. What would we need to observe to know the effect of the ballot design, and why can we never observe it?*
+
+INSERT ANSWER HERE
+
+3. *Here are two comparisons we could make: (a) Compare Broward's Senate votes in 2018 versus Broward's Senate votes in 2016, and (b) compare Broward's Senate votes in 2018 versus Broward's governor votes in 2018. What must be true for each comparison to tell us the effect of the ballot design? Which do you think is more credible, and why?*
+
+INSERT ANSWER HERE
+
+# Part B: Getting the Data Ready
+
+4. *Load `tidyverse` and read `florida_georgia.csv` into an object called `elections`. Use `glimpse()` to inspect it. Then use `filter()` to create an object called `florida` that contains only the Florida counties. How many counties does Florida have?*
+
+```{r q4}
+# INSERT ANSWER
+```
+
+5. *How close was the 2018 Senate race? Use `summarize()` to add up the votes for Nelson and for Scott across the Florida counties and compute the difference. Does it match the 10,033-vote margin that was reported?*
+
+```{r q5}
+# INSERT ANSWER
+```
+
+6. *Create the undervote - this is the number of votes that were cast in one race but not another. This is our dependent variable of interest.  First do some wrangling to add five new variables to `florida`: `SenVotes2018` (Nelson plus Scott), `GovVotes2018` (Gillum plus DeSantis), `Undervote2018` (`GovVotes2018` minus `SenVotes2018`), `PctUndervote2018` (`Undervote2018` divided by `GovVotes2018`), and, for later, `PctUndervote2016`, the same share for 2016 using the presidential vote as the base: (`PresDemVote2016 + PresRepVote2016` minus `SenDemVote2016 + SenRepVote2016`) divided by `PresDemVote2016 + PresRepVote2016`. Then use `arrange(desc(Undervote2018))` and look at the top of the data. What do you see and how does that relate to the main question?*
+
+```{r q6}
+# INSERT ANSWER
+```
+
+# Part C: Three Comparisons without an Experiment
+
+Session 15 gave us three ways to estimate a causal effect without randomization. Apply each one to Broward County's 2018 undervote.
+
+7. ***Cross-section.** Use `filter()` to create two objects: `Broward` (just Broward County) and `OtherCounties` (the other 66 Florida counties). Compare `PctUndervote2018` in Broward to the average of `PctUndervote2018` in the other counties. How many percentage points higher is Broward? Multiply that gap by Broward's `GovVotes2018` to express the percentage difference in terms of the number of votes.*
+
+```{r q7}
+# INSERT ANSWER
+```
+
+8. ***Thinking: what could confound the cross-section?** What does it mean to be *confounded* and why does that matter?  What must be true to say that the difference is caused by the ballot?*
+
+INSERT ANSWER HERE
+
+9. ***Before-and-after.** Compare Broward's `PctUndervote2016` to its `PctUndervote2018`. Did the undervote rise?*
+
+```{r q9}
+# INSERT ANSWER
+```
+
+10. ***Thinking:** What must be true to say that the difference is caused by the ballot? Do you think this is more or less likely to be true here than in the cross-section?*
+
+INSERT ANSWER HERE
+
+11. ***Difference-in-differences.** Calculate the change in the undervote from 2016 to 2018 in Broward and the average change in the other counties, and subtract. Express the difference-in-differences in percentage points and, multiplying by Broward's `GovVotes2018`, in votes. How does it compare with the 10,033-vote margin?*
+
+```{r q11}
+# INSERT ANSWER
+```
+
+12. ***Thinking: what could confound the difference-in-differences?** What must the difference in difference assume to make a causal claim? Of the three comparisons, which do you find most credible, and why do the three give different numbers?*
+
+INSERT ANSWER HERE
+
+# Part D: Correlation and Regression
+
+The comparisons in Part C treat the whole undervote as the effect of the ballot and ignore that only some of the missing voters would have voted for Nelson. Session 16's tools let us ask directly how many votes Nelson should have received in Broward given what happened in the other counties.
+
+13. *Plot Nelson's 2018 vote share in each county (`SenDemPct2018`) against Clinton's 2016 share (`PresDemPct2016`) -- but include the 45-degree line using `+ geom_abline()`, and compute the correlation with `cor()`. What does the plot show? Now make the same plot and correlation using votes cast (`SenDemVote2018` against `PresDemVote2016`). Does the correlation tell you what the plot shows?*
+
+```{r q13}
+# INSERT ANSWER
+```
+
+14. *Now compare the two 2018 races on the same ballot: Nelson against Gillum (`SenDemVote2018` against `GovDemVote2018`), with the 45-degree line and the correlation. Is this a better comparison than 2016 for our question? What stands out?*
+
+```{r q14}
+# INSERT ANSWER
+```
+
+15. *Run a regression predicting `SenDemVote2018` from `GovDemVote2018` using `lm()` and save it as `fl.reg`. Interpret the intercept and the slope in terms of votes. If a county cast 1,000 more votes for Gillum, how many more votes for Nelson does the regression predict?*
+
+```{r q15}
+# INSERT ANSWER
+```
+
+16. *Make the scatterplot of `SenDemVote2018` against `GovDemVote2018` with both the 45-degree line (`geom_abline()`) and the regression line (`geom_smooth(method = "lm")`). How close is the regression line to the 45-degree line, and what does that mean?*
+
+```{r q16}
+# INSERT ANSWER
+```
+
+17. *Use `predict()` with `newdata = Broward` to predict Nelson's votes in Broward from the regression. How many votes do we actually observe? How large is the difference, and how does it compare with the 10,033-vote margin?^[If we wanted the full effect of the ballot we would also need the Republican undervote, by running the same regression for Scott and DeSantis. I am not asking you to do this, but it is a good exercise if you are interested.]*
+
+```{r q17}
+# INSERT ANSWER
+```
+
+18. *An NBC producer asks whether you are underestimating the effect because Broward itself helped fit the line. Run the regression again using only `OtherCounties`, predict Broward's votes from that regression, and compare the difference to Question 17. Why is it larger? (This is called leave-one-out cross-validation.)*
+
+```{r q18}
+# INSERT ANSWER
+```
+
+# Part E: What Does This All Mean?
+
+19. *We have now done several analyses. If you had to summarize what you think is true, what would you say: did the ballot design in Broward affect the election? Why or why not?*
+
+INSERT ANSWER HERE
+
+## Optional Challenge: Uncertainty, Residuals, and Georgia
+
+You do not have to do this, but see if you can challenge yourself.
+
+**A.** *Take a look at the regression errors (i.e., residuals) by adding them to `florida` with `mutate(Residual = SenDemVote2018 - predict(fl.reg, newdata = florida))` and plot a histogram of them. Where does Broward fall? What does the rest of the distribution tell you about how confident to be?*
+
+```{r challenge-a}
+# INSERT ANSWER
+```
+
+**B.** *How uncertain is the Broward shortfall? Resample `OtherCounties` 1,000 times, run the regression on each resample, predict Broward each time, and save the shortfall (predicted minus observed) with `c()` as in Session 15. Use `quantile()` for a 95 percent interval. In what share of resamples is the shortfall larger than 10,033?*
+
+```{r challenge-b}
+# INSERT ANSWER
+```
+
+**C.** ***Georgia.** President Trump claimed that his vote was undercounted in Georgia. Using `elections` and `filter(state == "GA")`, plot `PresRepVote2016` against `SenRepVote2016` with a 45-degree line, and then `PresDemVote2016` against `SenDemVote2016`. Is that evidence of fraud? What else could explain it?*
+
+```{r challenge-c}
+# INSERT ANSWER
+```
+
+## Where the data came from
+
+County election returns compiled for this course. Presidential returns are from the MIT Election Data and Science Lab, *County Presidential Election Returns 2000-2020*, Harvard Dataverse, <https://doi.org/10.7910/DVN/VOQCHQ>. Senate and governor returns are from official state results as compiled in the course's county election file. `florida_georgia.csv` keeps the Florida and Georgia counties and the 2016 and 2018 races used here.
