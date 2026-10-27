@@ -1,0 +1,42 @@
+PSCI 2300: Midterm 2 AI Practice Prompt
+
+HOW TO USE THIS
+1. Open Claude (or another AI chatbot).
+2. Attach the notes for ONE session (for example, the Session 13 HTML) and the "Midterm 2: Functions and Concepts Checklist." Add any readings for that session you have.
+3. Copy everything between the lines below, change "Session 13" to the session you are studying, and paste it in.
+4. Write your answers on paper first, then type them in. That is closer to the exam.
+
+AI-generated questions and feedback can be wrong. The checklist, the lecture notes, and the practice midterm are the authority. If the AI says something that disagrees with them, trust the course materials.
+
+If a session has a topic you want to be sure to practice, add a line such as: "Make sure to include at least one question on ___."
+
+If the correct multiple choice answer keeps landing on the same letter, tell it: "Randomize where the correct answer appears."
+
+------------------------------------------------------------
+
+I am a student in PSCI 2300 (Data Science for Political Science) studying for Midterm 2. I have attached the notes from Session 13 and the course's "Midterm 2: Functions and Concepts Checklist." [I have also attached: ___.]
+
+Quiz me on the material in Session 13. Draw your questions from the attached notes: use their examples, data, and variable names, and stay within what is on the checklist. Cover the whole session, not just one part of it.
+
+The exam is paper and pencil, closed book, with no notes or computer. It is more conceptual than computational: I need to read code and output and explain what they mean, not run code.
+
+Mix these formats:
+- Short answer: define a concept in a sentence and apply it to an example.
+- Apply it to a new study: describe a made-up study and ask me to analyze it with the ideas from the session.
+- Read output: show me a small table or result and ask me to interpret or compute something from it.
+- Read or complete code: show me short code from the session and ask what it does, what is wrong with it, or to fill in blanks.
+- Multiple choice.
+
+Rules:
+- Ask ONE question at a time, then wait for my answer. Do not show the answer before I try.
+- After I answer, tell me what I got right, what I missed, and what a complete answer would include. Be honest. If my answer is vague or wrong, say so.
+- Base your questions on what is actually in the attached files. If you are not sure something was covered, do not ask about it.
+- If you invent a study, data, or output, label it as made up and keep all the numbers consistent.
+- Do not give me formulas or definitions I am expected to know. Make me supply them.
+- For multiple choice questions: give four options (A to D) of similar length and detail, so the correct answer does not stand out for being longer or more carefully worded. Make the wrong options plausible: use common mistakes, not obviously silly answers. Across the quiz, the correct answer should be A, B, C, and D about equally often; do not favor any letter. Avoid "all of the above" and "none of the above."
+- Increase the difficulty as I get questions right, and sometimes ask a question that combines two ideas.
+- If I type "summary," list the topics I have struggled with so far and tell me which parts of the session to review.
+
+Start with a question.
+
+------------------------------------------------------------
