@@ -1,0 +1,484 @@
+---
+title: "Session 17. From Polls to Seats: Who Wins the House?"
+author: "Prof. Josh Clinton"
+institute: "Vanderbilt University"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# Today's Agenda: Learning Objectives
+
+The midterms are next week!  On Monday you made a forecast using presidential approval.  Today you make a second forecast using what voters tell us in a poll -- and then we compare them.
+
+Motivating questions:
+
+- How do votes turn into seats?
+
+- What does our poll say voters will do?
+
+- Which party will win the House?
+
+Tools:
+
+- Using a regression to go from votes to seats
+
+- Fixing a sample "by hand" (i.e., weighting)
+
+- Comparing predictions: is it the model or what we plug into it?
+
+Nothing here is new R!  You already know how to do all of this -- we are just putting the pieces together.
+
+The plan: first I will show you each piece.  Then it is your turn.  You will make the decisions -- who is a likely voter, how to fix the sample (by 2024 vote? by party? which targets?), which elections to use -- and see how much each decision matters.
+
+# Where We Left Off
+
+```{r}
+library(tidyverse)
+```
+
+On Monday we estimated how the change in House seats for the president's party depends on presidential approval in midterm elections.
+
+```{r}
+approvalvote = read.csv("approvalvote.csv")
+
+midterms = approvalvote |>
+  filter(Election == "Midterm")
+```
+
+Should Monday's scatterplot use all elections (`approvalvote`) or only midterms (`midterms`)?
+
+```{r, fig.width=8, fig.height=5.5}
+approvalvote |>
+  ggplot(aes(x = JuneApproval, y = HouseSeatChange)) +
+  geom_hline(yintercept = 0) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(
+    x = "President's approval in June (%)",
+    y = "Change in the president's party's House seats"
+  ) +
+  theme_bw()
+```
+
+```{r}
+midterm.reg = lm(HouseSeatChange ~ JuneApproval, data = midterms)
+
+midterm.reg
+```
+
+So I give you approval, and you tell me what you predict for the change in seats.  Republicans won 220 seats in 2024, so add the predicted change (a negative number) to 220 to get seats.
+
+```{r}
+predict(midterm.reg, newdata = tibble(JuneApproval = c(35, 40, 45)))
+
+220 + predict(midterm.reg, newdata = tibble(JuneApproval = c(35, 40, 45)))
+```
+
+Is 218 in reach?  But to do that you had to pick a value for approval.  Gallup stopped doing presidential approval polls, so what did you use?  Where did it come from?
+
+QUESTION: Every prediction has two pieces: the model (the regression) and the value of X we plug into it.  Which do you think matters more?
+
+# The Poll: Presidential Approval
+
+<div class="alert alert-info">
+**MOTIVATION QUESTION**
+What does our poll say about Trump's approval?  And what does Monday's model predict if we use it?
+</div>
+
+Remember the poll from Session 12?  It asked about Trump's approval too.  Let's use it as our X.
+
+## What Data Do We Have?
+
+Each row is a respondent.  Fielded Sept 28 - Oct 5, 2026.
+
+```{r}
+poll = read.csv("midterm2026_poll.csv")
+```
+
+Always look at the data.
+
+```{r}
+glimpse(poll)
+
+poll |>
+  count(trump_approve)
+```
+
+Dealing with missing data, and creating the variables we need: `approve` is 1 if the respondent approves of Trump (strongly or somewhat), and `demvote` is 1 if they would vote for the Democrat for the House (we will need it later).
+
+```{r}
+poll = poll |>
+  drop_na(trump_approve, generic_ballot) |>
+  mutate(
+    approve = if_else(trump_approve %in% c("Strongly approve", "Somewhat approve"), 1, 0),
+    demvote = if_else(generic_ballot == "Democrat", 1, 0)
+  )
+```
+
+## Take the Poll at Face Value
+
+What share approve?
+
+```{r}
+poll |>
+  summarize(Approve = 100 * mean(approve))
+```
+
+Plug it into Monday's model.
+
+```{r}
+predict(midterm.reg, newdata = tibble(JuneApproval = 35.6))
+
+220 + predict(midterm.reg, newdata = tibble(JuneApproval = 35.6))
+```
+
+Should we trust it?
+
+## Does the Sample Look Like the Country?
+
+Who answered?  What party do they identify with?
+
+```{r}
+poll |>
+  count(party3) |>
+  mutate(Pct = 100 * n / sum(n))
+```
+
+Counting independents who lean toward a party as partisans, one estimate is that voters are about 46% Democrat, 46% Republican, and 8% Independent.
+
+So what is wrong with our sample?
+
+## Fixing It by Hand
+
+Remember how we fixed the poll in Session 12?  We went fast, so let's walk through it again -- this time by party, which is simpler.  This is the template you will use in a minute.
+
+Here is the idea.  Compute approval within each party.  Then add the groups back up using the share each group *should* be, not the share it is in our sample.
+
+Targets: 46% Democrat, 46% Republican, 8% Independent.  Unlike an election result, nobody *knows* these -- they are a guess.  Hold on to that thought.
+
+```{r}
+by_party = poll |>
+  filter(!is.na(party3)) |>
+  group_by(party3) |>
+  summarize(
+    N = n(),
+    PctApprove = mean(approve),
+    PctDem = mean(demvote)
+  ) |>
+  mutate(
+    SampleShare = N / sum(N),
+    ActualShare = case_when(
+      party3 == "Democrat" ~ .46,
+      party3 == "Republican" ~ .46,
+      party3 == "Independent" ~ .08
+    ),
+    Weight = ActualShare / SampleShare
+  )
+
+by_party
+```
+
+Look at the `Weight` column.  This is what a survey weight does: each Republican counts as about 1.2 people and each Democrat as about 0.9.  Groups we have too few of count for more; groups we have too many of count for less.
+
+Now multiply each group's answer by its share in the sample and add them up.  Unadjusted uses the sample as is; adjusted multiplies each group's share by its weight.  (Notice that `SampleShare * Weight` is just `ActualShare` -- weighting makes each group the size it *should* be.)
+
+```{r}
+by_party |>
+  summarize(
+    ApproveUnadjusted = 100 * sum(PctApprove * SampleShare),
+    ApproveAdjusted = 100 * sum(PctApprove * SampleShare * Weight)
+  )
+```
+
+How much did fixing the sample change approval?  What does Monday's model predict now?
+
+```{r}
+220 + predict(midterm.reg, newdata = tibble(JuneApproval = 41.0))
+```
+
+Approval went up about 5 points.  How many seats did that buy Republicans?
+
+# But Approval Is Not a Vote
+
+Presidential approval is not a ballot.  Our poll also asks how people will vote for the House.  Why not just use that?
+
+First, how closely are approval and the House vote tied?  Among those who would vote for each party, what share approve of Trump?
+
+```{r, fig.width=8, fig.height=5.5}
+poll |>
+  ggplot(aes(x = generic_ballot, fill = approve == 1)) +
+  geom_bar(position = "fill") +
+  labs(
+    x = "Generic ballot",
+    y = "Share of respondents",
+    fill = "Approve of Trump?"
+  ) +
+  theme_bw()
+```
+
+How many Democratic voters approve of Trump?  How many Republican voters disapprove?  If approval and the vote are this closely tied, should both models tell us the same thing?
+
+To use the House vote, we need to get from votes to seats.
+
+# From Votes to Seats
+
+<div class="alert alert-info">
+**MOTIVATION QUESTION**
+How do votes turn into seats?
+</div>
+
+Polls tell us about votes.  But who controls the House depends on seats!  So we need a way to map from votes (X) to seats (Y).  Sound familiar?
+
+Good news: we already have the data.  `approvalvote` has the president's party's share of the two-party House vote (`HouseVoteShare`) and its share of House seats (`HouseSeatShare`).
+## Look at the Relationship
+
+```{r, fig.width=8, fig.height=5.5}
+SeatsVotes = approvalvote |>
+  ggplot(aes(x = HouseVoteShare, y = HouseSeatShare)) +
+  geom_hline(yintercept = 50) +
+  geom_vline(xintercept = 50) +
+  geom_point() +
+  labs(
+    x = "President's party's share of the two-party House vote (%)",
+    y = "President's party's share of House seats (%)"
+  ) +
+  theme_bw()
+
+SeatsVotes
+```
+
+What do you observe?
+
+- Does the relationship move up or down?
+- How tightly do the observations cluster?
+- What does it mean to be in the top-left or bottom-right box?
+
+```{r}
+cor(approvalvote$HouseVoteShare, approvalvote$HouseSeatShare)
+```
+
+## Analyze the Relationship with Regression
+
+Now plot!  Recall that we can add to our previously saved plot!
+
+```{r, fig.width=8, fig.height=5.5}
+SeatsVotes +
+  geom_smooth(method = "lm")
+```
+
+```{r}
+seats.reg = lm(HouseSeatShare ~ HouseVoteShare, data = approvalvote)
+
+seats.reg
+```
+
+In terms of *interpretation*: how many points of seats does one more point of the vote get you?
+
+Why more than one?  (Hint: what happens in a district a party wins 51-49?)
+
+Does the intercept mean anything here?  Has any party ever gotten 0% of the vote?
+
+`predict()` gives the prediction for values of X that we choose.  A majority is 50% of the seats (218 of 435).
+
+```{r}
+predict(seats.reg, newdata = tibble(HouseVoteShare = c(44, 46, 48, 50, 52, 54)))
+```
+
+How much of the vote does a party need to win the House?
+
+## Which Elections?
+
+NOTE: Democrats held the House from 1955 through 1994.  Maybe that is weird?  Is the relationship the same since then?
+
+```{r}
+recent = approvalvote |>
+  filter(Year >= 1996)
+
+seats.reg.recent = lm(HouseSeatShare ~ HouseVoteShare, data = recent)
+
+seats.reg.recent
+
+predict(seats.reg.recent, newdata = tibble(HouseVoteShare = c(44, 46, 48, 50, 52, 54)))
+```
+
+How does the slope change?  What does that mean for how many seats a bad year costs a party?
+
+# Back to the Poll: The Generic Ballot
+
+<div class="alert alert-info">
+**MOTIVATION QUESTION**
+What does our poll say voters will do?
+</div>
+
+Does weighting matter?  `by_party` also has the generic ballot in each party (`PctDem`), so we can use the same fix.  One minus the Democratic share is the Republican share.
+
+```{r}
+by_party |>
+  summarize(
+    Unadjusted = 1 - sum(PctDem * SampleShare),
+    Adjusted = 1 - sum(PctDem * SampleShare * Weight)
+  )
+```
+
+NOTE: Pollsters also adjust for things like age, education, and race -- the published estimate for this poll was about D+8.  Different reasonable choices give different answers.  Recall that in Session 12 the same data gave us anything from D+2 to D+21!
+
+Let's use that to predict!  Republicans are the president's party.  Everyone who answered, no adjustments:
+
+```{r}
+predict(seats.reg, newdata = tibble(HouseVoteShare = 41))
+```
+
+With the adjustment:
+
+```{r}
+predict(seats.reg, newdata = tibble(HouseVoteShare = 46.9))
+```
+
+Has the president's party ever done this badly?
+
+```{r}
+min(approvalvote$HouseVoteShare)
+min(approvalvote$HouseSeatShare)
+```
+
+# Your Turn: Your Forecast
+
+You now have all the pieces.  At each step you make a decision.  There is no single right answer -- but you need to be able to defend what you did.
+
+## Step 1: Who Is a Likely Voter?
+
+Not everyone who answers a poll will vote, and there is no rule book for deciding who will.
+
+**YOUR DECISION:** Who is a likely voter?  Look at `registered`, `vote_intent`, and `vote2024`.
+
+Create a variable in `poll` called `likely` that is 1 if the respondent is a likely voter and 0 otherwise.
+
+```{r}
+# INSERT CODE HERE
+```
+
+## Step 2: Who Will Vote?
+
+What is the partisan composition likely to be?  How does that matter?  We can change the numbers (make sure they add to 1!) and see how that matters!
+
+```{r}
+by_party_new = poll |>
+  filter(likely == 1) |>
+  filter(!is.na(party3)) |>
+  group_by(party3) |>
+  summarize(
+    N = n(),
+    PctApprove = mean(approve),
+    PctDem = mean(demvote)
+  ) |>
+  mutate(
+    SampleShare = N / sum(N),
+    ActualShare = case_when(
+      party3 == "Democrat" ~ .46,  # replace
+      party3 == "Republican" ~ .46, # replace
+      party3 == "Independent" ~ .08 # replace
+    ),
+    Weight = ActualShare / SampleShare
+  )
+
+by_party_new
+```
+
+Now predict!  Use the approval model and also the seat share model.  Do the two models agree?
+
+```{r}
+# INSERT CODE HERE
+```
+
+## Step 3: Compare
+
+Put all of your predictions side by side, including Monday's.  Do they agree?  If not, is it the model or what you plugged in?  Which decision mattered the most?
+
+```{r}
+# INSERT CODE HERE
+```
+
+## Step 4: What Must Be True for Republicans to Win?
+
+Flip it around: what would X have to be for Republicans to win 218 seats (50% of the seats)?
+
+*Quick Exercise* What share of the vote do Republicans need?  Then: what would you have to assume about who votes to get our poll there?  Does that electorate seem plausible?
+
+```{r}
+# INSERT CODE HERE
+```
+
+# Make Your Prediction!
+
+Write down your forecast.
+
+- Republican seats:
+- Which party wins the House:
+- How sure are you (0-100%)?
+- Which model and which value of X do you trust most, and why?
+- What would make you wrong?
+
+# Optional: Fixing by 2024 Vote
+
+Party targets are a guess.  The 2024 result is a fact.  So why not fix the sample to how people voted in 2024?
+
+Who answered?
+
+```{r}
+poll |>
+  count(vote2024) |>
+  mutate(Pct = 100 * n / sum(n))
+```
+
+What actually happened in 2024?  About 89% of registered voters voted.  Among those who voted: Trump 49.8, Harris 48.3, someone else 1.9.
+
+Targets, as shares of registered voters: the actual 2024 result among the 89% who voted, and 11% who did not vote.
+
+```{r}
+turnout24 = .89
+
+by_vote = poll |>
+  filter(vote2024 != "Not eligible", !is.na(vote2024)) |>
+  group_by(vote2024) |>
+  summarize(
+    N = n(),
+    PctApprove = mean(approve),
+    PctDem = mean(demvote)
+  ) |>
+  mutate(
+    SampleShare = N / sum(N),
+    ActualShare = case_when(
+      vote2024 == "Harris" ~ .483 * turnout24,
+      vote2024 == "Trump" ~ .498 * turnout24,
+      vote2024 == "Someone else" ~ .019 * turnout24,
+      vote2024 == "Did not vote" ~ 1 - turnout24
+    ),
+    Weight = ActualShare / SampleShare
+  )
+
+by_vote
+
+by_vote |>
+  summarize(
+    Adjusted = sum(PctDem * SampleShare * Weight),
+    ApproveAdjusted = 100 * sum(PctApprove * SampleShare * Weight)
+  ) |>
+  mutate(
+    AdjustedMargin = 100 * (2 * Adjusted - 1),
+    RepShare = 100 * (1 - Adjusted)
+  )
+```
+
+How does this compare to fixing by party?  Now try it on your `likely` voters.  The 2024 result is a fact -- but what share of *likely* voters did not vote in 2024?  (Change `turnout24`.)
+
+# New R Functions Introduced in Session 17
+
+None!  Everything today uses functions you already know.
