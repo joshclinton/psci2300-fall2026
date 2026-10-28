@@ -1523,8 +1523,10 @@ elections.</p>
 midterms = approvalvote |&gt;
   filter(Election == &quot;Midterm&quot;)</code></pre>
 <p>Should Monday’s scatterplot use all elections
-(<code>approvalvote</code>) or only midterms
-(<code>midterms</code>)?</p>
+(<code>approvalvote</code>) or only midterms (<code>midterms</code>)?
+And which outcome: <code>HouseSeatShare</code>,
+<code>HouseSeatChange</code>, <code>HouseVoteShare</code>, or
+<code>HouseVoteChange</code>?</p>
 <pre class="r"><code>approvalvote |&gt;
   ggplot(aes(x = JuneApproval, y = HouseSeatChange)) +
   geom_hline(yintercept = 0) +
@@ -1544,9 +1546,7 @@ change (a negative number) to 220 to get seats.</p>
 <pre class="r"><code>predict(midterm.reg, newdata = tibble(JuneApproval = c(35, 40, 45)))
 
 220 + predict(midterm.reg, newdata = tibble(JuneApproval = c(35, 40, 45)))</code></pre>
-<p>Is 218 in reach? But to do that you had to pick a value for approval.
-Gallup stopped doing presidential approval polls, so what did you use?
-Where did it come from?</p>
+<p>Is 218 in reach?</p>
 <p>QUESTION: Every prediction has two pieces: the model (the regression)
 and the value of X we plug into it. Which do you think matters more?</p>
 </div>

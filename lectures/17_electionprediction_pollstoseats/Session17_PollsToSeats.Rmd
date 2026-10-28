@@ -53,7 +53,7 @@ midterms = approvalvote |>
   filter(Election == "Midterm")
 ```
 
-Should Monday's scatterplot use all elections (`approvalvote`) or only midterms (`midterms`)?
+Should Monday's scatterplot use all elections (`approvalvote`) or only midterms (`midterms`)?  And which outcome: `HouseSeatShare`, `HouseSeatChange`, `HouseVoteShare`, or `HouseVoteChange`?
 
 ```{r, fig.width=8, fig.height=5.5}
 approvalvote |>
@@ -82,7 +82,7 @@ predict(midterm.reg, newdata = tibble(JuneApproval = c(35, 40, 45)))
 220 + predict(midterm.reg, newdata = tibble(JuneApproval = c(35, 40, 45)))
 ```
 
-Is 218 in reach?  But to do that you had to pick a value for approval.  Gallup stopped doing presidential approval polls, so what did you use?  Where did it come from?
+Is 218 in reach?
 
 QUESTION: Every prediction has two pieces: the model (the regression) and the value of X we plug into it.  Which do you think matters more?
 

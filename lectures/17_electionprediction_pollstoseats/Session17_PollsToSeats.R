@@ -27,6 +27,12 @@ midterms = approvalvote |>
   filter(Election == "Midterm")
 
 # Monday's scatterplot: approvalvote? midterms?
+
+# HouseSeatShare?
+# HouseSeatChange?
+# HouseVoteShare?
+# HouseVoteChange?
+
 approvalvote |>
   ggplot(aes(x = JuneApproval, y = HouseSeatChange)) +
   geom_hline(yintercept = 0) +
@@ -47,9 +53,6 @@ midterm.reg
 predict(midterm.reg, newdata = tibble(JuneApproval = c(35, 40, 45)))
 
 220 + predict(midterm.reg, newdata = tibble(JuneApproval = c(35, 40, 45)))
-
-# Get out your forecast from Monday. What value of approval did you use?
-# Where did it come from?
 
 
 # ---- 3. The poll: presidential approval -------------------------------------
