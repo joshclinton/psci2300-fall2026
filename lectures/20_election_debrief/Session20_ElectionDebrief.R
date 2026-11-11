@@ -75,13 +75,8 @@ midterms |>
 
 # ---- 4. Forecast #2: the generic ballot to seats ----------------------------
 
-before = approvalvote |>
-  filter(Year < 2026)
-
-seats.reg = lm(HouseSeatShare ~ HouseVoteShare, data = before)
-
-recent = before |>
-  filter(Year >= 1996)
+recent = approvalvote |>
+  filter(Year < 2026 & Year >= 1996)
 
 seats.reg.recent = lm(HouseSeatShare ~ HouseVoteShare, data = recent)
 
@@ -90,24 +85,10 @@ seats.reg.recent = lm(HouseSeatShare ~ HouseVoteShare, data = recent)
 # 46.9 = our NBC News poll, fixed by party (D+6)
 # 43.7 = the actual result (D+12)
 # 435 = seats in the House
-435 * predict(seats.reg, newdata = tibble(HouseVoteShare = c(41, 46.9, 43.7))) / 100
 
 435 * predict(seats.reg.recent, newdata = tibble(HouseVoteShare = c(41, 46.9, 43.7))) / 100
 
 # Republicans won (projected) 176 seats = 40.5% of seats. Where does 2026 fall?
-approvalvote |>
-  ggplot(aes(x = HouseVoteShare, y = HouseSeatShare, color = Year == 2026)) +
-  geom_hline(yintercept = 50) +
-  geom_vline(xintercept = 50) +
-  geom_point() +
-  geom_smooth(data = before, method = "lm", color = "black") +
-  scale_color_manual(values = c("grey50", "red"), labels = c("1946-2024", "2026")) +
-  labs(
-    x = "President's party's share of the House vote (%)",
-    y = "President's party's share of House seats (%)",
-    color = ""
-  ) +
-  theme_bw()
 
 
 # ---- 5. How did the polls do? -----------------------------------------------

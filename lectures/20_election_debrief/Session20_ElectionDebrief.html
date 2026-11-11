@@ -1641,37 +1641,17 @@ the two-party vote):</p>
 </tr>
 </tbody>
 </table>
-<p>The votes-to-seats regressions from Session 17 – all elections, and
-since 1996 – fit on the elections before 2026. Predictions at the raw
-poll, the fixed poll, and the actual vote:</p>
-<pre class="r"><code>before = approvalvote |&gt;
-  filter(Year &lt; 2026)
-
-seats.reg = lm(HouseSeatShare ~ HouseVoteShare, data = before)
-
-recent = before |&gt;
-  filter(Year &gt;= 1996)
+<p>The votes-to-seats regression from Session 17, using the elections
+from 1996 through 2024. Predictions at the raw poll, the fixed poll, and
+the actual vote:</p>
+<pre class="r"><code>recent = approvalvote |&gt;
+  filter(Year &lt; 2026 &amp; Year &gt;= 1996)
 
 seats.reg.recent = lm(HouseSeatShare ~ HouseVoteShare, data = recent)
-
-435 * predict(seats.reg, newdata = tibble(HouseVoteShare = c(41, 46.9, 43.7))) / 100
 
 435 * predict(seats.reg.recent, newdata = tibble(HouseVoteShare = c(41, 46.9, 43.7))) / 100</code></pre>
 <p>Republicans won (projected) 176 seats, or 40.5%. Where does 2026
 fall?</p>
-<pre class="r"><code>approvalvote |&gt;
-  ggplot(aes(x = HouseVoteShare, y = HouseSeatShare, color = Year == 2026)) +
-  geom_hline(yintercept = 50) +
-  geom_vline(xintercept = 50) +
-  geom_point() +
-  geom_smooth(data = before, method = &quot;lm&quot;, color = &quot;black&quot;) +
-  scale_color_manual(values = c(&quot;grey50&quot;, &quot;red&quot;), labels = c(&quot;1946-2024&quot;, &quot;2026&quot;)) +
-  labs(
-    x = &quot;President&#39;s party&#39;s share of the House vote (%)&quot;,
-    y = &quot;President&#39;s party&#39;s share of House seats (%)&quot;,
-    color = &quot;&quot;
-  ) +
-  theme_bw()</code></pre>
 </div>
 <div id="how-did-the-polls-do" class="section level1">
 <h1>How Did the Polls Do?</h1>
