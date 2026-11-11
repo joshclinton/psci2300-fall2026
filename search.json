@@ -201,5 +201,12 @@
     "title": "Survey Demographics",
     "section": "",
     "text": "Demographics Morning Consult collects for every respondent: age, gender, education, ethnicity/race, party ID, citizenship, registered voter status, state, ZIP code, parental status, marital status, income, employment status, vote history, home ownership, urbanicity. Optional: stock market investment, health status, insurance type, vehicle ownership, union status, sexual orientation, religion, military household, blue or white collar, political segmentation."
+  },
+  {
+    "objectID": "lectures/20_election_debrief/index.html",
+    "href": "lectures/20_election_debrief/index.html",
+    "title": "The Election Is Over: How Did We Do?",
+    "section": "",
+    "text": "Session 20 · Wednesday, November 11. How close did our simple forecasts come? How did the polls do in Senate and governor races? Is a “too regular” election result suspicious? Does a bad midterm predict a bad presidential election? Reading: Center for an Informed Public, University of Washington (2026), 'Proof' of a 'stolen election': How misleading charts lend credibility to election fraud rumors. Lecture, R Markdown, R script. Data: approvalvote2026.csv, statepolls2026.csv, midterm_pres2026.csv, midterm2026_poll_clean.csv, trump2024_bystate.csv. 2026 results from NBC News as of November 6, 2026."
   }
 ]
