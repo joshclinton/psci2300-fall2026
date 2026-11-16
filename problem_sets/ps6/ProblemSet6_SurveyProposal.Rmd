@@ -1,0 +1,97 @@
+---
+title: 'PSCI 2300 Problem Set 6'
+author: "YOUR NAME HERE"
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# Proposing a Question for Our Survey
+# DUE MONDAY, NOVEMBER 30 (BEFORE CLASS)
+
+We are going to write our own questions for a national survey of about 2,000 American adults that Morning Consult will field over Thanksgiving. Before you start, read the [class survey page](https://clintojd.github.io/psci2300-fall2026/survey/) and spend some time on the Morning Consult links there.
+
+In this problem set **you** propose a question for the survey and a plan for how you will analyze it.
+
+We are writing the plan *before* we see any data. This is called a **pre-analysis plan**. Writing it first keeps us honest: we cannot change our hypothesis or go looking for a result that we like after the data come in.
+
+Recall that problem sets are graded by completion. I want you to try to figure things out on your own, with friends, or with help from me or Alex. The point is to understand what the code is doing and what the results mean.
+
+You can also use AI to help you. But use it to help, don't outsource your thinking and agency to a machine. If you want to be capable you need to be able to work _with_ AI.
+
+Fill in the answers in the spots below. Test things out using `Run Current Chunk` and then, when everything works, `Knit` from above - `Knit to PDF` is best. Make sure you save the name of this file to contain your VUNET ID!
+
+The questions are in *italics*. Put your written answers after each question and your code in the answer chunk.
+
+# Part A: Your Question
+
+1. *What do you want to know about American public opinion or politics? State it as a question.*
+
+INSERT ANSWER HERE
+
+2. *Why does it matter? Who has made a claim about it -- a politician, a pundit, a news story, people you know? Give a source if you have one.*
+
+INSERT ANSWER HERE
+
+# Part B: Your Hypothesis
+
+3. *What do you think the answer is? State your hypothesis as a comparison: e.g., which group(s) will be higher or lower on what?*
+
+INSERT ANSWER HERE
+
+4. *Why do you expect that? What is the reasoning behind your hypothesis?*
+
+INSERT ANSWER HERE
+
+# Part C: Measuring the Outcome
+
+5. *Propose a survey question that measures the outcome you care about. Give the exact wording and the answer options in the order respondents will see them.*
+
+INSERT ANSWER HERE
+
+6. *Why is your question a good measure of the outcome you care about? Address: (a) is it pick one or select all, and why? (b) why these response options: binary or categorical, odd or even, and do you offer "don't know"? (c) does it ask one thing, with no loaded words? (d) if it asks about a policy, will respondents know what the policy is? (e) can it be answered on a phone in a few seconds?*
+
+INSERT ANSWER HERE
+
+# Part D: Your Dependent Variable
+
+7. *How will you turn the answers to your question into a dependent variable (Y)? Give it a name and say exactly how each response will be coded. Say what you will do with "don't know" or skipped answers. Provide a hypothetical code chunk to do this.*
+
+INSERT ANSWER HERE
+
+```{r, eval = FALSE}
+# INSERT FAKE CODE HERE
+```
+
+# Part E: Your Independent Variables
+
+In addition to questions that you ask, everyone on the survey answers a common core of questions: party identification (with leaners), 2024 presidential vote, 2026 House vote, Trump approval, gender, age, race and ethnicity, and education. You can use any of these without writing a new question.
+
+8. *Propose 2-4 independent variables that you are interested in examining to see how responses to your dependent variable vary. At least one should relate to your hypothesis in question 3. At least one should be a competing explanation for what may explain the pattern.* 
+
+INSERT ANSWER HERE
+
+# Part F: Your Pre-Analysis Plan
+
+Now write the plan for **your** question. You do not have the data yet, so make up sensible names for your variables (for example, `trust_elections`, `social_media`) and call the data `survey`. The chunk will not run -- that is fine.
+
+9. *Write the code you will run on our survey, in order:*
+
+    a. *the overall mean of your dependent variable;*
+    b. *the mean of your dependent variable for each group of your main explanation;*
+    c. *the regression of the dependent variable on the independent variable with `lm()`;*
+
+```{r, eval = FALSE}
+# INSERT ANSWER
+```
+
+10. *Which numbers in question 9 will you look at to support your hypothesis? What will count as evidence for or against your hypothesis?*
+
+INSERT ANSWER HERE
+
+
