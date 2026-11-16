@@ -62,8 +62,6 @@ INSERT ANSWER HERE
 
 7. *How will you turn the answers to your question into a dependent variable (Y)? Give it a name and say exactly how each response will be coded. Say what you will do with "don't know" or skipped answers. Provide a hypothetical code chunk to do this.*
 
-INSERT ANSWER HERE
-
 ```{r, eval = FALSE}
 # INSERT FAKE CODE HERE
 ```
